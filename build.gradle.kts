@@ -20,9 +20,19 @@ dependencies {
     // compilation classpath (e.g. it is used as a transitive by a third-party library)
     // then it should be declared as "api" here since we use useCompileClasspathVersions
     // to make runtime classpath consistent with the compile one.
+    api(platform("org.codehaus.groovy:groovy-bom:3.0.17"))
     api("org.ow2.asm:asm:9.5")
 
+    // https://mvnrepository.com/artifact/org.apache.jmeter/Apachejmeter_java
+    implementation("org.apache.jmeter:ApacheJMeter_java:5.4.3") {
+        exclude("org.apache.jmeter", "bom")
+    }
+    implementation("org.apache.jmeter:ApacheJMeter_components:5.4.3") {
+        exclude("org.apache.jmeter", "bom")
+    }
+
     implementation("commons-io:commons-io:2.12.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.1")
 
     api("bsf:bsf:2.4.0")
     api("cglib:cglib-nodep:3.3.0")

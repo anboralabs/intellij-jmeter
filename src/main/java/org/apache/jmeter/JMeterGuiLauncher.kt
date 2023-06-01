@@ -21,7 +21,7 @@ import com.thoughtworks.xstream.converters.ConversionException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-//import kotlinx.coroutines.swing.Swing
+import kotlinx.coroutines.swing.Swing
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import org.apache.jmeter.gui.GuiPackage
@@ -43,6 +43,7 @@ import org.apache.jorphan.gui.ui.KerningOptimizer
 import org.slf4j.LoggerFactory
 import java.awt.event.ActionEvent
 import java.io.File
+import java.util.*
 
 public object JMeterGuiLauncher {
     private val log = LoggerFactory.getLogger(JMeterGuiLauncher::class.java)
@@ -63,9 +64,9 @@ public object JMeterGuiLauncher {
 
         runBlocking {
             // See https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md
-            /*launch(Dispatchers.Swing) {
+            launch(Dispatchers.Swing) {
                 startGuiInternal(testFile)
-            }*/
+            }
         }
     }
 
