@@ -713,7 +713,7 @@ public class JMeter implements JMeterPlugin {
         } else {
             JMeterUtils.loadJMeterProperties(NewDriver.getJMeterDir() + File.separator
                     + "bin" + File.separator // $NON-NLS-1$
-                    + "jmeter.properties");// $NON-NLS-1$
+                    + "org/apache/jmeter/jmeter.properties");// $NON-NLS-1$
         }
 
         JMeterUtils.initLocale();
@@ -839,7 +839,7 @@ public class JMeter implements JMeterPlugin {
                     final Level logLevel = Level.getLevel(value);
                     if (logLevel != null) {
                         String loggerName = name;
-                        if (name.startsWith("jmeter") || name.startsWith("jorphan")) {
+                        if (name.startsWith("org/apache/jmeter") || name.startsWith("jorphan")) {
                             loggerName = PACKAGE_PREFIX + name;
                         }
                         Configurator.setAllLevels(loggerName, logLevel);

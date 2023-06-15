@@ -68,7 +68,7 @@ public class AboutCommand extends AbstractAction {
     @Override
     public void doAction(ActionEvent e) {
         if (e.getActionCommand().equals(ActionNames.ABOUT)) {
-            AboutCommand.about();
+            //AboutCommand.about();
         }
     }
 
@@ -85,7 +85,7 @@ public class AboutCommand extends AbstractAction {
      * the product image and the copyright notice. The dialog box is centered
      * over the MainFrame.
      */
-    private static void about() {
+    /*private static void about() {
         JFrame mainFrame = GuiPackage.getInstance().getMainFrame();
         JDialog dialog = initDialog(mainFrame);
 
@@ -95,7 +95,7 @@ public class AboutCommand extends AbstractAction {
         Dimension d2 = dialog.getSize();
         dialog.setLocation(p.x + (d1.width - d2.width) / 2, p.y + (d1.height - d2.height) / 2);
         dialog.setVisible(true);
-    }
+    }*/
 
     /**
      * @param mainFrame {@link JFrame}

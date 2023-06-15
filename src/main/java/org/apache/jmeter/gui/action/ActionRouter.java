@@ -77,27 +77,29 @@ public final class ActionRouter implements ActionListener {
                 log.error("performAction({}) updateCurrentGui() on{} caused", actionCommand, e, err);
                 JMeterUtils.reportErrorToUser("Problem updating GUI - see log file for details");
             }
-            for (Command c : commands.get(actionCommand)) {
-                try {
-                    preActionPerformed(c.getClass(), e);
-                    c.doAction(e);
-                    postActionPerformed(c.getClass(), e);
-                } catch (IllegalUserActionException err) {
-                    String msg = err.getMessage();
-                    if (msg == null) {
-                        msg = err.toString();
-                    }
-                    Throwable t = err.getCause();
-                    if (t != null) {
-                        String cause = t.getMessage();
-                        if (cause == null) {
-                            cause = t.toString();
+            if (!commands.isEmpty()) {
+                for (Command c : commands.get(actionCommand)) {
+                    try {
+                        preActionPerformed(c.getClass(), e);
+                        c.doAction(e);
+                        postActionPerformed(c.getClass(), e);
+                    } catch (IllegalUserActionException err) {
+                        String msg = err.getMessage();
+                        if (msg == null) {
+                            msg = err.toString();
                         }
-                        msg = msg + "\n" + cause;
+                        Throwable t = err.getCause();
+                        if (t != null) {
+                            String cause = t.getMessage();
+                            if (cause == null) {
+                                cause = t.toString();
+                            }
+                            msg = msg + "\n" + cause;
+                        }
+                        JMeterUtils.reportErrorToUser(msg);
+                    } catch (Exception err) {
+                        log.error("Error processing {}", c, err);
                     }
-                    JMeterUtils.reportErrorToUser(msg);
-                } catch (Exception err) {
-                    log.error("Error processing {}", c, err);
                 }
             }
         } catch (NullPointerException er) {
@@ -315,11 +317,16 @@ public final class ActionRouter implements ActionListener {
             return; // already done
         }
         try {
-            Collection<Command> commandServices = JMeterUtils.loadServicesAndScanJars(
+            /*Collection<Command> commandServices = JMeterUtils.loadServicesAndScanJars(
                     Command.class,
                     ServiceLoader.load(Command.class),
                     Thread.currentThread().getContextClassLoader(),
                     new LogAndIgnoreServiceLoadExceptionHandler(log)
+            );*/
+
+            Collection<Command> commandServices = List.of(
+                    new Load(),
+                    new EditCommand()
             );
 
             if (commandServices.isEmpty()) {

@@ -119,7 +119,7 @@ public class HtmlReportGenerator {
         arguments.add("-jar");
         arguments.add(jmeterBinDir + "/ApacheJMeter.jar");
         arguments.add("-p");
-        arguments.add(jmeterBinDir + "/jmeter.properties");
+        arguments.add(jmeterBinDir + "/org/apache/jmeter/jmeter.properties");
         arguments.add("-q");
         arguments.add(userPropertiesFilePath);
         arguments.add("-g");

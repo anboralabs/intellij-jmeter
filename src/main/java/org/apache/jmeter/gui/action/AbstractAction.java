@@ -23,11 +23,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.text.MessageFormat;
 
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.GuiPackage;
@@ -144,7 +140,7 @@ public abstract class AbstractAction implements Command {
      * @param event {@link ActionEvent}
      * @return parent Window
      */
-    protected static JFrame getParentFrame(ActionEvent event) {
+    /*protected static JFrame getParentFrame(ActionEvent event) {
         JFrame parent = null;
         Object source = event.getSource();
         if (source instanceof JMenuItem) {
@@ -162,5 +158,5 @@ public abstract class AbstractAction implements Command {
             parent = GuiPackage.getInstance().getMainFrame();
         }
         return parent;
-    }
+    }*/
 }

@@ -65,7 +65,7 @@ public object JMeterGuiLauncher {
         runBlocking {
             // See https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md
             launch(Dispatchers.Swing) {
-                startGuiInternal(testFile)
+                //startGuiInternal(testFile)
             }
         }
     }
@@ -83,7 +83,7 @@ public object JMeterGuiLauncher {
         }
     }
 
-    private suspend fun startGuiInternal(testFile: String?) {
+    /*private suspend fun startGuiInternal(testFile: String?) {
         setupLaF()
         val splash = SplashScreen()
         splash.showScreen()
@@ -128,7 +128,7 @@ public object JMeterGuiLauncher {
         }
         setProgress(93)
         splash.close()
-    }
+    }*/
 
     private suspend fun loadFile(testFile: String) {
         try {

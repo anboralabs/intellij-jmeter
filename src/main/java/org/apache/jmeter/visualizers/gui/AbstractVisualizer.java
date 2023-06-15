@@ -140,7 +140,7 @@ public abstract class AbstractVisualizer
             }
         });
         JButton saveConfigButton = new JButton(JMeterUtils.getResString("config_save_settings")); // $NON-NLS-1$
-        saveConfigButton.addActionListener(e -> {
+        /*saveConfigButton.addActionListener(e -> {
             SavePropertyDialog d = new SavePropertyDialog(
                     GuiPackage.getInstance().getMainFrame(),
                     JMeterUtils.getResString("sample_result_save_configuration"), // $NON-NLS-1$
@@ -148,7 +148,7 @@ public abstract class AbstractVisualizer
             d.pack();
             ComponentUtil.centerComponentInComponent(GuiPackage.getInstance().getMainFrame(), d);
             d.setVisible(true);
-        });
+        });*/
 
         filePanel = new FilePanel(JMeterUtils.getResString("file_visualizer_output_file"), EXTS); // $NON-NLS-1$
         filePanel.addChangeListener(this);

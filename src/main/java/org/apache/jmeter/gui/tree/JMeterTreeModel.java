@@ -158,11 +158,14 @@ public class JMeterTreeModel extends DefaultTreeModel {
             // The node can be added in non GUI mode at startup
             guiPackage.updateCurrentNode();
             JMeterGUIComponent guicomp = guiPackage.getGui(component);
-            guicomp.clearGui();
-            guicomp.configure(component);
-            guicomp.modifyTestElement(component);
-            guiPackage.getCurrentGui(); // put the gui object back
-                                        // to the way it was.
+            if (guicomp != null) {
+                guicomp.clearGui();
+                guicomp.configure(component);
+                guicomp.modifyTestElement(component);
+                guiPackage.getCurrentGui(); // put the gui object back
+                // to the way it was.
+            }
+
         }
         JMeterTreeNode newNode = new JMeterTreeNode(component, this);
 

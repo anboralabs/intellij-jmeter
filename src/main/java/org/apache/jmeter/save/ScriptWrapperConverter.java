@@ -36,7 +36,7 @@ public class ScriptWrapperConverter implements Converter {
 
     private static final String ATT_PROPERTIES = "properties"; // $NON-NLS-1$
     private static final String ATT_VERSION = "version"; // $NON-NLS-1$
-    private static final String ATT_JMETER = "jmeter"; // $NON-NLS-1$
+    private static final String ATT_JMETER = "org/apache/jmeter"; // $NON-NLS-1$
 
     /**
      * Returns the converter version; used to check for possible

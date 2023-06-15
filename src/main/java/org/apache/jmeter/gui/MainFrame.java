@@ -78,6 +78,9 @@ import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import co.anbora.labs.jmeter.ide.gui.JmeterEditor;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.gui.action.ActionNames;
 import org.apache.jmeter.gui.action.ActionRouter;
@@ -104,6 +107,8 @@ import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.gui.ComponentUtil;
 import org.apache.jorphan.gui.JMeterUIDefaults;
 import org.apache.jorphan.util.JOrphanUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +116,7 @@ import org.slf4j.LoggerFactory;
  * The main JMeter frame, containing the menu bar, test tree, and an area for
  * JMeter component GUIs.
  */
-public class MainFrame extends JFrame implements TestStateListener, Remoteable, DropTargetListener, Clearable, ActionListener {
+public class MainFrame extends JPanel implements TestStateListener, Remoteable, DropTargetListener, Clearable, ActionListener {
 
     private static final long serialVersionUID = 241L;
 
@@ -231,7 +236,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
         GuiPackage.getInstance().setMainFrame(this);
         init();
         initTopLevelDndHandler();
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        //setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
         int ctrlAltMask = (IS_MAC ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK) |
                 InputEvent.ALT_DOWN_MASK;
@@ -288,9 +293,9 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
      *
      * @deprecated Do not use - only needed for JUnit tests
      */
-    @Deprecated
+    /*@Deprecated
     public MainFrame() {
-    }
+    }*/
 
     // MenuBar related methods
     // TODO: Do we really need to have all these menubar methods duplicated
@@ -403,7 +408,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
      *            the host where JMeter threads are stopping
      */
     public void showStoppingMessage(String host) {
-        if (stoppingMessage != null){
+        /*if (stoppingMessage != null){
             stoppingMessage.dispose();
         }
         stoppingMessage = new EscapeDialog(this, JMeterUtils.getResString("stopping_test_title"), true); //$NON-NLS-1$
@@ -420,7 +425,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
                 if (stoppingMessage != null) {
                     stoppingMessage.setVisible(true);
                 }
-        });
+        });*/
     }
 
     public void updateCounts() {
@@ -517,7 +522,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
      */
     private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
         menuBar = new JMeterMenuBar();
-        setJMenuBar(menuBar);
+        //setJMenuBar(menuBar);
         JPanel all = new JPanel(new BorderLayout());
         all.add(createToolBar(), BorderLayout.NORTH);
 
@@ -553,14 +558,14 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
         treeAndMain.setContinuousLayout(true);
         all.add(treeAndMain, BorderLayout.CENTER);
 
-        getContentPane().add(all);
+        add(all);
 
         tree.setSelectionRow(1);
-        addWindowListener(new WindowHappenings());
+        //addWindowListener(new WindowHappenings());
         // Building is complete, register as listener
         GuiPackage.getInstance().registerAsListener();
-        setTitle(DEFAULT_TITLE);
-        setIconImage(JMeterUtils.getImage("icon-apache.png").getImage());// $NON-NLS-1$
+        //setTitle(DEFAULT_TITLE);
+        //setIconImage(JMeterUtils.getImage("icon-apache.png").getImage());// $NON-NLS-1$
         setWindowTitle(); // define AWT WM_CLASS string
         refreshErrorsTimer.start();
     }
@@ -576,14 +581,14 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
     public void setExtendedFrameTitle(String fname) {
         // file New operation may set to null, so just return app name
         if (fname == null) {
-            setTitle(DEFAULT_TITLE);
+            //setTitle(DEFAULT_TITLE);
             return;
         }
 
         // allow for windows / chars in filename
         String temp = fname.replace('\\', '/'); // $NON-NLS-1$ // $NON-NLS-2$
         String simpleName = temp.substring(temp.lastIndexOf('/') + 1);// $NON-NLS-1$
-        setTitle(simpleName + " (" + fname + ") - " + DEFAULT_TITLE); // $NON-NLS-1$ // $NON-NLS-2$
+        //setTitle(simpleName + " (" + fname + ") - " + DEFAULT_TITLE); // $NON-NLS-1$ // $NON-NLS-2$
     }
 
     /**

@@ -48,7 +48,7 @@ public class CreateFunctionDialog extends AbstractAction {
 
     @Override
     public void doAction(ActionEvent event) {
-        FunctionHelper helper = new FunctionHelper(getParentFrame(event));
-        helper.setVisible(true);
+        //FunctionHelper helper = new FunctionHelper(getParentFrame(event));
+        //helper.setVisible(true);
     }
 }

@@ -20,6 +20,12 @@ dependencies {
     // compilation classpath (e.g. it is used as a transitive by a third-party library)
     // then it should be declared as "api" here since we use useCompileClasspathVersions
     // to make runtime classpath consistent with the compile one.
+    implementation("org.apache.jmeter:ApacheJMeter_java:5.4.3") {
+        exclude("org.apache.jmeter", "bom")
+    }
+    implementation("org.apache.jmeter:ApacheJMeter_components:5.4.3") {
+        exclude("org.apache.jmeter", "bom")
+    }
 
     implementation("commons-io:commons-io:2.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.1")
@@ -27,24 +33,22 @@ dependencies {
     api("bsf:bsf:2.4.0")
 
     api("com.fifesoft:rsyntaxtextarea:3.3.3")
-    api("com.formdev:svgSalamander:1.1.4")
-    api("com.github.ben-manes.caffeine:caffeine:2.9.3")
+
     api("com.github.weisj:darklaf-core:2.7.3")
     api("com.github.weisj:darklaf-extensions-rsyntaxarea:0.3.4")
     api("com.github.weisj:darklaf-property-loader:2.7.3")
-    api("com.github.weisj:darklaf-theme:2.7.3")
+
     api("com.google.auto.service:auto-service-annotations:1.1.0")
     api("com.google.auto.service:auto-service:1.1.0")
     api("com.google.errorprone:error_prone_annotations:2.19.1")
-
+    api("com.miglayout:miglayout-core:5.3")
+    api("com.miglayout:miglayout-swing:5.3")
     api("com.sun.activation:javax.activation:1.2.0")
+    api("com.thoughtworks.xstream:xstream:1.4.20")
 
     api("commons-lang:commons-lang:2.6")
 
     api("javax.activation:javax.activation-api:1.2.0")
-    api("jcharts:jcharts:0.7.5")
-
-    api("org.checkerframework:checker-qual:3.34.0")
 
     api("net.minidev:accessors-smart:2.4.11")
     api("net.minidev:json-smart:2.4.11")
@@ -64,23 +68,19 @@ dependencies {
     api("org.apache.logging.log4j:log4j-core:2.20.0")
 
     api("org.apache.tika:tika-core:1.28.5")
-    api("org.apache.tika:tika-parsers:1.28.5")
-    api("org.apache.velocity:velocity:1.7")
-    api("org.apache.xmlgraphics:xmlgraphics-commons:2.8")
+
     api("org.apiguardian:apiguardian-api:1.1.2")
 
     api("org.brotli:dec:0.1.2")
     api("org.exparity:hamcrest-date:2.0.8")
     api("org.freemarker:freemarker:2.3.32")
-    api("org.jdom:jdom:1.1.3")
+
     api("org.jetbrains.lets-plot:lets-plot-batik:3.2.0")
     api("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.4.1")
     api("org.jetbrains:annotations:24.0.1")
     api("org.jodd:jodd-core:5.0.13")
-    api("org.jodd:jodd-lagarto:5.0.13")
-    api("org.jodd:jodd-log:5.0.13")
+
     api("org.jodd:jodd-props:5.0.13")
-    api("org.jsoup:jsoup:1.16.1")
 
     api("org.slf4j:jcl-over-slf4j:1.7.36")
     api("org.slf4j:slf4j-api:1.7.36")
@@ -89,7 +89,6 @@ dependencies {
     api("xalan:xalan:2.7.3")
 
     api("xml-apis:xml-apis:1.4.01")
-    api("xmlpull:xmlpull:1.1.3.1")
 }
 
 // Configure Gradle IntelliJ Plugin

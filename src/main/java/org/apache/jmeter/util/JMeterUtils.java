@@ -31,20 +31,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.ServiceLoader;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -74,6 +61,7 @@ import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
 import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -228,6 +216,17 @@ public class JMeterUtils implements UnitTestManager {
                 throw new RuntimeException("Could not read JMeter properties file:" + file);
             }
         }
+        appProperties = p;
+    }
+
+    public static void loadJMeterProperties(@Nullable ResourceBundle res) {
+        Properties p = new Properties(System.getProperties());
+
+        for (Iterator<String> i = res.getKeys().asIterator(); i.hasNext(); ) {
+            String key = i.next();
+            p.put(key, res.getString(key));
+        }
+
         appProperties = p;
     }
 
