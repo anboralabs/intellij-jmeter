@@ -421,9 +421,13 @@ public final class GuiPackage implements LocaleChangeListener, HistoryListener {
         } else {
             comp = guis.get(guiClass);
             if (comp == null) {
-                comp = (JMeterGUIComponent) guiClass.getDeclaredConstructor().newInstance();
-                if (!(comp instanceof UnsharedComponent)) {
-                    guis.put(guiClass, comp);
+                try {
+                    comp = (JMeterGUIComponent) guiClass.getDeclaredConstructor().newInstance();
+                    if (!(comp instanceof UnsharedComponent)) {
+                        guis.put(guiClass, comp);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         }

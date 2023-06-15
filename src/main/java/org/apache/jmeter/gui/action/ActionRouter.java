@@ -326,6 +326,7 @@ public final class ActionRouter implements ActionListener {
 
             Collection<Command> commandServices = List.of(
                     new Load(),
+                    new CheckDirty(),
                     new EditCommand()
             );
 
@@ -340,6 +341,7 @@ public final class ActionRouter implements ActionListener {
                     commandObjects.add(command);
                 }
             }
+            commands.isEmpty();
         } catch (HeadlessException e) {
             if (log.isWarnEnabled()) {
                 log.warn("AWT headless exception occurred. {}", e.toString());
