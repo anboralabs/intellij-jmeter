@@ -347,7 +347,7 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
      *            the new Edit menu
      */
     public void setEditMenu(JPopupMenu menu) {
-        menuBar.setEditMenu(menu);
+        //menuBar.setEditMenu(menu);
     }
 
     /**
@@ -523,7 +523,7 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
     private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
         menuBar = new JMeterMenuBar();
         //setJMenuBar(menuBar);
-        JPanel all = new JPanel(new BorderLayout());
+        //JPanel all = new JPanel();
         //all.add(createToolBar(), BorderLayout.NORTH);
 
         JSplitPane treeAndMain = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -556,9 +556,9 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
 
         treeAndMain.setResizeWeight(.2);
         treeAndMain.setContinuousLayout(true);
-        all.add(treeAndMain, BorderLayout.CENTER);
+        //all.add(treeAndMain);
 
-        add(all);
+        add(treeAndMain);
 
         tree.setSelectionRow(1);
         //addWindowListener(new WindowHappenings());
@@ -566,7 +566,7 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
         GuiPackage.getInstance().registerAsListener();
         //setTitle(DEFAULT_TITLE);
         //setIconImage(JMeterUtils.getImage("icon-apache.png").getImage());// $NON-NLS-1$
-        setWindowTitle(); // define AWT WM_CLASS string
+        //setWindowTitle(); // define AWT WM_CLASS string
         refreshErrorsTimer.start();
     }
 
