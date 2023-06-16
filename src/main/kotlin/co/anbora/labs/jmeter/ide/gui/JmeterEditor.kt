@@ -19,7 +19,7 @@ class JmeterEditor(
     private val projectArg: Project,
     private val fileArg: VirtualFile,
     private val mainPanel: JPanel
-): JPanel(), FileEditor, FileEditorLocation {
+): FileEditor, FileEditorLocation {
 
     /*protected lateinit var projectArg: Project
     protected lateinit var fileArg: VirtualFile

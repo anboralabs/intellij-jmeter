@@ -65,7 +65,7 @@ class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
         instance.populateCommandMap()
         treeLis.setActionHandler(instance)
         val main = MainFrame(treeModel, treeLis)
-        //loadFile(file.toNioPath().toFile())
+        loadFile(file.toNioPath().toFile())
         return JmeterEditor(project, file, main)
     }
 

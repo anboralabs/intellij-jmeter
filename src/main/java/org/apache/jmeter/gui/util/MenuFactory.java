@@ -269,7 +269,7 @@ public final class MenuFactory {
     }
 
     public static void addFileMenu(JPopupMenu pop) {
-        addFileMenu(pop, true);
+        //addFileMenu(pop, true);
     }
 
     /**

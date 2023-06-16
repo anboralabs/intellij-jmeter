@@ -119,7 +119,7 @@ public class JMeterMenuBar extends JMenuBar implements LocaleChangeListener {
             remoteHosts = new String[0];
         }
         this.getRemoteItems();
-        createMenuBar();
+        //createMenuBar();
         JMeterUtils.addLocaleChangeListener(this);
     }
 

@@ -337,7 +337,7 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
      * @param file - the full path to the file that was loaded
      */
     public void setProjectFileLoaded(String file) {
-        menuBar.setProjectFileLoaded(file);
+        //menuBar.setProjectFileLoaded(file);
     }
 
     /**
@@ -524,7 +524,7 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
         menuBar = new JMeterMenuBar();
         //setJMenuBar(menuBar);
         JPanel all = new JPanel(new BorderLayout());
-        all.add(createToolBar(), BorderLayout.NORTH);
+        //all.add(createToolBar(), BorderLayout.NORTH);
 
         JSplitPane treeAndMain = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -650,7 +650,7 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
         loggerPanel.setPreferredSize(new Dimension(0, 150));
         GuiPackage guiInstance = GuiPackage.getInstance();
         guiInstance.setLoggerPanel(loggerPanel);
-        guiInstance.getMenuItemLoggerPanel().getModel().setSelected(DISPLAY_LOGGER_PANEL);
+        //guiInstance.getMenuItemLoggerPanel().getModel().setSelected(DISPLAY_LOGGER_PANEL);
         loggerPanel.setVisible(DISPLAY_LOGGER_PANEL);
         return loggerPanel;
     }

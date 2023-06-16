@@ -78,7 +78,7 @@ public abstract class AbstractThreadGroupGui extends AbstractJMeterGuiComponent 
         }
 
         MenuFactory.addEditMenu(pop, true);
-        MenuFactory.addFileMenu(pop, false);
+        //MenuFactory.addFileMenu(pop, false);
         return pop;
     }
 

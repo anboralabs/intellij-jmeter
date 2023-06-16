@@ -61,13 +61,13 @@ public class TestPlanGui extends AbstractJMeterGuiComponent {
     /** A panel allowing the user to define variables. */
     private final ArgumentsPanel argsPanel;
 
-    private final FileListPanel browseJar;
+    //private final FileListPanel browseJar;
 
     /**
      * Create a new TestPlanGui.
      */
     public TestPlanGui() {
-        browseJar = new FileListPanel(JMeterUtils.getResString("test_plan_classpath_browse"), ".jar"); // $NON-NLS-1$ $NON-NLS-2$
+        //browseJar = new FileListPanel(JMeterUtils.getResString("test_plan_classpath_browse"), ".jar"); // $NON-NLS-1$ $NON-NLS-2$
         argsPanel = new ArgumentsPanel(JMeterUtils.getResString("user_defined_variables")); // $NON-NLS-1$
         serializedMode = new JCheckBox(JMeterUtils.getResString("testplan.serialized")); // $NON-NLS-1$
         functionalMode = new JCheckBox(JMeterUtils.getResString("functional_mode")); // $NON-NLS-1$
@@ -106,7 +106,7 @@ public class TestPlanGui extends AbstractJMeterGuiComponent {
         addMenu.add(MenuFactory.makeMenu(MenuFactory.NON_TEST_ELEMENTS, ActionNames.ADD));
         pop.add(addMenu);
         MenuFactory.addPasteResetMenu(pop);
-        MenuFactory.addFileMenu(pop, false);
+        //MenuFactory.addFileMenu(pop, false);
         return pop;
     }
 
@@ -128,7 +128,7 @@ public class TestPlanGui extends AbstractJMeterGuiComponent {
             tp.setTearDownOnShutdown(tearDownOnShutdown.isSelected());
             tp.setSerialized(serializedMode.isSelected());
             tp.setUserDefinedVariables((Arguments) argsPanel.createTestElement());
-            tp.setTestPlanClasspathArray(browseJar.getFiles());
+            //tp.setTestPlanClasspathArray(browseJar.getFiles());
         }
     }
 
@@ -171,7 +171,7 @@ public class TestPlanGui extends AbstractJMeterGuiComponent {
             if (udv != null) {
                 argsPanel.configure((Arguments) udv.getObjectValue());
             }
-            browseJar.setFiles(tp.getTestPlanClasspathArray());
+            //browseJar.setFiles(tp.getTestPlanClasspathArray());
         }
     }
 
@@ -192,7 +192,7 @@ public class TestPlanGui extends AbstractJMeterGuiComponent {
         southPanel.add(functionalMode);
         JComponent explain = new JLabel(JMeterUtils.getResString("functional_mode_explanation")); // $NON-NLS-1$
         southPanel.add(explain);
-        southPanel.add(browseJar);
+        //southPanel.add(browseJar);
 
         add(southPanel, BorderLayout.SOUTH);
     }
@@ -204,6 +204,6 @@ public class TestPlanGui extends AbstractJMeterGuiComponent {
         serializedMode.setSelected(false);
         tearDownOnShutdown.setSelected(true);
         argsPanel.clear();
-        browseJar.clearFiles();
+        //browseJar.clearFiles();
     }
 }
