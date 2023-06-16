@@ -183,7 +183,7 @@ public class LookAndFeelCommand extends AbstractAction {
             return MenuItem.ofDarklafTheme(new DarculaTheme()).command;
         }
 
-        return MenuItem.of("default", jMeterLaf).command; // $NON-NLS-1$
+        return MenuItem.of("default", jMeterLaf).command; // $NON-NLS-1$*/
     }
 
     // Check if LAF is a built-in one

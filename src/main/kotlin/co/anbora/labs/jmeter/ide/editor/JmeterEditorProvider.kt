@@ -21,14 +21,13 @@ import org.apache.jmeter.gui.tree.JMeterTreeModel
 import org.apache.jmeter.save.SaveService
 import org.apache.jmeter.util.JMeterUtils
 import org.apache.jorphan.collections.HashTree
+import org.apache.jorphan.gui.JMeterUIDefaults
 import java.io.File
 import java.util.*
 
 private const val EDITOR_TYPE_ID = "co.anbora.labs.jmeter.editor"
 
 class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
-
-    private val res = ResourceBundle.getBundle("org/apache/jmeter/jmeter")
 
     override fun accept(project: Project, file: VirtualFile): Boolean {
         return isJmeterFile(file)
@@ -61,14 +60,12 @@ class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
         val treeModel = JMeterTreeModel()
         val treeLis = JMeterTreeListener(treeModel)
         GuiPackage.initInstance(treeLis, treeModel)
-        JMeterUtils.setLocale(Locale.US)
-        JMeterUtils.setJMeterHome(System.getenv("JMETER_HOME"))
-        JMeterUtils.loadJMeterProperties(res)
+
         val instance = ActionRouter.getInstance()
         instance.populateCommandMap()
         treeLis.setActionHandler(instance)
         val main = MainFrame(treeModel, treeLis)
-        loadFile(file.toNioPath().toFile())
+        //loadFile(file.toNioPath().toFile())
         return JmeterEditor(project, file, main)
     }
 

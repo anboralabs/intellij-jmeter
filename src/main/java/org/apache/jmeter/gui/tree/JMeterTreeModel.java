@@ -159,7 +159,7 @@ public class JMeterTreeModel extends DefaultTreeModel {
             guiPackage.updateCurrentNode();
             JMeterGUIComponent guicomp = guiPackage.getGui(component);
             if (guicomp != null) {
-                guicomp.clearGui();
+                //guicomp.clearGui();
                 guicomp.configure(component);
                 guicomp.modifyTestElement(component);
                 guiPackage.getCurrentGui(); // put the gui object back

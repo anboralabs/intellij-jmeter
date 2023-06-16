@@ -703,9 +703,9 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
         treevar.addKeyListener(treeListener);
 
         // enable drag&drop, install a custom transfer handler
-        treevar.setDragEnabled(true);
-        treevar.setDropMode(DropMode.ON_OR_INSERT);
-        treevar.setTransferHandler(new JMeterTreeTransferHandler());
+        // treevar.setDragEnabled(true);
+        // treevar.setDropMode(DropMode.ON_OR_INSERT);
+        // treevar.setTransferHandler(new JMeterTreeTransferHandler());
 
         addQuickComponentHotkeys(treevar);
 

@@ -35,6 +35,7 @@ dependencies {
     api("com.fifesoft:rsyntaxtextarea:3.3.3")
 
     api("com.github.weisj:darklaf-core:2.7.3")
+    api("com.github.weisj:darklaf-theme:2.7.3")
     api("com.github.weisj:darklaf-extensions-rsyntaxarea:0.3.4")
     api("com.github.weisj:darklaf-property-loader:2.7.3")
 
