@@ -44,6 +44,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.openapi.extensions.PluginId;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jmeter.gui.GuiPackage;

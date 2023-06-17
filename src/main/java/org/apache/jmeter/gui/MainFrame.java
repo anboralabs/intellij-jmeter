@@ -17,14 +17,7 @@
 
 package org.apache.jmeter.gui;
 
-import java.awt.AWTEvent;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -522,9 +515,10 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
      */
     private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
         menuBar = new JMeterMenuBar();
+        setLayout(new GridLayout());
         //setJMenuBar(menuBar);
         //JPanel all = new JPanel();
-        //all.add(createToolBar(), BorderLayout.NORTH);
+        //add(createToolBar(), BorderLayout.NORTH);
 
         JSplitPane treeAndMain = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -549,10 +543,10 @@ public class MainFrame extends JPanel implements TestStateListener, Remoteable, 
         GuiPackage.getInstance().getLogEventBus().registerEventListener(logPanel);
         GuiPackage.getInstance().getLogEventBus().registerEventListener(errorsAndFatalsCounterLogTarget);
 
-        topAndDown.setTopComponent(mainPanel);
-        topAndDown.setBottomComponent(logPanel);
+        //topAndDown.setTopComponent(mainPanel);
+        //topAndDown.setBottomComponent(logPanel);
 
-        treeAndMain.setRightComponent(topAndDown);
+        treeAndMain.setRightComponent(mainPanel);
 
         treeAndMain.setResizeWeight(.2);
         treeAndMain.setContinuousLayout(true);
