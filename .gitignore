@@ -242,7 +242,7 @@ modules.xml
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-!jmeter-libs/*.jar
+!jmeter-libs/**.jar
 
 # Package Files #
 *.jar
