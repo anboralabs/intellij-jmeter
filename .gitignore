@@ -242,8 +242,6 @@ modules.xml
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-!jmeter-libs/**.jar
-
 # Package Files #
 *.jar
 *.war
@@ -310,6 +308,8 @@ Temporary Items
 
 # Ignore Gradle GUI config
 gradle-app.setting
+
+!jmeter-libs/**.jar
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
