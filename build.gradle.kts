@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.8.21"
-    id("org.jetbrains.intellij") version "1.13.3"
+    id("org.jetbrains.intellij") version "1.14.1"
 }
 
 group = "co.anbora.labs.jmeter"
@@ -86,6 +86,8 @@ dependencies {
     api("xerces:xercesImpl:2.12.2")
     api("xml-apis:xml-apis:1.4.01")
     api("xmlpull:xmlpull:1.1.3.1")
+
+    implementation(fileTree(mapOf("dir" to "jmeter-libs", "include" to listOf("*.jar"))))
 }
 
 // Configure Gradle IntelliJ Plugin
