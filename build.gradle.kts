@@ -20,12 +20,6 @@ dependencies {
     // compilation classpath (e.g. it is used as a transitive by a third-party library)
     // then it should be declared as "api" here since we use useCompileClasspathVersions
     // to make runtime classpath consistent with the compile one.
-    implementation("org.apache.jmeter:ApacheJMeter_java:5.4.3") {
-        exclude("org.apache.jmeter", "bom")
-    }
-    implementation("org.apache.jmeter:ApacheJMeter_components:5.4.3") {
-        exclude("org.apache.jmeter", "bom")
-    }
 
     implementation("commons-io:commons-io:2.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.1")
@@ -67,6 +61,7 @@ dependencies {
     api("org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1")
 
     api("org.apache.logging.log4j:log4j-core:2.20.0")
+    api("org.apache.logging.log4j:log4j-slf4j-impl:2.20.0")
 
     api("org.apache.tika:tika-core:1.28.5")
 
@@ -88,8 +83,9 @@ dependencies {
     api("oro:oro:2.0.8")
     api("xalan:serializer:2.7.3")
     api("xalan:xalan:2.7.3")
-
+    api("xerces:xercesImpl:2.12.2")
     api("xml-apis:xml-apis:1.4.01")
+    api("xmlpull:xmlpull:1.1.3.1")
 }
 
 // Configure Gradle IntelliJ Plugin
