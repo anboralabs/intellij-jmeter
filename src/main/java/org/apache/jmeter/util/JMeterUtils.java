@@ -44,6 +44,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import co.anbora.labs.jmeter.ide.settings.PathHomeConfig;
+import co.anbora.labs.jmeter.ide.settings.Settings;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.extensions.PluginId;
 import org.apache.commons.lang3.StringUtils;
@@ -420,7 +422,12 @@ public class JMeterUtils implements UnitTestManager {
             result = new String[paths.length + 1];
             System.arraycopy(paths, 0, result, 1, paths.length);
         }
-        result[0] = getJMeterHome() + "/lib/ext"; // $NON-NLS-1$
+        PathHomeConfig pathConfig = Settings.INSTANCE.getSelectedJmeterPath();
+        if (pathConfig == PathHomeConfig.EXTERNAL) {
+            result[0] = getJMeterHome() + "/lib/ext"; // $NON-NLS-1$
+        } else {
+            result[0] = Settings.INSTANCE.getPLUGIN_PATH();
+        }
         return result;
     }
 

@@ -1,6 +1,8 @@
 package co.anbora.labs.jmeter.fileTypes
 
 import co.anbora.labs.jmeter.ide.icons.JmeterIcons
+import co.anbora.labs.jmeter.ide.settings.Settings
+import co.anbora.labs.jmeter.ide.settings.Settings.OPTION_KEY_JMETER_PATH
 import com.intellij.openapi.fileTypes.UserBinaryFileType
 import org.apache.jmeter.JMeter
 import org.apache.jmeter.plugin.PluginManager
@@ -20,7 +22,7 @@ object JmxFileType: UserBinaryFileType() {
     init {
         PluginManager.install(JMeter(), true)
         JMeterUtils.setLocale(Locale.US)
-        JMeterUtils.setJMeterHome(System.getenv("JMETER_HOME"))
+        JMeterUtils.setJMeterHome(Settings[OPTION_KEY_JMETER_PATH])
         JMeterUtils.loadJMeterProperties(res)
         JMeterUtils.applyHiDPIOnFonts()
         JMeterUIDefaults.INSTANCE.install()

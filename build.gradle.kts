@@ -5,22 +5,13 @@ plugins {
 }
 
 group = "co.anbora.labs.jmeter"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // api means "the dependency is for both compilation and runtime"
-    // runtime means "the dependency is only for runtime, not for compilation"
-    // In other words, marking dependency as "runtime" would avoid accidental
-    // dependency on it during compilation
-    // Note: if there's at least single chance for the dependency to be needed on the
-    // compilation classpath (e.g. it is used as a transitive by a third-party library)
-    // then it should be declared as "api" here since we use useCompileClasspathVersions
-    // to make runtime classpath consistent with the compile one.
-
     implementation("commons-io:commons-io:2.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.1")
 
@@ -96,7 +87,7 @@ intellij {
     version.set("2022.2.5")
     type.set("IC") // Target IDE Platform
 
-    plugins.set(listOf(/* Plugin Dependencies */))
+    plugins.set(listOf())
 }
 
 tasks {
@@ -112,12 +103,8 @@ tasks {
     patchPluginXml {
         sinceBuild.set("222")
         untilBuild.set("232.*")
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+        changeNotes.set(file("src/main/html/change-notes.html").inputStream().readBytes().toString(Charsets.UTF_8))
+        pluginDescription.set(file("src/main/html/description.html").inputStream().readBytes().toString(Charsets.UTF_8))
     }
 
     publishPlugin {
