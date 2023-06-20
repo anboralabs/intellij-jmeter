@@ -39,8 +39,9 @@ public class UnzipUtility {
         ZipEntry entry = zipIn.getNextEntry();
         // iterates over entries in the zip file
         while (entry != null) {
-            while (entry.getName().startsWith("__MACOSX")) {
+            if (entry.getName().startsWith("__MACOSX")) {
                 entry = zipIn.getNextEntry();
+                continue;
             }
             String filePath = destDirectory + File.separator + entry.getName();
             if (!entry.isDirectory()) {

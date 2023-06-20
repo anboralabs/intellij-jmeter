@@ -25,7 +25,7 @@ object JmxFileType: UserBinaryFileType() {
         JMeterUtils.setJMeterHome(Settings[OPTION_KEY_JMETER_PATH])
         JMeterUtils.loadJMeterProperties(res)
         JMeterUtils.applyHiDPIOnFonts()
-        JMeterUIDefaults.INSTANCE.install()
+        //JMeterUIDefaults.INSTANCE.install()
     }
 
     override fun getName(): String = FILETYPE_NAME

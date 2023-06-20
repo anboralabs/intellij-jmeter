@@ -243,11 +243,11 @@ public class JMeterTreeListener implements TreeSelectionListener, MouseListener,
     }
 
     private void displayPopUp(MouseEvent e) {
-        JPopupMenu pop = getCurrentNode().createPopupMenu();
+        // JPopupMenu pop = getCurrentNode().createPopupMenu();
         // invokeLater ensures popup does not disappear when user right-clicks an inactive node
         // In other words: right-click different nodes and verify if menu is shown every time.
         // invokeLater seems to be required as long as tree.requestFocusInWindow(); is used
         // in valueChanged
-        SwingUtilities.invokeLater(() -> GuiPackage.getInstance().displayPopUp(e, pop));
+        // SwingUtilities.invokeLater(() -> GuiPackage.getInstance().displayPopUp(e, pop));
     }
 }

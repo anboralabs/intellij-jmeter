@@ -134,8 +134,8 @@ public class JFactory {
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JLabel error(JLabel component) {
         return STYLE.withDynamic(component, c -> {
-            c.setFont(UIManager.getFont(JMeterUIDefaults.LABEL_ERROR_FONT));
-            c.setForeground(UIManager.getColor(JMeterUIDefaults.LABEL_ERROR_FOREGROUND));
+            // c.setFont(UIManager.getFont(JMeterUIDefaults.LABEL_ERROR_FONT));
+            // c.setForeground(UIManager.getColor(JMeterUIDefaults.LABEL_ERROR_FOREGROUND));
         });
     }
 

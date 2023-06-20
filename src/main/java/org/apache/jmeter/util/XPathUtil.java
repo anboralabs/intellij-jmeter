@@ -518,7 +518,7 @@ public class XPathUtil {
      * @throws XMLStreamException on problematic xml
      * @throws FactoryConfigurationError when no xml input factory can be established
      */
-    public static List<String[]> getNamespaces(String xml)
+    /*public static List<String[]> getNamespaces(String xml)
             throws XMLStreamException, FactoryConfigurationError{
         List<String[]> res= new ArrayList<>();
         XMLStreamReader reader;
@@ -533,7 +533,7 @@ public class XPathUtil {
             }
         }
         return res;
-    }
+    }*/
 
     private static void addToList(XMLStreamReader reader, List<String[]> res) {
         boolean isInList = false;

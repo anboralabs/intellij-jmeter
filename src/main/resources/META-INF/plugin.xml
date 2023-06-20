@@ -19,6 +19,10 @@
         <fileType name="Jmeter" implementationClass="co.anbora.labs.jmeter.fileTypes.JmxFileType"
                   fieldName="INSTANCE" extensions="jmx"/>
         <fileEditorProvider implementation="co.anbora.labs.jmeter.ide.editor.JmeterEditorProvider"/>
-        <preloadingActivity implementation="co.anbora.labs.jmeter.ide.startup.InitConfigFiles"/>
     </extensions>
+
+    <applicationListeners>
+        <listener class="co.anbora.labs.jmeter.ide.startup.InitConfigFiles"
+                  topic="com.intellij.openapi.application.ApplicationActivationListener" />
+    </applicationListeners>
 </idea-plugin>

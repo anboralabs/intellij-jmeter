@@ -21,7 +21,6 @@ import com.thoughtworks.xstream.converters.ConversionException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.swing.Swing
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
 import org.apache.jmeter.gui.GuiPackage
@@ -64,9 +63,9 @@ public object JMeterGuiLauncher {
 
         runBlocking {
             // See https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md
-            launch(Dispatchers.Swing) {
+            //launch(Dispatchers.Swing) {
                 //startGuiInternal(testFile)
-            }
+            //}
         }
     }
 
