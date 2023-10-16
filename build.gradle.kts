@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "co.anbora.labs.jmeter"
-version = "1.2.0"
+version = "1.2.1"
 
 repositories {
     mavenCentral()
@@ -91,7 +91,7 @@ apply {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2022.2.5")
+    version.set("LATEST-EAP-SNAPSHOT")
     type.set("IC") // Target IDE Platform
     downloadSources.set(true)
     plugins.set(listOf())
