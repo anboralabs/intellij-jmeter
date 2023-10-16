@@ -24,7 +24,7 @@ object JmxFileType: UserBinaryFileType() {
         JMeterUtils.setLocale(Locale.US)
         JMeterUtils.setJMeterHome(Settings[OPTION_KEY_JMETER_PATH])
         JMeterUtils.loadJMeterProperties(res)
-        JMeterUtils.applyHiDPIOnFonts()
+        //JMeterUtils.applyHiDPIOnFonts()
         //JMeterUIDefaults.INSTANCE.install()
     }
 
