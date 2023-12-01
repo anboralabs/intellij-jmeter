@@ -25,4 +25,14 @@
         <listener class="co.anbora.labs.jmeter.ide.startup.InitConfigFiles"
                   topic="com.intellij.openapi.application.ApplicationActivationListener" />
     </applicationListeners>
+
+    <actions>
+        <action
+                id="co.anbora.labs.jmeter.ide.actions.PluginManagerDialogAction"
+                class="co.anbora.labs.jmeter.ide.actions.PluginManagerDialogAction"
+                text="Jmeter Plugin Manager"
+                description="Show plugin manager">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
