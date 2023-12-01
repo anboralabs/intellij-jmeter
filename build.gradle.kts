@@ -80,6 +80,8 @@ dependencies {
     implementation("xml-apis:xml-apis:1.4.01")
     implementation("xmlpull:xmlpull:1.1.3.1")
 
+    implementation("net.sf.json-lib:json-lib:2.4:jdk15")
+
     implementation(fileTree(mapOf("dir" to "jmeter-libs", "include" to listOf("*.jar"))))
 }
 
