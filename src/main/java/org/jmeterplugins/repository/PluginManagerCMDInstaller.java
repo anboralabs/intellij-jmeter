@@ -14,7 +14,8 @@ public class PluginManagerCMDInstaller {
     }
 
     private static void writeOut(String resName, boolean executable) throws IOException {
-        String path = PluginManagerCMDInstaller.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+        // String path = PluginManagerCMDInstaller.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+        String path = Plugin.byGetResource(PluginManagerCMDInstaller.class);
         File self = new File(URLDecoder.decode(path, "UTF-8"));
         File src = new File(resName);
         String home = self.getParentFile().getParentFile().getParent();

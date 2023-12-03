@@ -1,5 +1,6 @@
 package org.jmeterplugins.repository;
 
+import co.anbora.labs.jmeter.ide.settings.Settings;
 import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,8 @@ public class ChangesMaker {
     }
 
     private File getTempPmgrJAR() throws IOException {
-        String jarPath = URLDecoder.decode(PluginManager.class.getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8");
+        // String jarPath = URLDecoder.decode(PluginManager.class.getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8");
+        String jarPath = Plugin.byGetResource(PluginManager.class);
         if (!jarPath.endsWith(".jar")) {
             log.warn("Suspicious JAR path detected: " + jarPath);
         }
@@ -139,14 +141,11 @@ public class ChangesMaker {
     }
 
     protected String generateLibPath(String libName) throws UnsupportedEncodingException {
-        String file = this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-        File libPath = new File(file).getParentFile();
-        File libPathParent = libPath.getParentFile();
-        if (Files.isWritable(libPathParent.getAbsoluteFile().toPath())) {
-            return URLDecoder.decode(libPathParent.getAbsolutePath(), "UTF-8") + File.separator + libName;
-        }
+        // String file = this.getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
+        File libPathParent = new File(Settings.INSTANCE.getPLUGIN_PATH());
+        Files.isWritable(libPathParent.getAbsoluteFile().toPath());
 
-        return URLDecoder.decode(libPath.getAbsolutePath(), "UTF-8") + File.separator + libName;
+        return URLDecoder.decode(libPathParent.getAbsolutePath(), "UTF-8") + File.separator + libName;
     }
 
     public File getMovementsFile(Set<Plugin> deletes, Set<Plugin> installs, Set<Library.InstallationInfo> installLibs, Set<String> libDeletions) throws IOException {

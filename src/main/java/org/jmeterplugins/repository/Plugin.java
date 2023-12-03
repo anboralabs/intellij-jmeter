@@ -1,6 +1,7 @@
 package org.jmeterplugins.repository;
 
 
+import co.anbora.labs.jmeter.ide.settings.Settings;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONNull;
 import net.sf.json.JSONObject;
@@ -14,6 +15,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -233,10 +237,30 @@ public class Plugin {
     }
 
     public static String getLibInstallPath(String lib) {
+        try {
+            List<String> pathsInternal = listFilesUsingDirectoryStream(Settings.INSTANCE.getPLUGIN_PATH());
+            String[] cp2 = pathsInternal.toArray(String[]::new);
+            String path2 = getLibPath(lib, cp2);
+            if (path2 != null) return path2;
+        } catch (IOException e) {
+            log.debug("Error walking plugin lib path: ");
+        }
+
         String[] cp = System.getProperty(DependencyResolver.JAVA_CLASS_PATH).split(File.pathSeparator);
-        String path = getLibPath(lib, cp);
-        if (path != null) return path;
-        return null;
+        return getLibPath(lib, cp);
+    }
+
+    public static List<String> listFilesUsingDirectoryStream(String dir) throws IOException {
+        List<String> fileSet = new LinkedList<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(dir))) {
+            for (Path path : stream) {
+                if (!Files.isDirectory(path)) {
+                    fileSet.add(path.toAbsolutePath()
+                            .toString());
+                }
+            }
+        }
+        return fileSet;
     }
 
     public static String getLibPath(String lib, String[] paths) {
@@ -283,7 +307,8 @@ public class Plugin {
 
         JARSource.DownloadResult dwn = jarSource.getJAR(id, location, notify);
         tempName = dwn.getTmpFile();
-        File f = new File(JMeterEngine.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+        // File f = new File(JMeterEngine.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+        File f = new File(Plugin.byGetResource(JMeterEngine.class));
         destName = URLDecoder.decode(f.getParent(), "UTF-8") + File.separator + dwn.getFilename();
     }
 
