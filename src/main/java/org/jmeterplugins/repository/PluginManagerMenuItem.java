@@ -1,5 +1,7 @@
 package org.jmeterplugins.repository;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.ProjectManager;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.MainFrame;
 import org.apache.jmeter.gui.util.JMeterToolBar;
@@ -98,10 +100,10 @@ public class PluginManagerMenuItem extends JMenuItem implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (dialog == null) {
-            dialog = new PluginManagerDialog(mgr);
+            dialog = new PluginManagerDialog(ProjectManager.getInstance().getDefaultProject(), mgr);
         }
 
         dialog.pack();
-        dialog.setVisible(true);
+        dialog.show();
     }
 }

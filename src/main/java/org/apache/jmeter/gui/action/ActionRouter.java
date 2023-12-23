@@ -327,7 +327,8 @@ public final class ActionRouter implements ActionListener {
             Collection<Command> commandServices = List.of(
                     new Load(),
                     new CheckDirty(),
-                    new EditCommand()
+                    new EditCommand(),
+                    new ExitIDECommand()
             );
 
             if (commandServices.isEmpty()) {

@@ -1,10 +1,17 @@
 package org.jmeterplugins.repository;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.DialogWrapper;
+import com.intellij.openapi.wm.WindowManager;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.action.ActionNames;
 import org.apache.jmeter.gui.action.ActionRouter;
+import org.apache.jmeter.gui.action.KeyStrokes;
 import org.apache.jmeter.gui.util.EscapeDialog;
 import org.apache.jorphan.gui.ComponentUtil;
+import org.jetbrains.annotations.Nullable;
+import org.jmeterplugins.gui.JEscDialog;
 import org.jmeterplugins.repository.exception.DownloadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +30,9 @@ import java.awt.event.ComponentListener;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
+import java.util.Objects;
 
-public class PluginManagerDialog extends EscapeDialog implements ActionListener, ComponentListener, HyperlinkListener {
+public class PluginManagerDialog extends JEscDialog implements ActionListener, ComponentListener, HyperlinkListener {
     /**
      *
      */
@@ -44,16 +52,19 @@ public class PluginManagerDialog extends EscapeDialog implements ActionListener,
     private final ChangeListener cbNotifier;
     private final ChangeListener cbUpgradeNotifier;
 
-    public PluginManagerDialog(PluginManager aManager) {
-        super((JFrame) null, "JMeter Plugins Manager", true);
-        setLayout(new BorderLayout());
-        addComponentListener(this);
+    public PluginManagerDialog(Project project, PluginManager aManager) {
+        super(project, IdeModalityType.IDE);
+        setTitle("JMeter Plugins Manager");
+        init();
+
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().addComponentListener(this);
         manager = aManager;
         Dimension size = new Dimension(1024, 768);
-        setSize(size);
-        setPreferredSize(size);
-        setIconImage(PluginIcon.getPluginFrameIcon(manager.hasAnyUpdates(), this));
-        ComponentUtil.centerComponentInWindow(this);
+        getContentPane().setSize(size);
+        getContentPane().setPreferredSize(size);
+        // root.setIconImage(PluginIcon.getPluginFrameIcon(manager.hasAnyUpdates(), this));
+        ComponentUtil.centerComponentInWindow(getRootPane());
 
         failureLabel.setContentType("text/html");
         failureLabel.addHyperlinkListener(this);
@@ -110,7 +121,7 @@ public class PluginManagerDialog extends EscapeDialog implements ActionListener,
         topAndDown.setTopComponent(getTabsPanel());
 
         topAndDown.setBottomComponent(getBottomPanel());
-        add(topAndDown, BorderLayout.CENTER);
+        getContentPane().add(topAndDown, BorderLayout.CENTER);
         statusRefresh.notify(this); // to reflect upgrades
     }
 
@@ -137,7 +148,7 @@ public class PluginManagerDialog extends EscapeDialog implements ActionListener,
                         " <br><br>Error's technical details: <pre>" + text.toString() + "</pre><br>";
                 failureLabel.setText("<html>" + msg + "</html>");
                 failureLabel.setEditable(false);
-                add(failureScrollPane, BorderLayout.CENTER);
+                getContentPane().add(failureScrollPane, BorderLayout.CENTER);
                 failureLabel.setCaretPosition(0);
             }
         }
@@ -179,6 +190,22 @@ public class PluginManagerDialog extends EscapeDialog implements ActionListener,
         return panel;
     }
 
+    private int getWidth() {
+        try {
+            return Objects.requireNonNull(WindowManager.getInstance().findVisibleFrame()).getWidth();
+        } catch (NullPointerException ex) {
+            return 500;
+        }
+    }
+
+    private int getHeight() {
+        try {
+            return Objects.requireNonNull(WindowManager.getInstance().findVisibleFrame()).getHeight();
+        } catch (NullPointerException ex) {
+            return 500;
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         statusLabel.setForeground(Color.BLACK);
@@ -191,13 +218,9 @@ public class PluginManagerDialog extends EscapeDialog implements ActionListener,
                     @Override
                     public void notify(final String s) {
                         SwingUtilities.invokeLater(
-                                new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        statusLabel.setText(s);
-                                        repaint();
-                                    }
+                                () -> {
+                                    statusLabel.setText(s);
+                                    repaint();
                                 });
                     }
                 };
