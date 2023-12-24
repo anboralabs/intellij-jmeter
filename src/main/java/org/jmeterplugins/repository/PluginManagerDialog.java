@@ -1,16 +1,11 @@
 package org.jmeterplugins.repository;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.wm.WindowManager;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.action.ActionNames;
 import org.apache.jmeter.gui.action.ActionRouter;
-import org.apache.jmeter.gui.action.KeyStrokes;
-import org.apache.jmeter.gui.util.EscapeDialog;
 import org.apache.jorphan.gui.ComponentUtil;
-import org.jetbrains.annotations.Nullable;
 import org.jmeterplugins.gui.JEscDialog;
 import org.jmeterplugins.repository.exception.DownloadException;
 import org.slf4j.Logger;
@@ -31,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 public class PluginManagerDialog extends JEscDialog implements ActionListener, ComponentListener, HyperlinkListener {
     /**
@@ -170,7 +166,7 @@ public class PluginManagerDialog extends JEscDialog implements ActionListener, C
         JPanel panel = new JPanel(new BorderLayout());
 
         JPanel modifsPanel = new JPanel(new BorderLayout());
-        modifsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, getHeight() / 3));
+        modifsPanel.setMaximumSize(new Dimension(getHeight(), getHeight() / 3));
         modifsPanel.setPreferredSize(new Dimension(getWidth(), getHeight() / 3));
         modifsPanel.setBorder(SPACING);
         modifsPanel.setBorder(BorderFactory.createTitledBorder("Review Changes"));
@@ -185,6 +181,8 @@ public class PluginManagerDialog extends JEscDialog implements ActionListener, C
         btnPanel.add(apply, BorderLayout.EAST);
         btnPanel.add(statusLabel, BorderLayout.CENTER);
         panel.add(btnPanel, BorderLayout.SOUTH);
+
+        getRootPane().setDefaultButton(apply);
 
         apply.addActionListener(this);
         return panel;
@@ -210,41 +208,38 @@ public class PluginManagerDialog extends JEscDialog implements ActionListener, C
     public void actionPerformed(ActionEvent e) {
         statusLabel.setForeground(Color.BLACK);
         enableComponents(false);
-        new Thread() {
-            @Override
-            public void run() {
-                // FIXME: what to do when user presses "cancel" on save test plan dialog?
-                GenericCallback<String> statusChanged = new GenericCallback<String>() {
-                    @Override
-                    public void notify(final String s) {
-                        SwingUtilities.invokeLater(
-                                () -> {
-                                    statusLabel.setText(s);
-                                    repaint();
-                                });
-                    }
-                };
-                try {
-                    LinkedList<String> options = null;
-                    String testPlan = GuiPackage.getInstance().getTestPlanFile();
-                    if (testPlan != null) {
-                        options = new LinkedList<>();
-                        options.add("-t");
-                        options.add(testPlan);
-                    }
-                    manager.applyChanges(statusChanged, true, options);
-                    ActionRouter.getInstance().actionPerformed(new ActionEvent(this, 0, ActionNames.EXIT));
-                } catch (DownloadException ex) {
+
+        // FIXME: what to do when user presses "cancel" on save test plan dialog?
+        GenericCallback<String> statusChanged = s -> SwingUtilities.invokeLater(
+                () -> {
+                    statusLabel.setText(s);
+                    repaint();
+                });
+
+        CompletableFuture.runAsync(() -> {
+            LinkedList<String> options = null;
+            String testPlan = GuiPackage.getInstance().getTestPlanFile();
+            if (testPlan != null) {
+                options = new LinkedList<>();
+                options.add("-t");
+                options.add(testPlan);
+            }
+            manager.applyChanges(statusChanged, true, options);
+            ActionRouter.getInstance().actionPerformed(new ActionEvent(this, 0, ActionNames.EXIT));
+        }).whenComplete((unused, ex) -> {
+            if (ex != null) {
+                if (ex instanceof DownloadException) {
                     enableComponents(true);
                     statusLabel.setForeground(Color.RED);
                     statusChanged.notify("Failed to apply changes: " + ex.getMessage());
-                } catch (Exception ex) {
+                } else {
                     statusLabel.setForeground(Color.RED);
                     statusChanged.notify("Failed to apply changes: " + ex.getMessage());
-                    throw ex;
                 }
+            } else {
+                SwingUtilities.invokeLater(this::closeDialog);
             }
-        }.start();
+        });
     }
 
     private void enableComponents(boolean enable) {
@@ -282,5 +277,10 @@ public class PluginManagerDialog extends JEscDialog implements ActionListener, C
         if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
             PluginsList.openInBrowser(e.getURL().toString());
         }
+    }
+
+    private void closeDialog() {
+        doCancelAction();
+        dispose();
     }
 }
