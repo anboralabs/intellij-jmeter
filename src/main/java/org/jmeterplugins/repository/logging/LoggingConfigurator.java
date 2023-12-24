@@ -13,24 +13,22 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
  */
 public class LoggingConfigurator {
 
+  public LoggingConfigurator() { configure(); }
 
+  public void configure() {
+    PatternLayout.Builder patternBuilder = PatternLayout.newBuilder();
+    patternBuilder.withPattern("%d %p %c{1.}: %m%n");
+    PatternLayout layout = patternBuilder.build();
 
-    public LoggingConfigurator() {
-        configure();
-    }
+    ConsoleAppender consoleAppender =
+        ConsoleAppender.createDefaultAppenderForLayout(layout);
+    consoleAppender.start();
 
-    public void configure() {
-        PatternLayout.Builder patternBuilder = PatternLayout.newBuilder();
-        patternBuilder.withPattern("%d %p %c{1.}: %m%n");
-        PatternLayout layout = patternBuilder.build();
+    Configuration configuration =
+        ((LoggerContext)LogManager.getContext(false)).getConfiguration();
 
-        ConsoleAppender consoleAppender = ConsoleAppender.createDefaultAppenderForLayout(layout);
-        consoleAppender.start();
-
-        Configuration configuration = ((LoggerContext) LogManager.getContext(false)).getConfiguration();
-
-        LoggerConfig rootLogger = configuration.getRootLogger();
-        rootLogger.setLevel(Level.INFO);
-        rootLogger.addAppender(consoleAppender, Level.INFO, null);
-    }
+    LoggerConfig rootLogger = configuration.getRootLogger();
+    rootLogger.setLevel(Level.INFO);
+    rootLogger.addAppender(consoleAppender, Level.INFO, null);
+  }
 }

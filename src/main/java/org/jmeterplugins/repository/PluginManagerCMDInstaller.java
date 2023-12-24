@@ -8,22 +8,26 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 public class PluginManagerCMDInstaller {
-    public static void main(String[] argv) throws IOException {
-        writeOut("/org/jmeterplugins/repository/PluginsManagerCMD.bat", false);
-        writeOut("/org/jmeterplugins/repository/PluginsManagerCMD.sh", true);
-    }
+  public static void main(String[] argv) throws IOException {
+    writeOut("/org/jmeterplugins/repository/PluginsManagerCMD.bat", false);
+    writeOut("/org/jmeterplugins/repository/PluginsManagerCMD.sh", true);
+  }
 
-    private static void writeOut(String resName, boolean executable) throws IOException {
-        // String path = PluginManagerCMDInstaller.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-        String path = Plugin.byGetResource(PluginManagerCMDInstaller.class);
-        File self = new File(URLDecoder.decode(path, "UTF-8"));
-        File src = new File(resName);
-        String home = self.getParentFile().getParentFile().getParent();
-        File dest = new File(home + File.separator + "bin" + File.separator + src.getName());
+  private static void writeOut(String resName, boolean executable)
+      throws IOException {
+    // String path =
+    // PluginManagerCMDInstaller.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+    String path = Plugin.byGetResource(PluginManagerCMDInstaller.class);
+    File self = new File(URLDecoder.decode(path, "UTF-8"));
+    File src = new File(resName);
+    String home = self.getParentFile().getParentFile().getParent();
+    File dest = new File(home + File.separator + "bin" + File.separator +
+                         src.getName());
 
-        try (InputStream is = PluginManagerCMDInstaller.class.getResourceAsStream(resName);) {
-            Files.copy(is, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            dest.setExecutable(executable);
-        }
+    try (InputStream is =
+             PluginManagerCMDInstaller.class.getResourceAsStream(resName);) {
+      Files.copy(is, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      dest.setExecutable(executable);
     }
+  }
 }
