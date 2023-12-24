@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "co.anbora.labs.jmeter"
-version = "1.2.2"
+version = "1.2.3"
 
 repositories {
     mavenCentral()
@@ -80,6 +80,8 @@ dependencies {
     implementation("xml-apis:xml-apis:1.4.01")
     implementation("xmlpull:xmlpull:1.1.3.1")
 
+    implementation("net.sf.json-lib:json-lib:2.4:jdk15")
+
     implementation(fileTree(mapOf("dir" to "jmeter-libs", "include" to listOf("*.jar"))))
 }
 
@@ -108,7 +110,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("231")
+        sinceBuild.set("232")
         untilBuild.set("233.*")
         changeNotes.set(file("src/main/html/change-notes.html").inputStream().readBytes().toString(Charsets.UTF_8))
         pluginDescription.set(file("src/main/html/description.html").inputStream().readBytes().toString(Charsets.UTF_8))
