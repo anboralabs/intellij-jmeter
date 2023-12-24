@@ -21,57 +21,50 @@ import com.google.auto.service.AutoService;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.updateSettings.impl.IdeRestartKt;
+import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.*;
 import kotlin.Unit;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.util.JMeterUtils;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
-
 @AutoService(Command.class)
 public class ExitIDECommand extends AbstractActionWithNoRunningTest {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.EXIT);
-    }
+  static { commands.add(ActionNames.EXIT); }
 
-    /**
-     * Constructor for the ExitCommand object
-     */
-    public ExitIDECommand() {
-    }
+  /**
+   * Constructor for the ExitCommand object
+   */
+  public ExitIDECommand() {}
 
-    /**
-     * Gets the ActionNames attribute of the ExitCommand object
-     *
-     * @return The ActionNames value
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * Gets the ActionNames attribute of the ExitCommand object
+   *
+   * @return The ActionNames value
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    /**
-     * Description of the Method
-     *
-     * @param e
-     *            Description of Parameter
-     */
-    @Override
-    public void doActionAfterCheck(ActionEvent e) {
-        ApplicationManager.getApplication().invokeLater(() -> {
-            IdeRestartKt.restartOrNotify(
-                    ProjectManager.getInstance().getDefaultProject(),
-                    false,
-                    () -> {
-                        ApplicationManager.getApplication().restart();
-                        return Unit.INSTANCE;
-                    }
-            );
-        });
-    }
+  /**
+   * Description of the Method
+   *
+   * @param e
+   *            Description of Parameter
+   */
+  @Override
+  public void doActionAfterCheck(ActionEvent e) {
+    ApplicationManager.getApplication().invokeLater(() -> {
+      IdeRestartKt.restartOrNotify(
+          ProjectManager.getInstance().getDefaultProject(), false, () -> {
+            ApplicationManager.getApplication().restart();
+            return Unit.INSTANCE;
+          });
+    });
+  }
 }

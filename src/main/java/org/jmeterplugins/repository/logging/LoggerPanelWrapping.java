@@ -7,18 +7,16 @@ import org.jmeterplugins.repository.plugins.PluginSuggester;
 
 public class LoggerPanelWrapping extends LoggerPanel {
 
-    protected PluginSuggester suggester;
+  protected PluginSuggester suggester;
 
-    public LoggerPanelWrapping(PluginManager mgr) {
-        super();
-        this.suggester = new PluginSuggester(mgr);
-    }
+  public LoggerPanelWrapping(PluginManager mgr) {
+    super();
+    this.suggester = new PluginSuggester(mgr);
+  }
 
-    public PluginSuggester getSuggester() {
-        return suggester;
-    }
+  public PluginSuggester getSuggester() { return suggester; }
 
-    public void setSuggester(PluginSuggester suggester) {
-        this.suggester = suggester;
-    }
+  public void setSuggester(PluginSuggester suggester) {
+    this.suggester = suggester;
+  }
 }
