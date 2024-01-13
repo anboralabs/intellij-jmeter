@@ -94,7 +94,7 @@ class JmeterHomePathSettings: Configurable {
             .setHorizontalGap(UIUtil.DEFAULT_HGAP)
             .setVerticalGap(UIUtil.DEFAULT_VGAP)
 
-        lintFieldsWrapperBuilder.addLabeledComponent("Jmeter home (JMETER_HOME):", homePathField)
+        lintFieldsWrapperBuilder.addLabeledComponent("JMeter home (JMETER_HOME):", homePathField)
 
         val builder = FormBuilder.createFormBuilder()
             .setHorizontalGap(UIUtil.DEFAULT_HGAP)
@@ -128,5 +128,5 @@ class JmeterHomePathSettings: Configurable {
         globalConfigView.apply()
     }
 
-    override fun getDisplayName(): String = "Jmeter"
+    override fun getDisplayName(): String = "JMeter"
 }
