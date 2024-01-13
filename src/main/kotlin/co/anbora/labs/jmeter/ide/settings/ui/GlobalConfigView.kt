@@ -22,8 +22,8 @@ class GlobalConfigView(val changeListener: Consumer<PathHomeConfig>) {
 
     private fun createUI() {
         val buttonGroup = ButtonGroup()
-        useInternalJmeter = JBRadioButton("Use internal jmeter (Recommended)")
-        useExternalJmeter = JBRadioButton("Set jmeter path")
+        useInternalJmeter = JBRadioButton("Use internal JMeter 5.5.1 (Recommended)")
+        useExternalJmeter = JBRadioButton("Set JMeter path")
 
         buttonGroup.add(useInternalJmeter)
         buttonGroup.add(useExternalJmeter)

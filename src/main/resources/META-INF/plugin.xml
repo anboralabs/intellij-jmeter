@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>co.anbora.labs.jmeter.jmeter-intellij</id>
-    <name>Jmeter Viewer</name>
+    <name>JMeter Viewer</name>
     <vendor email="anboralabs@gmail.com" url="https://labs.anbora.co">Anbora-labs</vendor>
 
     <!-- Product and plugin compatibility requirements.
@@ -13,26 +13,26 @@
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable
                 groupId="tools"
-                displayName="Jmeter"
+                displayName="JMeter"
                 id="preference.JmeterHomeConfigurable"
                 instance="co.anbora.labs.jmeter.ide.settings.ui.JmeterHomePathSettings" />
         <fileType name="Jmeter" implementationClass="co.anbora.labs.jmeter.fileTypes.JmxFileType"
                   fieldName="INSTANCE" extensions="jmx"/>
         <fileEditorProvider implementation="co.anbora.labs.jmeter.ide.editor.JmeterEditorProvider"/>
+        <postStartupActivity implementation="co.anbora.labs.jmeter.ide.startup.InitConfigFiles" />
+        <notificationGroup id="JMeter_Notification" displayType="STICKY_BALLOON"/>
     </extensions>
-
-    <applicationListeners>
-        <listener class="co.anbora.labs.jmeter.ide.startup.InitConfigFiles"
-                  topic="com.intellij.openapi.application.ApplicationActivationListener" />
-    </applicationListeners>
 
     <actions>
         <action
                 id="co.anbora.labs.jmeter.ide.actions.PluginManagerDialogAction"
                 class="co.anbora.labs.jmeter.ide.actions.PluginManagerDialogAction"
-                text="Jmeter Plugin Manager"
+                text="JMeter Plugin Manager"
                 description="Show plugin manager">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
         </action>
+        <action id="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
+                class="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
+                text="Setup" />
     </actions>
 </idea-plugin>
