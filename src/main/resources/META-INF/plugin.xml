@@ -34,5 +34,8 @@
         <action id="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
                 class="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
                 text="Setup" />
+        <action id="co.anbora.labs.jmeter.ide.actions.RestartIDEAction"
+                class="co.anbora.labs.jmeter.ide.actions.RestartIDEAction"
+                text="Restart" />
     </actions>
 </idea-plugin>
