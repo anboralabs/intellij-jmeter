@@ -24,7 +24,6 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
@@ -62,16 +61,14 @@ public class ExitIDECommand extends AbstractActionWithNoRunningTest {
     Project[] project = ProjectManager.getInstance().getOpenProjects();
 
     Notification notification = JMeterNotifications.createNotification(
-            "JMeter Plugin Setup",
-            "Please restart the IDE",
-            NotificationType.INFORMATION,
-            new RestartIDEAction()
-    );
+        "JMeter Plugin Setup", "Please restart the IDE",
+        NotificationType.INFORMATION, new RestartIDEAction());
 
     if (project.length != 0) {
       JMeterNotifications.showNotification(notification, project[0]);
     } else {
-      JMeterNotifications.showNotification(notification, ProjectManager.getInstance().getDefaultProject());
+      JMeterNotifications.showNotification(
+          notification, ProjectManager.getInstance().getDefaultProject());
     }
   }
 }
