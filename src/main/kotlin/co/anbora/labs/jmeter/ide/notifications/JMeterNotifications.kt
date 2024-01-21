@@ -8,6 +8,8 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.project.Project
 
 object JMeterNotifications {
+
+    @JvmStatic
     fun createNotification(
         title: String,
         content: String,
@@ -27,6 +29,7 @@ object JMeterNotifications {
         return notification
     }
 
+    @JvmStatic
     fun showNotification(notification: Notification, project: Project?) {
         try {
             notification.notify(project)

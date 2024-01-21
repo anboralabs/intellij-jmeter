@@ -17,17 +17,16 @@
 
 package org.apache.jmeter.gui.action;
 
+import co.anbora.labs.jmeter.ide.actions.RestartIDEAction;
+import co.anbora.labs.jmeter.ide.notifications.JMeterNotifications;
 import com.google.auto.service.AutoService;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.updateSettings.impl.IdeRestartKt;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.*;
-import kotlin.Unit;
-import org.apache.jmeter.gui.GuiPackage;
-import org.apache.jmeter.util.JMeterUtils;
 
 @AutoService(Command.class)
 public class ExitIDECommand extends AbstractActionWithNoRunningTest {
@@ -59,12 +58,17 @@ public class ExitIDECommand extends AbstractActionWithNoRunningTest {
    */
   @Override
   public void doActionAfterCheck(ActionEvent e) {
-    ApplicationManager.getApplication().invokeLater(() -> {
-      IdeRestartKt.restartOrNotify(
-          ProjectManager.getInstance().getDefaultProject(), false, () -> {
-            ApplicationManager.getApplication().restart();
-            return Unit.INSTANCE;
-          });
-    });
+    Project[] project = ProjectManager.getInstance().getOpenProjects();
+
+    Notification notification = JMeterNotifications.createNotification(
+        "JMeter Plugin Setup", "Please restart the IDE",
+        NotificationType.INFORMATION, new RestartIDEAction());
+
+    if (project.length != 0) {
+      JMeterNotifications.showNotification(notification, project[0]);
+    } else {
+      JMeterNotifications.showNotification(
+          notification, ProjectManager.getInstance().getDefaultProject());
+    }
   }
 }
