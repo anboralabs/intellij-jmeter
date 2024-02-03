@@ -11,3 +11,4 @@ plugins {
 rootProject.name = "jmeter-intellij"
 include("jorphan")
 include("core")
+include("launcher")

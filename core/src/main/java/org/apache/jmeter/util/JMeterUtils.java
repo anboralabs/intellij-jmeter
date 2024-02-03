@@ -1148,7 +1148,7 @@ public class JMeterUtils implements UnitTestManager {
      * @return the JMeter version string
      */
     public static String getJMeterVersion() {
-        return JMeterVersion.getVERSION();
+        return "5.6.3";
     }
 
     /**
@@ -1157,7 +1157,7 @@ public class JMeterUtils implements UnitTestManager {
      * @return the JMeter copyright string
      */
     public static String getJMeterCopyright() {
-        return JMeterVersion.getCopyRight();
+        return "";
     }
 
     /**
