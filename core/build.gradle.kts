@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "org.example"
+group = "co.anbora.labs.jmeter.core"
 version = "1.2.5"
 
 repositories {
@@ -129,8 +129,6 @@ dependencies {
 
     implementation(project(":jorphan"))
     implementation(project(":launcher"))
-
-    implementation("org.apache.jmeter:ApacheJMeter_http:5.6.3")
 }
 
 tasks {

@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm")
 }
 
-group = "org.example"
+group = "co.anbora.labs.jmeter.jorphan"
 version = "1.2.5"
 
 repositories {
