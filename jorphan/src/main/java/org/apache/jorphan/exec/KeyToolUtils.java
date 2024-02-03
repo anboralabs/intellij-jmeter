@@ -140,6 +140,7 @@ public class KeyToolUtils {
         final SystemCommand nativeCommand = new SystemCommand(workingDir, null);
         final List<String> arguments = new ArrayList<>();
         arguments.add(getKeyToolPath());
+        arguments.add("-J-Xmx128m");
         arguments.add("-genkeypair"); // $NON-NLS-1$
         arguments.add("-alias"); // $NON-NLS-1$
         arguments.add(alias);
@@ -345,6 +346,7 @@ public class KeyToolUtils {
         final SystemCommand nativeCommand = new SystemCommand(workingDir, null);
         final List<String> arguments = new ArrayList<>();
         arguments.add(getKeyToolPath());
+        arguments.add("-J-Xmx128m");
         arguments.add("-list"); // $NON-NLS-1$
         arguments.add("-v"); // $NON-NLS-1$
 
@@ -423,6 +425,7 @@ public class KeyToolUtils {
                 new SystemCommand(workingDir, 0L, 0, null, input, output, stdErr);
         final List<String> arguments = new ArrayList<>();
         arguments.add(getKeyToolPath());
+        arguments.add("-J-Xmx128m");
         arguments.add(command);
         arguments.add("-keystore"); // $NON-NLS-1$
         arguments.add(keystore.getName());
@@ -474,6 +477,7 @@ public class KeyToolUtils {
         final SystemCommand nativeCommand = new SystemCommand(null, null);
         final List<String> arguments = new ArrayList<>();
         arguments.add(keytoolPath);
+        arguments.add("-J-Xmx128m");
         arguments.add("-help"); // $NON-NLS-1$
         try {
             int status = nativeCommand.run(arguments);
