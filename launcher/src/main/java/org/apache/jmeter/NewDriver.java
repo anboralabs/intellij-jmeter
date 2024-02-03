@@ -134,6 +134,49 @@ public final class NewDriver {
         loader = createClassLoader(jars);
     }
 
+    public static DynamicClassLoader loadJMeterLibsToPlugin(String jmeterHome, ClassLoader pluginClassLoader) {
+        final List<URL> jars = new ArrayList<>();
+        boolean usesUNC = OS_NAME_LC.startsWith("windows");
+
+        StringBuilder classpath = new StringBuilder();
+        File[] libDirs = new File[] { new File(jmeterHome + File.separator + "lib"),// $NON-NLS-1$ $NON-NLS-2$
+                new File(jmeterHome + File.separator + "lib" + File.separator + "ext"),// $NON-NLS-1$ $NON-NLS-2$
+                new File(jmeterHome + File.separator + "lib" + File.separator + "junit")};// $NON-NLS-1$ $NON-NLS-2$
+        for (File libDir : libDirs) {
+            File[] libJars = libDir.listFiles((dir, name) -> name.endsWith(".jar"));
+            if (libJars == null) {
+                new Throwable("Could not access " + libDir).printStackTrace(); // NOSONAR No logging here
+                continue;
+            }
+            Arrays.sort(libJars); // Bug 50708 Ensure predictable order of jars
+            for (File libJar : libJars) {
+                try {
+                    String s = libJar.getPath();
+
+                    // Fix path to allow the use of UNC URLs
+                    if (usesUNC) {
+                        if (s.startsWith("\\\\") && !s.startsWith("\\\\\\")) {// $NON-NLS-1$ $NON-NLS-2$
+                            s = "\\\\" + s;// $NON-NLS-1$
+                        } else if (s.startsWith("//") && !s.startsWith("///")) {// $NON-NLS-1$ $NON-NLS-2$
+                            s = "//" + s;// $NON-NLS-1$
+                        }
+                    } // usesUNC
+
+                    jars.add(new File(s).toURI().toURL());// See Java bug 4496398
+                    classpath.append(CLASSPATH_SEPARATOR);
+                    classpath.append(s);
+                } catch (MalformedURLException e) { // NOSONAR
+                    EXCEPTIONS_IN_INIT.add(new Exception("Error adding jar:"+libJar.getAbsolutePath(), e));
+                }
+            }
+        }
+
+        // ClassFinder needs the classpath
+        // System.setProperty(JAVA_CLASS_PATH, initiaClasspath + classpath.toString());
+
+        return new DynamicClassLoader(jars.toArray(new URL[jars.size()]), pluginClassLoader);
+    }
+
     @SuppressWarnings("removal")
     private static DynamicClassLoader createClassLoader(List<URL> jars) {
         return java.security.AccessController.doPrivileged(

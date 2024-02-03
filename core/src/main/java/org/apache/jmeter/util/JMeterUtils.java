@@ -65,7 +65,6 @@ import org.apache.jorphan.gui.JFactory;
 import org.apache.jorphan.gui.JMeterUIDefaults;
 import org.apache.jorphan.reflect.ClassFinder;
 import org.apache.jorphan.reflect.ServiceLoadExceptionHandler;
-import org.apache.jorphan.test.UnitTestManager;
 import org.apache.jorphan.util.JMeterError;
 import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.oro.text.MalformedCachePatternException;
@@ -87,7 +86,7 @@ import com.thoughtworks.xstream.security.NoTypePermission;
  * This class contains the static utility methods used by JMeter.
  *
  */
-public class JMeterUtils implements UnitTestManager {
+public class JMeterUtils {
     private static final Logger log = LoggerFactory.getLogger(JMeterUtils.class);
 
     private static final String JMETER_VARS_PREFIX = "__jm__";
@@ -316,10 +315,56 @@ public class JMeterUtils implements UnitTestManager {
         return LazyPatternCacheHolder.INSTANCE.getPattern(expression, options);
     }
 
-    @Override
-    public void initializeProperties(String file) {
-        System.out.println("Initializing Properties: " + file); // NOSONAR intentional
-        getProperties(file);
+    public static void initializeJMeter(String jmeterHome) {
+        System.out.println("Initializing Properties: " + jmeterHome); // NOSONAR intentional
+
+        setJMeterHome(jmeterHome);
+
+        loadJMeterProperties(
+                jmeterHome + File.separator
+                        + "bin" + File.separator // $NON-NLS-1$
+                        + "jmeter.properties"
+        );
+
+        initLocale();
+
+        addUserProperties();
+        addSystemProperties();
+    }
+
+    private static void addSystemProperties() {
+        // Add local system properties, if the file is found
+        String sysProp = JMeterUtils.getPropDefault("system.properties",""); //$NON-NLS-1$
+        if (sysProp.length() > 0){
+            File file = JMeterUtils.findFile(sysProp);
+            if (file.canRead()) {
+                try (FileInputStream fis = new FileInputStream(file)){
+                    log.info("Loading system properties from: {}", file);
+                    System.getProperties().load(fis);
+                } catch (IOException e) {
+                    log.warn("Error loading system property file: {}", sysProp, e);
+                }
+            }
+        }
+    }
+
+    private static void addUserProperties() {
+        Properties jmeterProps = JMeterUtils.getJMeterProperties();
+        // Add local JMeter properties, if the file is found
+        String userProp = JMeterUtils.getPropDefault("user.properties",""); //$NON-NLS-1$
+        if (userProp.length() > 0){ //$NON-NLS-1$
+            File file = JMeterUtils.findFile(userProp);
+            if (file.canRead()){
+                try (FileInputStream fis = new FileInputStream(file)){
+                    log.info("Loading user properties from: {}", file);
+                    Properties tmp = new Properties();
+                    tmp.load(fis);
+                    jmeterProps.putAll(tmp);
+                } catch (IOException e) {
+                    log.warn("Error loading user property file: {}", userProp, e);
+                }
+            }
+        }
     }
 
     /**

@@ -129,6 +129,8 @@ dependencies {
 
     implementation(project(":jorphan"))
     implementation(project(":launcher"))
+
+    implementation("org.apache.jmeter:ApacheJMeter_http:5.6.3")
 }
 
 tasks {

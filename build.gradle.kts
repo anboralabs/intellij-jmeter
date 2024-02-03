@@ -84,6 +84,7 @@ dependencies {
 
     implementation(project(":jorphan"))
     implementation(project(":core"))
+    implementation(project(":launcher"))
 }
 
 apply {
