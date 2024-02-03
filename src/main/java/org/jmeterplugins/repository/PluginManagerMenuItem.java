@@ -1,6 +1,5 @@
 package org.jmeterplugins.repository;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.ProjectManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;

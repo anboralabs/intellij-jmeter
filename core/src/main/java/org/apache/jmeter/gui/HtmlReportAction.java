@@ -55,7 +55,7 @@ public class HtmlReportAction extends AbstractAction implements MenuCreator {
     @Override
     public void doAction(ActionEvent e) throws IllegalUserActionException {
         htmlReportPanel = new HtmlReportUI();
-        htmlReportPanel.showInputDialog(getParentFrame(e));
+        // htmlReportPanel.showInputDialog(getParentFrame(e));
     }
 
     @Override

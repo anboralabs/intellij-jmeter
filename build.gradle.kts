@@ -82,8 +82,8 @@ dependencies {
 
     implementation("net.sf.json-lib:json-lib:2.4:jdk15")
 
-    implementation(project(":core"))
     implementation(project(":jorphan"))
+    implementation(project(":core"))
 
     implementation(fileTree(mapOf("dir" to "jmeter-libs", "include" to listOf("*.jar"))))
 }

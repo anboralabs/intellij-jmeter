@@ -21,9 +21,7 @@ import org.apache.jmeter.gui.tree.JMeterTreeModel
 import org.apache.jmeter.save.SaveService
 import org.apache.jmeter.util.JMeterUtils
 import org.apache.jorphan.collections.HashTree
-import org.apache.jorphan.gui.JMeterUIDefaults
 import java.io.File
-import java.util.*
 
 private const val EDITOR_TYPE_ID = "co.anbora.labs.jmeter.editor"
 

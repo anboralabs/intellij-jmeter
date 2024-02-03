@@ -314,7 +314,12 @@ public final class ActionRouter implements ActionListener {
         if (!commands.isEmpty()) {
             return; // already done
         }
+        Thread currentThread = Thread.currentThread();
+        ClassLoader originalClassLoader = currentThread.getContextClassLoader();
+        ClassLoader pluginClassLoader = this.getClass().getClassLoader();
         try {
+            currentThread.setContextClassLoader(pluginClassLoader);
+
             Collection<Command> commandServices = JMeterUtils.loadServicesAndScanJars(
                     Command.class,
                     ServiceLoader.load(Command.class),
@@ -339,6 +344,8 @@ public final class ActionRouter implements ActionListener {
             }
         } catch (Exception e) {
             log.error("exception finding action handlers", e);
+        } finally {
+            currentThread.setContextClassLoader(originalClassLoader);
         }
     }
 

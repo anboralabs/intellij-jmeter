@@ -107,7 +107,7 @@ public final class MenuFactory {
         try {
             initializeMenus(menuMap, classesToSkip());
             sortMenus(menuMap.values());
-            separateItemsWithExplicitOrder(menuMap.values());
+            // separateItemsWithExplicitOrder(menuMap.values());
         } catch (Error | RuntimeException ex) { // NOSONAR We want to log Errors in jmeter.log
             log.error("Error initializing menus, check configuration if using 3rd party libraries", ex);
             throw ex;
@@ -447,8 +447,8 @@ public final class MenuFactory {
 
     private static JPopupMenu createDefaultPopupMenu() {
         JPopupMenu pop = new JPopupMenu();
-        MenuFactory.addEditMenu(pop, true);
-        MenuFactory.addFileMenu(pop);
+        // MenuFactory.addEditMenu(pop, true);
+        // MenuFactory.addFileMenu(pop);
         return pop;
     }
 

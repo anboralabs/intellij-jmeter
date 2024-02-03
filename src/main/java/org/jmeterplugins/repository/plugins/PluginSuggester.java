@@ -1,13 +1,10 @@
 package org.jmeterplugins.repository.plugins;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.*;
-import org.apache.jmeter.gui.GuiPackage;
-import org.apache.jmeter.gui.MainFrame;
+
 import org.jmeterplugins.repository.Plugin;
 import org.jmeterplugins.repository.PluginManager;
 import org.slf4j.Logger;

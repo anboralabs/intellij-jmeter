@@ -17,80 +17,13 @@
 
 package org.apache.jmeter.gui;
 
-import java.awt.AWTEvent;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Insets;
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.DropMode;
-import javax.swing.ImageIcon;
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTree;
-import javax.swing.KeyStroke;
-import javax.swing.MenuElement;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeCellRenderer;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-
 import org.apache.commons.lang3.StringUtils;
-import org.apache.jmeter.gui.action.ActionNames;
-import org.apache.jmeter.gui.action.ActionRouter;
-import org.apache.jmeter.gui.action.KeyStrokes;
-import org.apache.jmeter.gui.action.LoadDraggedFile;
-import org.apache.jmeter.gui.action.LookAndFeelCommand;
+import org.apache.jmeter.gui.action.*;
 import org.apache.jmeter.gui.logging.GuiLogEventListener;
 import org.apache.jmeter.gui.logging.LogEventObject;
 import org.apache.jmeter.gui.tree.JMeterCellRenderer;
 import org.apache.jmeter.gui.tree.JMeterTreeListener;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
-import org.apache.jmeter.gui.tree.JMeterTreeTransferHandler;
-import org.apache.jmeter.gui.util.EscapeDialog;
 import org.apache.jmeter.gui.util.JMeterMenuBar;
 import org.apache.jmeter.gui.util.JMeterToolBar;
 import org.apache.jmeter.gui.util.MenuFactory;
@@ -101,17 +34,38 @@ import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.TestStateListener;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.util.JMeterUtils;
-import org.apache.jorphan.gui.ComponentUtil;
 import org.apache.jorphan.gui.JMeterUIDefaults;
 import org.apache.jorphan.util.JOrphanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.AbstractAction;
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
+
 /**
  * The main JMeter frame, containing the menu bar, test tree, and an area for
  * JMeter component GUIs.
  */
-public class MainFrame extends JFrame implements TestStateListener, Remoteable, DropTargetListener, Clearable, ActionListener {
+public class MainFrame extends JPanel implements TestStateListener, Remoteable, DropTargetListener, Clearable, ActionListener {
 
     private static final long serialVersionUID = 241L;
 
@@ -231,7 +185,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
         GuiPackage.getInstance().setMainFrame(this);
         init();
         initTopLevelDndHandler();
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        //setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
         int ctrlAltMask = (IS_MAC ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK) |
                 InputEvent.ALT_DOWN_MASK;
@@ -288,9 +242,9 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
      *
      * @deprecated Do not use - only needed for JUnit tests
      */
-    @Deprecated
+    /*@Deprecated
     public MainFrame() {
-    }
+    }*/
 
     // MenuBar related methods
     // TODO: Do we really need to have all these menubar methods duplicated
@@ -332,7 +286,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
      * @param file - the full path to the file that was loaded
      */
     public void setProjectFileLoaded(String file) {
-        menuBar.setProjectFileLoaded(file);
+        //menuBar.setProjectFileLoaded(file);
     }
 
     /**
@@ -342,7 +296,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
      *            the new Edit menu
      */
     public void setEditMenu(JPopupMenu menu) {
-        menuBar.setEditMenu(menu);
+        //menuBar.setEditMenu(menu);
     }
 
     /**
@@ -403,13 +357,13 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
      *            the host where JMeter threads are stopping
      */
     public void showStoppingMessage(String host) {
-        if (stoppingMessage != null){
+        /*if (stoppingMessage != null){
             stoppingMessage.dispose();
         }
         stoppingMessage = new EscapeDialog(this, JMeterUtils.getResString("stopping_test_title"), true); //$NON-NLS-1$
         String label = JMeterUtils.getResString("stopping_test"); //$NON-NLS-1
         if (!StringUtils.isEmpty(host)) {
-            label = label + " " + JMeterUtils.getResString("stopping_test_host") + ": " + host;
+            label = label + JMeterUtils.getResString("stopping_test_host")+ ": " + host;
         }
         JLabel stopLabel = new JLabel(label); //$NON-NLS-1$$NON-NLS-2$
         stopLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -420,7 +374,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
                 if (stoppingMessage != null) {
                     stoppingMessage.setVisible(true);
                 }
-        });
+        });*/
     }
 
     public void updateCounts() {
@@ -517,9 +471,10 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
      */
     private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
         menuBar = new JMeterMenuBar();
-        setJMenuBar(menuBar);
-        JPanel all = new JPanel(new BorderLayout());
-        all.add(createToolBar(), BorderLayout.NORTH);
+        setLayout(new GridLayout());
+        //setJMenuBar(menuBar);
+        //JPanel all = new JPanel();
+        //add(createToolBar(), BorderLayout.NORTH);
 
         JSplitPane treeAndMain = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -544,24 +499,24 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
         GuiPackage.getInstance().getLogEventBus().registerEventListener(logPanel);
         GuiPackage.getInstance().getLogEventBus().registerEventListener(errorsAndFatalsCounterLogTarget);
 
-        topAndDown.setTopComponent(mainPanel);
-        topAndDown.setBottomComponent(logPanel);
+        //topAndDown.setTopComponent(mainPanel);
+        //topAndDown.setBottomComponent(logPanel);
 
-        treeAndMain.setRightComponent(topAndDown);
+        treeAndMain.setRightComponent(mainPanel);
 
         treeAndMain.setResizeWeight(.2);
         treeAndMain.setContinuousLayout(true);
-        all.add(treeAndMain, BorderLayout.CENTER);
+        //all.add(treeAndMain);
 
-        getContentPane().add(all);
+        add(treeAndMain);
 
         tree.setSelectionRow(1);
-        addWindowListener(new WindowHappenings());
+        //addWindowListener(new WindowHappenings());
         // Building is complete, register as listener
         GuiPackage.getInstance().registerAsListener();
-        setTitle(DEFAULT_TITLE);
-        setIconImage(JMeterUtils.getImage("icon-apache.png").getImage());// $NON-NLS-1$
-        setWindowTitle(); // define AWT WM_CLASS string
+        //setTitle(DEFAULT_TITLE);
+        //setIconImage(JMeterUtils.getImage("icon-apache.png").getImage());// $NON-NLS-1$
+        //setWindowTitle(); // define AWT WM_CLASS string
         refreshErrorsTimer.start();
     }
 
@@ -576,14 +531,14 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
     public void setExtendedFrameTitle(String fname) {
         // file New operation may set to null, so just return app name
         if (fname == null) {
-            setTitle(DEFAULT_TITLE);
+            //setTitle(DEFAULT_TITLE);
             return;
         }
 
         // allow for windows / chars in filename
         String temp = fname.replace('\\', '/'); // $NON-NLS-1$ // $NON-NLS-2$
         String simpleName = temp.substring(temp.lastIndexOf('/') + 1);// $NON-NLS-1$
-        setTitle(simpleName + " (" + fname + ") - " + DEFAULT_TITLE); // $NON-NLS-1$ // $NON-NLS-2$
+        //setTitle(simpleName + " (" + fname + ") - " + DEFAULT_TITLE); // $NON-NLS-1$ // $NON-NLS-2$
     }
 
     /**
@@ -645,7 +600,7 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
         loggerPanel.setPreferredSize(new Dimension(0, 150));
         GuiPackage guiInstance = GuiPackage.getInstance();
         guiInstance.setLoggerPanel(loggerPanel);
-        guiInstance.getMenuItemLoggerPanel().getModel().setSelected(DISPLAY_LOGGER_PANEL);
+        //guiInstance.getMenuItemLoggerPanel().getModel().setSelected(DISPLAY_LOGGER_PANEL);
         loggerPanel.setVisible(DISPLAY_LOGGER_PANEL);
         return loggerPanel;
     }
@@ -698,9 +653,9 @@ public class MainFrame extends JFrame implements TestStateListener, Remoteable, 
         treevar.addKeyListener(treeListener);
 
         // enable drag&drop, install a custom transfer handler
-        treevar.setDragEnabled(true);
-        treevar.setDropMode(DropMode.ON_OR_INSERT);
-        treevar.setTransferHandler(new JMeterTreeTransferHandler());
+        // treevar.setDragEnabled(true);
+        // treevar.setDropMode(DropMode.ON_OR_INSERT);
+        // treevar.setTransferHandler(new JMeterTreeTransferHandler());
 
         addQuickComponentHotkeys(treevar);
 

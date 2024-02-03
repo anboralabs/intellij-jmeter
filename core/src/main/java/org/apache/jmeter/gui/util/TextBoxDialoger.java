@@ -95,7 +95,7 @@ public class TextBoxDialoger implements ActionListener {
     }
 
     private void createDialogBox() {
-        JFrame mainFrame = GuiPackage.getInstance().getMainFrame();
+        /*JFrame mainFrame = GuiPackage.getInstance().getMainFrame();
         String title = editable ? JMeterUtils.getResString("textbox_title_edit") //$NON-NLS-1$
                 : JMeterUtils.getResString("textbox_title_view"); //$NON-NLS-1$
         dialog = new JDialog(mainFrame, title, true);  // modal dialog box
@@ -141,7 +141,7 @@ public class TextBoxDialoger implements ActionListener {
         Dimension d1 = mainFrame.getSize();
         Dimension d2 = dialog.getSize();
         dialog.setLocation(p.x + (d1.width - d2.width) / 2, p.y + (d1.height - d2.height) / 2);
-        dialog.pack();
+        dialog.pack();*/
     }
 
     private void closeDialog() {

@@ -181,7 +181,8 @@ public class JMeterTreeNode extends DefaultMutableTreeNode implements NamedTreeN
 
     public JPopupMenu createPopupMenu() {
         try {
-            return GuiPackage.getInstance().getGui(getTestElement()).createPopupMenu();
+            // return GuiPackage.getInstance().getGui(getTestElement()).createPopupMenu();
+            return null;
         } catch (Exception e) {
             log.error("Can't get popup menu for gui", e);
             return null;

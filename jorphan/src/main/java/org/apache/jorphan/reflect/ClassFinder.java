@@ -466,7 +466,7 @@ public final class ClassFinder {
                 // Ignore jars with JMeter-Skip-Class-Scanning attribute
                 try (JarFile jar = new JarFile(file)) {
                     String value = jar.getManifest().getMainAttributes().getValue(JMETER_SKIP_CLASS_SCANNING_ATTRIBUTE);
-                    if (Boolean.parseBoolean(value)) {
+                    if (!Boolean.parseBoolean(value)) {
                         log.debug(
                                 "Will skip scanning jar {} with filter {} since the jar has {}={} attribute",
                                 file, filter, JMETER_SKIP_CLASS_SCANNING_ATTRIBUTE, value

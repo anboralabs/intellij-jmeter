@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.Set;
 import javax.swing.*;
-import org.apache.jmeter.gui.MainFrame;
+
 import org.apache.jmeter.gui.action.ActionNames;
 import org.apache.jmeter.gui.action.ActionRouter;
 import org.apache.jmeter.gui.util.EscapeDialog;
