@@ -28,12 +28,12 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:2.22.1")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.22.1")
 
-
     implementation("net.sf.json-lib:json-lib:2.4:jdk15")
 
     implementation(project(":jorphan"))
     implementation(project(":core"))
     implementation(project(":launcher"))
+    implementation(project(":protocol-java"))
 }
 
 apply {

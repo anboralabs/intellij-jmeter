@@ -46,7 +46,7 @@ public class JFactory {
      */
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static void refreshUI() {
-        STYLE.updateLaf();
+        // STYLE.updateLaf();
     }
 
     /**
@@ -55,7 +55,7 @@ public class JFactory {
      */
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static void refreshUI(String className) {
-        STYLE.updateLaf(className);
+        // STYLE.updateLaf(className);
     }
 
     /**
@@ -77,24 +77,28 @@ public class JFactory {
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JButton small(JButton component) {
         component.putClientProperty(SIZE_VARIANT, NimbusStyle.SMALL_KEY);
-        return STYLE.withFont(component, JMeterUIDefaults.BUTTON_SMALL_FONT);
+        // return STYLE.withFont(component, JMeterUIDefaults.BUTTON_SMALL_FONT);
+        return STYLE.withDynamic(component, c -> {});
     }
 
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JLabel small(JLabel component) {
-        return STYLE.withFont(component, JMeterUIDefaults.LABEL_SMALL_FONT);
+        // return STYLE.withFont(component, JMeterUIDefaults.LABEL_SMALL_FONT);
+        return STYLE.withDynamic(component, c -> {});
     }
 
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JTextField small(JTextField component) {
         component.putClientProperty(SIZE_VARIANT, NimbusStyle.SMALL_KEY);
-        return STYLE.withFont(component, JMeterUIDefaults.TEXTFIELD_SMALL_FONT);
+        // return STYLE.withFont(component, JMeterUIDefaults.TEXTFIELD_SMALL_FONT);
+        return STYLE.withDynamic(component, c -> {});
     }
 
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JCheckBox small(JCheckBox component) {
         component.putClientProperty(SIZE_VARIANT, NimbusStyle.SMALL_KEY);
-        return STYLE.withFont(component, JMeterUIDefaults.CHECKBOX_SMALL_FONT);
+        // return STYLE.withFont(component, JMeterUIDefaults.CHECKBOX_SMALL_FONT);
+        return STYLE.withDynamic(component, c -> {});
     }
 
     @API(since = "5.6", status = API.Status.EXPERIMENTAL)
@@ -105,12 +109,14 @@ public class JFactory {
 
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JLabel big(JLabel component) {
-        return STYLE.withFont(component, JMeterUIDefaults.LABEL_BIG_FONT);
+        // return STYLE.withFont(component, JMeterUIDefaults.LABEL_BIG_FONT);
+        return STYLE.withDynamic(component, c -> {});
     }
 
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JToolBar small(JToolBar component) {
-        return STYLE.withFont(component, JMeterUIDefaults.TOOLBAR_SMALL_FONT);
+        // return STYLE.withFont(component, JMeterUIDefaults.TOOLBAR_SMALL_FONT);
+        return STYLE.withDynamic(component, c -> {});
     }
 
     /**
@@ -140,8 +146,8 @@ public class JFactory {
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JLabel error(JLabel component) {
         return STYLE.withDynamic(component, c -> {
-            c.setFont(UIManager.getFont(JMeterUIDefaults.LABEL_ERROR_FONT));
-            c.setForeground(UIManager.getColor(JMeterUIDefaults.LABEL_ERROR_FOREGROUND));
+            // c.setFont(UIManager.getFont(JMeterUIDefaults.LABEL_ERROR_FONT));
+            // c.setForeground(UIManager.getColor(JMeterUIDefaults.LABEL_ERROR_FOREGROUND));
         });
     }
 
@@ -153,8 +159,8 @@ public class JFactory {
     @API(since = "5.3", status = API.Status.EXPERIMENTAL)
     public static JLabel warning(JLabel component) {
         return STYLE.withDynamic(component, c -> {
-            c.setFont(UIManager.getFont(JMeterUIDefaults.LABEL_WARNING_FONT));
-            c.setForeground(UIManager.getColor(JMeterUIDefaults.LABEL_WARNING_FOREGROUND));
+            // c.setFont(UIManager.getFont(JMeterUIDefaults.LABEL_WARNING_FONT));
+            // c.setForeground(UIManager.getColor(JMeterUIDefaults.LABEL_WARNING_FOREGROUND));
         });
     }
 

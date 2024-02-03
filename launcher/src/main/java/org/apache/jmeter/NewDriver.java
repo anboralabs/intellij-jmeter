@@ -184,6 +184,13 @@ public final class NewDriver {
                         new DynamicClassLoader(jars.toArray(new URL[jars.size()]))
         );
     }
+    @SuppressWarnings("removal")
+    private static DynamicClassLoader createClassLoader(List<URL> jars, ClassLoader pluginClassLoader) {
+        return java.security.AccessController.doPrivileged(
+                (java.security.PrivilegedAction<DynamicClassLoader>) () ->
+                        new DynamicClassLoader(jars.toArray(new URL[jars.size()]))
+        );
+    }
 
     /**
      * Prevent instantiation.
