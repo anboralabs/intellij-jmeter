@@ -84,8 +84,6 @@ dependencies {
 
     implementation(project(":jorphan"))
     implementation(project(":core"))
-
-    implementation(fileTree(mapOf("dir" to "jmeter-libs", "include" to listOf("*.jar"))))
 }
 
 apply {
