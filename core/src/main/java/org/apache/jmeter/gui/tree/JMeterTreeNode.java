@@ -36,6 +36,7 @@ import org.apache.jmeter.gui.GUIFactory;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testelement.TestElement;
+import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,6 +142,7 @@ public class JMeterTreeNode extends DefaultMutableTreeNode implements NamedTreeN
 
     public ImageIcon getIcon(boolean enabled) {
         TestElement testElement = getTestElement();
+        ClassLoader loader = JMeterUtils.getDynamicLoader();
         try {
             if (testElement instanceof TestBean) {
                 Class<?> testClass = testElement.getClass();
@@ -154,7 +156,7 @@ public class JMeterTreeNode extends DefaultMutableTreeNode implements NamedTreeN
                             log.warn("getIcon(): Can't obtain GUI class from {}", testClass);
                             return null;
                         }
-                        return GUIFactory.getIcon(Class.forName((String) clazz), enabled);
+                        return GUIFactory.getIcon(loader.loadClass((String) clazz), enabled);
                     }
                     return new ImageIcon(img);
                 } catch (IntrospectionException e1) {
@@ -162,7 +164,7 @@ public class JMeterTreeNode extends DefaultMutableTreeNode implements NamedTreeN
                     throw new org.apache.jorphan.util.JMeterError(e1);
                 }
             }
-            return GUIFactory.getIcon(Class.forName(testElement.getPropertyAsString(TestElement.GUI_CLASS)),
+            return GUIFactory.getIcon(loader.loadClass(testElement.getPropertyAsString(TestElement.GUI_CLASS)),
                         enabled);
         } catch (ClassNotFoundException e) {
             log.warn("Can't get icon for class {}", testElement, e);
