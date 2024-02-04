@@ -61,6 +61,10 @@ class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
         GuiPackage.initInstance(treeLis, treeModel)
 
         val instance = ActionRouter.getInstance()
+
+        val pluginClassLoader = this.javaClass.classLoader
+        JMeterUtils.setDynamicLoader(loadJMeterLibsToPlugin(JMeterUtils.getJMeterHome(), pluginClassLoader))
+
         instance.populateCommandMap()
         treeLis.setActionHandler(instance)
         val main = MainFrame(treeModel, treeLis)
@@ -69,12 +73,10 @@ class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
     }
 
     private fun loadFile(testFile: File) {
-        val currentThread = Thread.currentThread()
-        val originalClassLoader = currentThread.contextClassLoader
-        val pluginClassLoader = this.javaClass.classLoader
+        //val currentThread = Thread.currentThread()
+        //val originalClassLoader = currentThread.contextClassLoader
         try {
-
-            currentThread.setContextClassLoader(loadJMeterLibsToPlugin(JMeterUtils.getJMeterHome(), pluginClassLoader));
+            //currentThread.setContextClassLoader(JMeterUtils.getDynamicLoader());
 
             val tree: HashTree = SaveService.loadTree(testFile)
             GuiPackage.getInstance().testPlanFile = testFile.absolutePath
@@ -84,7 +86,7 @@ class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
         } catch (e: Exception) {
             JMeterUtils.reportErrorToUser(e.toString())
         } finally {
-            currentThread.setContextClassLoader(originalClassLoader);
+            //currentThread.setContextClassLoader(originalClassLoader);
         }
     }
 }

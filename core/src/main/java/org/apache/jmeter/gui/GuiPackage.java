@@ -37,6 +37,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
+import org.apache.jmeter.NewDriver;
 import org.apache.jmeter.engine.util.ValueReplacer;
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.UndoHistory.HistoryListener;
@@ -225,15 +226,17 @@ public final class GuiPackage implements LocaleChangeListener, HistoryListener {
         String testClassName = node.getPropertyAsString(TestElement.TEST_CLASS);
         String guiClassName = node.getPropertyAsString(TestElement.GUI_CLASS);
         try {
+            ClassLoader loader = JMeterUtils.getDynamicLoader();
+
             Class<?> testClass;
             if (testClassName.isEmpty()) {
                 testClass = node.getClass();
             } else {
-                testClass = Class.forName(testClassName);
+                testClass = loader.loadClass(testClassName);
             }
             Class<?> guiClass = null;
             if (!guiClassName.isEmpty()) {
-                guiClass = Class.forName(guiClassName);
+                guiClass = loader.loadClass(guiClassName);
             }
             return getGui(node, guiClass, testClass);
         } catch (ClassNotFoundException e) {

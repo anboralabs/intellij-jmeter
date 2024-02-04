@@ -33,7 +33,6 @@ dependencies {
     implementation(project(":jorphan"))
     implementation(project(":core"))
     implementation(project(":launcher"))
-    implementation(project(":protocol-java"))
 }
 
 apply {

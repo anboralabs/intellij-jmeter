@@ -33,6 +33,7 @@ import javax.swing.SwingUtilities;
 
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.GuiPackage;
+import org.apache.jmeter.gui.TestElementMetadata;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.reflect.LogAndIgnoreServiceLoadExceptionHandler;
 import org.apache.jorphan.util.JMeterError;
@@ -314,11 +315,11 @@ public final class ActionRouter implements ActionListener {
         if (!commands.isEmpty()) {
             return; // already done
         }
-        Thread currentThread = Thread.currentThread();
-        ClassLoader originalClassLoader = currentThread.getContextClassLoader();
-        ClassLoader pluginClassLoader = this.getClass().getClassLoader();
+        //Thread currentThread = Thread.currentThread();
+        //ClassLoader originalClassLoader = currentThread.getContextClassLoader();
+        //ClassLoader pluginClassLoader = this.getClass().getClassLoader();
         try {
-            currentThread.setContextClassLoader(pluginClassLoader);
+            //currentThread.setContextClassLoader(pluginClassLoader);
 
             Collection<Command> commandServices = JMeterUtils.loadServicesAndScanJars(
                     Command.class,
@@ -345,7 +346,7 @@ public final class ActionRouter implements ActionListener {
         } catch (Exception e) {
             log.error("exception finding action handlers", e);
         } finally {
-            currentThread.setContextClassLoader(originalClassLoader);
+            //currentThread.setContextClassLoader(originalClassLoader);
         }
     }
 

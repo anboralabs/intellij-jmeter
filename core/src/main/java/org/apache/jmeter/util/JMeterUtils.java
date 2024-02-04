@@ -59,6 +59,7 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.jmeter.DynamicClassLoader;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jorphan.gui.JFactory;
@@ -144,6 +145,18 @@ public class JMeterUtils {
     private static volatile boolean ignoreResources = false; // Special flag for use in debugging resources
 
     private static final ThreadLocal<Perl5Matcher> localMatcher = ThreadLocal.withInitial(Perl5Matcher::new);
+
+    private static volatile DynamicClassLoader loader = null;
+
+    public static void setDynamicLoader(DynamicClassLoader newLoader) {
+        if (loader == null) {
+            loader = newLoader;
+        }
+    }
+
+    public static DynamicClassLoader getDynamicLoader() {
+        return loader;
+    }
 
     /**
      * Gets Perl5Matcher for this thread.
@@ -367,6 +380,11 @@ public class JMeterUtils {
         }
     }
 
+    private static void addIconProps() {
+        Properties jmeterProps = JMeterUtils.getJMeterProperties();
+        jmeterProps.putIfAbsent("jmeter.icons", "org/apache/jmeter/images/icon.properties");
+    }
+
     /**
      * Loads services implementing a given interface and scans JMeter search path for the implementations.
      * This is a transition replacement for {@link ClassFinder}, and JMeter would migrate to {@link ServiceLoader}-only
@@ -387,6 +405,12 @@ public class JMeterUtils {
             ClassLoader classLoader,
             ServiceLoadExceptionHandler<? super S> exceptionHandler
     ) {
+        Thread currentThread = Thread.currentThread();
+        ClassLoader originalClassLoader = currentThread.getContextClassLoader();
+        ClassLoader pluginClassLoader = service.getClassLoader();
+
+        Thread.currentThread().setContextClassLoader(JMeterUtils.getDynamicLoader());
+
         Collection<S> services = ClassFinder.loadServices(service, serviceLoader, exceptionHandler);
 
         List<String> classesFromJars;
@@ -415,7 +439,8 @@ public class JMeterUtils {
                 continue;
             }
             try {
-                Class<? extends S> klass = Class.forName(className, false, classLoader)
+                ClassLoader loaderDynamic = JMeterUtils.getDynamicLoader();
+                Class<? extends S> klass = loaderDynamic.loadClass(className)
                         .asSubclass(service);
                 result.add(klass.getDeclaredConstructor().newInstance());
             } catch (Throwable e) {

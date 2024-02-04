@@ -138,6 +138,8 @@ public final class NewDriver {
         final List<URL> jars = new ArrayList<>();
         boolean usesUNC = OS_NAME_LC.startsWith("windows");
 
+        // final String initiaClasspath = System.getProperty(JAVA_CLASS_PATH);
+
         StringBuilder classpath = new StringBuilder();
         File[] libDirs = new File[] { new File(jmeterHome + File.separator + "lib"),// $NON-NLS-1$ $NON-NLS-2$
                 new File(jmeterHome + File.separator + "lib" + File.separator + "ext"),// $NON-NLS-1$ $NON-NLS-2$

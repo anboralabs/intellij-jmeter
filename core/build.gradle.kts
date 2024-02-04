@@ -127,7 +127,7 @@ dependencies {
     implementation("xml-apis:xml-apis:1.4.01")
     implementation("xmlpull:xmlpull:1.1.3.1")
 
-    implementation("org.apache.jmeter:ApacheJMeter_http:5.6.3")
+    //implementation("org.apache.jmeter:ApacheJMeter_http:5.6.3")
     //implementation("org.apache.jmeter:ApacheJMeter_java:5.6.3")
 
     implementation(project(":jorphan"))
