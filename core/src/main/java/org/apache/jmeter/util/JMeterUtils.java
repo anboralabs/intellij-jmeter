@@ -405,10 +405,6 @@ public class JMeterUtils {
             ClassLoader classLoader,
             ServiceLoadExceptionHandler<? super S> exceptionHandler
     ) {
-        Thread currentThread = Thread.currentThread();
-        ClassLoader originalClassLoader = currentThread.getContextClassLoader();
-        ClassLoader pluginClassLoader = service.getClassLoader();
-
         Thread.currentThread().setContextClassLoader(JMeterUtils.getDynamicLoader());
 
         Collection<S> services = ClassFinder.loadServices(service, serviceLoader, exceptionHandler);

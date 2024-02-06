@@ -1,7 +1,6 @@
 package co.anbora.labs.jmeter.ide.settings
 
 import co.anbora.labs.jmeter.ide.utils.toPath
-import java.nio.file.Path
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.io.path.exists
@@ -19,13 +18,6 @@ object JMeterConfigurationUtil {
     const val LIB_JUNIT_PATH = "junit"
 
     const val STANDARD_JMETER_CONFIG = "jmeter.properties"
-
-    fun getStdlibLocation(path: String): String? {
-        if (path.isBlank()) {
-            return null
-        }
-        return Path.of(path, STANDARD_LIB_PATH).toString()
-    }
 
     fun guessToolchainVersion(path: String): String {
         if (path.isBlank()) {

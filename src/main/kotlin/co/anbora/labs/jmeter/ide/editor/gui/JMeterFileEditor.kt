@@ -1,4 +1,4 @@
-package co.anbora.labs.jmeter.ide.gui
+package co.anbora.labs.jmeter.ide.editor.gui
 
 import co.anbora.labs.jmeter.fileTypes.JmxFileType.EDITOR_NAME
 import co.anbora.labs.jmeter.ide.editor.JmeterViewerState
@@ -11,26 +11,34 @@ import com.intellij.openapi.util.Key
 import com.intellij.openapi.util.UserDataHolder
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
+import com.thoughtworks.xstream.converters.ConversionException
+import org.apache.jmeter.NewDriver
+import org.apache.jmeter.gui.GuiPackage
+import org.apache.jmeter.gui.MainFrame
+import org.apache.jmeter.gui.action.ActionRouter
+import org.apache.jmeter.gui.action.Load
+import org.apache.jmeter.gui.tree.JMeterTreeListener
+import org.apache.jmeter.gui.tree.JMeterTreeModel
+import org.apache.jmeter.save.SaveService
+import org.apache.jmeter.util.JMeterUtils
+import org.apache.jorphan.collections.HashTree
 import java.beans.PropertyChangeListener
+import java.io.File
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-class JmeterEditor(
+abstract class JMeterFileEditor(
     private val projectArg: Project,
     private val fileArg: VirtualFile,
-    private val mainPanel: JPanel
 ): FileEditor, FileEditorLocation {
 
-    /*protected lateinit var projectArg: Project
-    protected lateinit var fileArg: VirtualFile
-
-    constructor(projectArg: Project, fileArg: VirtualFile) : this() {
-        this.projectArg = projectArg
-        this.fileArg = fileArg
-    }*/
+    protected lateinit var mainPanel: JPanel
 
     private val userDataHolder: UserDataHolder = UserDataHolderBase()
     private var viewerState: JmeterViewerState = JmeterViewerState()
+
+
+    abstract fun initComponents()
 
     override fun getName(): String = EDITOR_NAME
 
