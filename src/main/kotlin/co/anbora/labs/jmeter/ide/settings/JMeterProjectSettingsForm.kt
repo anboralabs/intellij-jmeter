@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Condition
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.panel
+import org.apache.jmeter.util.JMeterUtils
 import java.nio.file.Path
 
 class JMeterProjectSettingsForm(private val project: Project?, private val model: Model) {
@@ -40,6 +41,7 @@ class JMeterProjectSettingsForm(private val project: Project?, private val model
 
     private fun onSelect(toolchainInfo: ToolchainInfo) {
         model.homeLocation = toolchainInfo.location
+        JMeterUtils.initializeJMeter(toolchainInfo.location)
     }
 
     init {

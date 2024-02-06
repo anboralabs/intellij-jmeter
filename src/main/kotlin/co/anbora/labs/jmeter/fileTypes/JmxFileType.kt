@@ -22,11 +22,6 @@ object JmxFileType: UserBinaryFileType() {
 
     const val EDITOR_NAME = "JMeter Details"
 
-    init {
-        PluginManager.install(JMeter(), true)
-        JMeterUtils.initializeJMeter(Settings[OPTION_KEY_JMETER_PATH])
-    }
-
     override fun getName(): String = FILETYPE_NAME
 
     override fun getDescription(): String = "JMeter viewer"

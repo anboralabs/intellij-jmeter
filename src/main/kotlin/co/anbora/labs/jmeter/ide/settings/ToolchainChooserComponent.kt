@@ -41,7 +41,7 @@ class ToolchainChooserComponent(browseActionListener: ActionListener, onSelectAc
                 hasFocus: Boolean,
             ) {
                 if (value == null || value is NoToolchain) {
-                    append("<No Toolchain>")
+                    append("<No JMeter Home>")
                     return
                 }
 

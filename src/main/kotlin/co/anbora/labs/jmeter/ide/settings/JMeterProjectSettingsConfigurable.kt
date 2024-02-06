@@ -2,8 +2,10 @@ package co.anbora.labs.jmeter.ide.settings
 
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchain
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurationException
+import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Disposer
@@ -63,4 +65,11 @@ class JMeterProjectSettingsConfigurable(private val project: Project) : Configur
     }
 
     override fun getDisplayName(): String = "JMeter"
+
+    companion object {
+        @JvmStatic
+        fun show(project: Project) {
+            ShowSettingsUtil.getInstance().showSettingsDialog(project, JMeterProjectSettingsConfigurable::class.java)
+        }
+    }
 }

@@ -27,10 +27,9 @@ class JMeterNewToolchainDialog(private val toolchainFilter: Condition<Path>, pro
         var toolchainLocation: String,
         var toolchainVersion: String,
         var stdlibLocation: String,
-        var modulesLocation: String,
     )
 
-    private val model: Model = Model("", "N/A", "", "")
+    private val model: Model = Model("", "N/A", "")
     private val mainPanel: DialogPanel
     private val toolchainVersion = JLabel()
     private val toolchainIconLabel = JLabel()
@@ -103,7 +102,7 @@ class JMeterNewToolchainDialog(private val toolchainFilter: Condition<Path>, pro
         model.toolchainVersion = JMeterConfigurationUtil.guessToolchainVersion(model.toolchainLocation)
 
         if (model.toolchainVersion != JMeterConfigurationUtil.UNDEFINED_VERSION) {
-            model.stdlibLocation = JMeterConfigurationUtil.getStdlibLocation(model.toolchainLocation) ?: ""
+            model.stdlibLocation = model.toolchainLocation ?: ""
         } else {
             model.stdlibLocation = ""
         }
