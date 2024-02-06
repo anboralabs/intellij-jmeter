@@ -24,8 +24,6 @@ class InitConfigFiles: ProjectActivity {
     }
 
     private fun checkConfigFilesNotExist(): Boolean {
-        return Settings.allConfigFiles.any {
-            !Settings.binPath.resolve(it).exists()
-        }
+        return false;
     }
 }

@@ -37,22 +37,6 @@ class SetupFilesAction: DumbAwareAction("Setup") {
     }
 
     private fun createConfigFiles(): CompletableFuture<Unit> {
-        return CompletableFuture.supplyAsync {
-            Settings.allConfigFiles
-        }.thenApplyAsync { list ->
-            if (!Settings.binPath.exists()) {
-                Files.createDirectory(Settings.binPath)
-            }
-
-            list.forEach { file ->
-                val confFile = Settings.binPath.resolve(file)
-
-                val stream = javaClass.classLoader.getResourceAsStream("config/$file")
-                    ?: error("No such file")
-                val text = stream.bufferedReader().use { it.readText() }
-
-                Files.writeString(confFile, text)
-            }
-        }
+        return CompletableFuture()
     }
 }

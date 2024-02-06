@@ -140,7 +140,6 @@ public final class NewDriver {
 
         // final String initiaClasspath = System.getProperty(JAVA_CLASS_PATH);
 
-        StringBuilder classpath = new StringBuilder();
         File[] libDirs = new File[] { new File(jmeterHome + File.separator + "lib"),// $NON-NLS-1$ $NON-NLS-2$
                 new File(jmeterHome + File.separator + "lib" + File.separator + "ext"),// $NON-NLS-1$ $NON-NLS-2$
                 new File(jmeterHome + File.separator + "lib" + File.separator + "junit")};// $NON-NLS-1$ $NON-NLS-2$
@@ -163,10 +162,7 @@ public final class NewDriver {
                             s = "//" + s;// $NON-NLS-1$
                         }
                     } // usesUNC
-
                     jars.add(new File(s).toURI().toURL());// See Java bug 4496398
-                    classpath.append(CLASSPATH_SEPARATOR);
-                    classpath.append(s);
                 } catch (MalformedURLException e) { // NOSONAR
                     EXCEPTIONS_IN_INIT.add(new Exception("Error adding jar:"+libJar.getAbsolutePath(), e));
                 }

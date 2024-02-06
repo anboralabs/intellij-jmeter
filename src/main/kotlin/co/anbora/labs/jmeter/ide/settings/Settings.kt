@@ -20,24 +20,6 @@ object Settings {
         ?.absolutePathString()
         .orEmpty()
 
-    private val jaasConf = "jaas.conf"
-    private val jmeterProperties = "jmeter.properties"
-    private val krb5 = "krb5.conf"
-    private val log4j2 = "log4j2.xml"
-    private val reportGeneratorProperties = "reportgenerator.properties"
-    private val saveServiceProperties = "saveservice.properties"
-    private val systemProperties = "system.properties"
-    private val upgradeProperties = "upgrade.properties"
-    private val userProperties = "user.properties"
-
-    val binPath = Paths.get(PLUGIN_PATH).resolve("bin")
-
-    val allConfigFiles = listOf(
-        jaasConf, jmeterProperties, krb5, log4j2,
-        reportGeneratorProperties, saveServiceProperties, systemProperties,
-        upgradeProperties, userProperties
-    )
-
     private val PROPERTIES = PropertiesComponent.getInstance()
 
     init {
