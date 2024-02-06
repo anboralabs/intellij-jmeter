@@ -35,13 +35,6 @@
     </extensionPoints>
 
     <actions>
-        <action
-                id="co.anbora.labs.jmeter.ide.actions.PluginManagerDialogAction"
-                class="co.anbora.labs.jmeter.ide.actions.PluginManagerDialogAction"
-                text="JMeter Plugin Manager"
-                description="Show plugin manager">
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
-        </action>
         <action id="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
                 class="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
                 text="Setup" />
