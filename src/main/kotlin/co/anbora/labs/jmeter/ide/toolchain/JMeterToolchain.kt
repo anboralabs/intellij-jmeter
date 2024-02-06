@@ -12,6 +12,7 @@ interface JMeterToolchain {
     fun stdlibJunitDir(): VirtualFile?
     fun stdlibDir(): VirtualFile?
     fun stdBinDir(): VirtualFile?
+    fun stdConfig(): VirtualFile?
     fun rootDir(): VirtualFile?
     fun homePath(): String
     fun isValid(): Boolean
@@ -39,6 +40,7 @@ interface JMeterToolchain {
             override fun stdlibJunitDir(): VirtualFile? = null
             override fun stdlibDir(): VirtualFile? = null
             override fun stdBinDir(): VirtualFile? = null
+            override fun stdConfig(): VirtualFile? = null
             override fun rootDir(): VirtualFile? = null
             override fun homePath(): String = ""
             override fun isValid(): Boolean = false

@@ -21,11 +21,12 @@ class InitConfigFiles: ProjectActivity {
 
         if (toolchain.isValid()) {
             JMeterUtils.initializeJMeter(toolchain.homePath())
+            return
         }
 
         val notification = JMeterNotifications.createNotification(
-            "JMeter Plugin Setup",
-            "Some configurations files needed to start use it.",
+            "JMeter Plugin",
+            "Please setup JMeter Home",
             NotificationType.INFORMATION,
             SetupFilesAction()
         )
