@@ -17,16 +17,14 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.Searchable;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Reset Search
@@ -34,41 +32,39 @@ import com.google.auto.service.AutoService;
 @AutoService(Command.class)
 public class ResetSearchCommand extends AbstractAction {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.SEARCH_RESET);
+  static { commands.add(ActionNames.SEARCH_RESET); }
+
+  /**
+   * @see Command#doAction(ActionEvent)
+   */
+  @Override
+  public void doAction(ActionEvent e) {
+    GuiPackage guiPackage = GuiPackage.getInstance();
+    try {
+      guiPackage.beginUndoTransaction();
+      guiPackage.getTreeModel()
+          .getNodesOfType(Searchable.class)
+          .stream()
+          .filter(node -> node.getUserObject() instanceof Searchable)
+          .map(JMeterTreeNode::getPathToThreadGroup)
+          .flatMap(Collection::stream)
+          .forEach(matchingNode -> {
+            matchingNode.setMarkedBySearch(false);
+            matchingNode.setChildrenNodesHaveMatched(false);
+          });
+    } finally {
+      guiPackage.endUndoTransaction();
     }
+    GuiPackage.getInstance().getMainFrame().repaint();
+  }
 
-    /**
-     * @see Command#doAction(ActionEvent)
-     */
-    @Override
-    public void doAction(ActionEvent e) {
-        GuiPackage guiPackage = GuiPackage.getInstance();
-        try {
-            guiPackage.beginUndoTransaction();
-            guiPackage.getTreeModel()
-                    .getNodesOfType(Searchable.class).stream()
-                    .filter(node -> node.getUserObject() instanceof Searchable)
-                    .map(JMeterTreeNode::getPathToThreadGroup)
-                    .flatMap(Collection::stream)
-                    .forEach(matchingNode ->  {
-                        matchingNode.setMarkedBySearch(false);
-                        matchingNode.setChildrenNodesHaveMatched(false);
-                    });
-        } finally {
-            guiPackage.endUndoTransaction();
-        }
-        GuiPackage.getInstance().getMainFrame().repaint();
-    }
-
-
-    /**
-     * @see Command#getActionNames()
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * @see Command#getActionNames()
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 }

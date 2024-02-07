@@ -30,17 +30,17 @@ import org.apache.jmeter.report.core.Sample;
  */
 public interface SampleIndexer<TIndex> {
 
-    /**
-     * Calculate index from the specified sample.
-     *
-     * @param sample
-     *            the sample
-     * @return the index
-     */
-    TIndex calculateIndex(Sample sample);
+  /**
+   * Calculate index from the specified sample.
+   *
+   * @param sample
+   *            the sample
+   * @return the index
+   */
+  TIndex calculateIndex(Sample sample);
 
-    /**
-     * Reset the index calculation logic.
-     */
-    void reset();
+  /**
+   * Reset the index calculation logic.
+   */
+  void reset();
 }

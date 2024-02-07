@@ -32,5 +32,6 @@ import org.apiguardian.api.API;
 @FunctionalInterface
 @API(status = API.Status.EXPERIMENTAL, since = "5.6")
 public interface ServiceLoadExceptionHandler<S> {
-    void handle(Class<? extends S> service, String className, Throwable throwable);
+  void handle(Class<? extends S> service, String className,
+              Throwable throwable);
 }

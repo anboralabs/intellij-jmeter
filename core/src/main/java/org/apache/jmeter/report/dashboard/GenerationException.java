@@ -25,36 +25,31 @@ package org.apache.jmeter.report.dashboard;
  */
 public class GenerationException extends Exception {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 8344451600520488094L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = 8344451600520488094L;
 
-    /**
-     * Instantiates a new configuration exception.
-     */
-    public GenerationException() {
-        super();
-    }
+  /**
+   * Instantiates a new configuration exception.
+   */
+  public GenerationException() { super(); }
 
-    /**
-     * Instantiates a new configuration exception.
-     *
-     * @param message
-     *            the message
-     */
-    public GenerationException(String message) {
-        super(message);
-    }
+  /**
+   * Instantiates a new configuration exception.
+   *
+   * @param message
+   *            the message
+   */
+  public GenerationException(String message) { super(message); }
 
-    /**
-     * Instantiates a new configuration exception.
-     *
-     * @param message
-     *            the message
-     * @param cause
-     *            the cause
-     */
-    public GenerationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+  /**
+   * Instantiates a new configuration exception.
+   *
+   * @param message
+   *            the message
+   * @param cause
+   *            the cause
+   */
+  public GenerationException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

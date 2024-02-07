@@ -20,49 +20,50 @@ package org.apache.jmeter.report.processor;
 import java.util.List;
 
 /**
- * The interface SampleSource represents a source of samples for sample consumers.
+ * The interface SampleSource represents a source of samples for sample
+ * consumers.
  *
  * @since 3.0
  */
 public interface SampleSource extends Runnable {
 
-    /**
-     * Gets the sample context.
-     *
-     * @return the sampleContext
-     */
-    SampleContext getSampleContext();
+  /**
+   * Gets the sample context.
+   *
+   * @return the sampleContext
+   */
+  SampleContext getSampleContext();
 
-    /**
-     * Sets the sample context.
-     *
-     * @param sampleContext
-     *            the sampleContext to set
-     */
-    void setSampleContext(SampleContext sampleContext);
+  /**
+   * Sets the sample context.
+   *
+   * @param sampleContext
+   *            the sampleContext to set
+   */
+  void setSampleContext(SampleContext sampleContext);
 
-    /**
-     * Sets the specified sample consumers that will consume samples produced by
-     * this sample source.
-     *
-     * @param consumers
-     *            consumers to be set
-     */
-    void setSampleConsumers(List<SampleConsumer> consumers);
+  /**
+   * Sets the specified sample consumers that will consume samples produced by
+   * this sample source.
+   *
+   * @param consumers
+   *            consumers to be set
+   */
+  void setSampleConsumers(List<SampleConsumer> consumers);
 
-    /**
-     * Add a sample consumer to this sample source.
-     *
-     * @param consumer
-     *            consumer to be added
-     */
-    void addSampleConsumer(SampleConsumer consumer);
+  /**
+   * Add a sample consumer to this sample source.
+   *
+   * @param consumer
+   *            consumer to be added
+   */
+  void addSampleConsumer(SampleConsumer consumer);
 
-    /**
-     * Remove a sample consumer from this sample source.
-     *
-     * @param consumer
-     *            consumer to be removed
-     */
-    void removeSampleConsumer(SampleConsumer consumer);
+  /**
+   * Remove a sample consumer from this sample source.
+   *
+   * @param consumer
+   *            consumer to be removed
+   */
+  void removeSampleConsumer(SampleConsumer consumer);
 }

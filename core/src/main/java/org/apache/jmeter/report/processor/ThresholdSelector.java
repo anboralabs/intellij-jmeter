@@ -25,13 +25,13 @@ package org.apache.jmeter.report.processor;
  */
 public interface ThresholdSelector {
 
-    /**
-     * Do a projection from the specified samplers name to APDEX threshold
-     * information.
-     *
-     * @param sampleName
-     *            the name of samples, or empty string for overall thresholds
-     * @return the apdex thresholds information
-     */
-    ApdexThresholdsInfo select(String sampleName);
+  /**
+   * Do a projection from the specified samplers name to APDEX threshold
+   * information.
+   *
+   * @param sampleName
+   *            the name of samples, or empty string for overall thresholds
+   * @return the apdex thresholds information
+   */
+  ApdexThresholdsInfo select(String sampleName);
 }

@@ -18,31 +18,25 @@
 package org.apache.jorphan.util;
 
 /**
- * This Exception is for use by functions etc to signal a Stop Test Now condition
- * where there is no access to the normal stop method.
- * Stop test now means interrupting current running samplers which will mark them as failed
+ * This Exception is for use by functions etc to signal a Stop Test Now
+ * condition where there is no access to the normal stop method. Stop test now
+ * means interrupting current running samplers which will mark them as failed
  *
  */
 public class JMeterStopTestNowException extends RuntimeException {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public JMeterStopTestNowException() {
-        super();
-    }
+  public JMeterStopTestNowException() { super(); }
 
-    public JMeterStopTestNowException(String s) {
-        super(s);
-    }
+  public JMeterStopTestNowException(String s) { super(s); }
 
-    public JMeterStopTestNowException(String s, Throwable ex) {
-        super(s, ex);
-    }
+  public JMeterStopTestNowException(String s, Throwable ex) { super(s, ex); }
 
-    public JMeterStopTestNowException(String s, Throwable ex, boolean enableSuppression, boolean writableStackTrace) {
-        super(s, ex, enableSuppression, writableStackTrace);
-    }
+  public JMeterStopTestNowException(String s, Throwable ex,
+                                    boolean enableSuppression,
+                                    boolean writableStackTrace) {
+    super(s, ex, enableSuppression, writableStackTrace);
+  }
 
-    public JMeterStopTestNowException(Throwable ex) {
-        super(ex);
-    }
+  public JMeterStopTestNowException(Throwable ex) { super(ex); }
 }

@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph.impl;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.apache.jmeter.report.processor.MapResultData;
 import org.apache.jmeter.report.processor.MeanAggregatorFactory;
 import org.apache.jmeter.report.processor.graph.AbstractGraphConsumer;
@@ -29,48 +28,47 @@ import org.apache.jmeter.report.processor.graph.GroupInfo;
 import org.apache.jmeter.report.processor.graph.NameSeriesSelector;
 
 /**
- * The class TimeVSThreadGraphConsumer provides a graph to visualize average response time
- * vs number of threads
+ * The class TimeVSThreadGraphConsumer provides a graph to visualize average
+ * response time vs number of threads
  *
  * @since 3.0
  */
 public class TimeVSThreadGraphConsumer extends AbstractGraphConsumer {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createKeysSelector()
-     */
-    @Override
-    protected final GraphKeysSelector createKeysSelector() {
-        return sample -> (double) sample.getAllThreads();
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createKeysSelector()
+   */
+  @Override
+  protected final GraphKeysSelector createKeysSelector() {
+    return sample -> (double)sample.getAllThreads();
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected Map<String, GroupInfo> createGroupInfos() {
-        return Collections.singletonMap(
-                AbstractGraphConsumer.DEFAULT_GROUP,
-                new GroupInfo(
-                        new MeanAggregatorFactory(), new NameSeriesSelector(),
-                        // We include Transaction Controller results
-                        new ElapsedTimeValueSelector(false), false, true));
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override
+  protected Map<String, GroupInfo> createGroupInfos() {
+    return Collections.singletonMap(
+        AbstractGraphConsumer.DEFAULT_GROUP,
+        new GroupInfo(new MeanAggregatorFactory(), new NameSeriesSelector(),
+                      // We include Transaction Controller results
+                      new ElapsedTimeValueSelector(false), false, true));
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
-     * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
-     */
-    @Override
-    protected void initializeExtraResults(MapResultData parentResult) {
-        // do nothing
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
+   * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
+   */
+  @Override
+  protected void initializeExtraResults(MapResultData parentResult) {
+    // do nothing
+  }
 }

@@ -23,25 +23,19 @@ package org.apache.jorphan.util;
  * Stop test now means shutdown test waiting for current running samplers to end
  */
 public class JMeterStopTestException extends RuntimeException {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public JMeterStopTestException() {
-        super();
-    }
+  public JMeterStopTestException() { super(); }
 
-    public JMeterStopTestException(String s) {
-        super(s);
-    }
+  public JMeterStopTestException(String s) { super(s); }
 
-    public JMeterStopTestException(String s, Throwable ex) {
-        super(s, ex);
-    }
+  public JMeterStopTestException(String s, Throwable ex) { super(s, ex); }
 
-    public JMeterStopTestException(String s, Throwable ex, boolean enableSuppression, boolean writableStackTrace) {
-        super(s, ex, enableSuppression, writableStackTrace);
-    }
+  public JMeterStopTestException(String s, Throwable ex,
+                                 boolean enableSuppression,
+                                 boolean writableStackTrace) {
+    super(s, ex, enableSuppression, writableStackTrace);
+  }
 
-    public JMeterStopTestException(Throwable ex) {
-        super(ex);
-    }
+  public JMeterStopTestException(Throwable ex) { super(ex); }
 }

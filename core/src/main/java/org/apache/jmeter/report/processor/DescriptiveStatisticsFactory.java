@@ -23,21 +23,25 @@ import org.apache.commons.math3.stat.descriptive.rank.Percentile.EstimationType;
 import org.apache.jmeter.util.JMeterUtils;
 
 public class DescriptiveStatisticsFactory {
-    private static final int SLIDING_WINDOW_SIZE = JMeterUtils.getPropDefault("backend_metrics_window", 100); //$NON-NLS-1$
-    private static final EstimationType ESTIMATION_TYPE = EstimationType
-            .valueOf(JMeterUtils.getPropDefault("backend_metrics_percentile_estimator", "LEGACY")); //$NON-NLS-1$
+  private static final int SLIDING_WINDOW_SIZE =
+      JMeterUtils.getPropDefault("backend_metrics_window", 100); //$NON-NLS-1$
+  private static final EstimationType ESTIMATION_TYPE =
+      EstimationType.valueOf(JMeterUtils.getPropDefault(
+          "backend_metrics_percentile_estimator", "LEGACY")); //$NON-NLS-1$
 
-    private DescriptiveStatisticsFactory() {
-        // utility class -> hide the constructor
-    }
+  private DescriptiveStatisticsFactory() {
+    // utility class -> hide the constructor
+  }
 
-    public static DescriptiveStatistics createDescriptiveStatistics() {
-        return createDescriptiveStatistics(SLIDING_WINDOW_SIZE);
-    }
+  public static DescriptiveStatistics createDescriptiveStatistics() {
+    return createDescriptiveStatistics(SLIDING_WINDOW_SIZE);
+  }
 
-    public static DescriptiveStatistics createDescriptiveStatistics(int windowSize) {
-        DescriptiveStatistics statistics = new DescriptiveStatistics(windowSize);
-        statistics.setPercentileImpl(new Percentile().withEstimationType(ESTIMATION_TYPE));
-        return statistics;
-    }
+  public static DescriptiveStatistics
+  createDescriptiveStatistics(int windowSize) {
+    DescriptiveStatistics statistics = new DescriptiveStatistics(windowSize);
+    statistics.setPercentileImpl(
+        new Percentile().withEstimationType(ESTIMATION_TYPE));
+    return statistics;
+  }
 }

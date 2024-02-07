@@ -18,11 +18,12 @@
 package org.apache.jmeter.gui.util;
 
 /**
- * Indicates a menu separator when building {@link MenuInfo} lists in {@link MenuFactory}
+ * Indicates a menu separator when building {@link MenuInfo} lists in {@link
+ * MenuFactory}
  * @since 4.0
  */
 public class MenuSeparatorInfo extends MenuInfo {
-    public MenuSeparatorInfo() {
-        super("separator", "javax.swing.JPopupMenu.Separator");
-    }
+  public MenuSeparatorInfo() {
+    super("separator", "javax.swing.JPopupMenu.Separator");
+  }
 }

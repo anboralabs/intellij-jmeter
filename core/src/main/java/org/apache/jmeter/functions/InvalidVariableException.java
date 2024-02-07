@@ -18,20 +18,15 @@
 package org.apache.jmeter.functions;
 
 public class InvalidVariableException extends Exception {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public InvalidVariableException() {
-    }
+  public InvalidVariableException() {}
 
-    public InvalidVariableException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public InvalidVariableException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public InvalidVariableException(Throwable cause) {
-        super(cause);
-    }
+  public InvalidVariableException(Throwable cause) { super(cause); }
 
-    public InvalidVariableException(String msg) {
-        super(msg);
-    }
+  public InvalidVariableException(String msg) { super(msg); }
 }

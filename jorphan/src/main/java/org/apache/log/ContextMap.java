@@ -41,224 +41,191 @@ import java.util.Hashtable;
  * @deprecated Will be dropped in 3.3
  */
 @Deprecated
-@SuppressWarnings({"unchecked", "rawtypes", "JdkObsolete"}) // will be dropped in 3.3
-public final class ContextMap
-    implements Serializable
-{
-    private static final long serialVersionUID = 1L;
+@SuppressWarnings({"unchecked", "rawtypes", "JdkObsolete"})
+// will be dropped in 3.3
+public final class ContextMap implements Serializable {
+  private static final long serialVersionUID = 1L;
 
-    ///Thread local for holding instance of map associated with current thread
-    private static final ThreadLocal c_localContext = new InheritableThreadLocal();
+  /// Thread local for holding instance of map associated with current thread
+  private static final ThreadLocal c_localContext =
+      new InheritableThreadLocal();
 
-    private final ContextMap m_parent;
+  private final ContextMap m_parent;
 
-    ///Container to hold map of elements
-    private final Hashtable m_map = new Hashtable();
+  /// Container to hold map of elements
+  private final Hashtable m_map = new Hashtable();
 
-    ///Flag indicating whether this map should be readonly
-    private transient boolean m_readOnly;
+  /// Flag indicating whether this map should be readonly
+  private transient boolean m_readOnly;
 
-    /**
-     * Get the Current ContextMap.
-     * This method returns a ContextMap associated with current thread. If the
-     * thread doesn't have a ContextMap associated with it then a new
-     * ContextMap is created.
-     *
-     * @return the current ContextMap
-     */
-    public static final ContextMap getCurrentContext()
-    {
-        return getCurrentContext( true );
+  /**
+   * Get the Current ContextMap.
+   * This method returns a ContextMap associated with current thread. If the
+   * thread doesn't have a ContextMap associated with it then a new
+   * ContextMap is created.
+   *
+   * @return the current ContextMap
+   */
+  public static final ContextMap getCurrentContext() {
+    return getCurrentContext(true);
+  }
+
+  /**
+   * Get the Current ContextMap.
+   * This method returns a ContextMap associated with current thread.
+   * If the thread doesn't have a ContextMap associated with it and
+   * autocreate is true then a new ContextMap is created.
+   *
+   * @param autocreate true if a ContextMap is to be created if it doesn't exist
+   * @return the current ContextMap
+   */
+  public static final ContextMap getCurrentContext(final boolean autocreate) {
+    // Check security permission here???
+    ContextMap context = (ContextMap)c_localContext.get();
+
+    if (null == context && autocreate) {
+      context = new ContextMap();
+      c_localContext.set(context);
     }
 
-    /**
-     * Get the Current ContextMap.
-     * This method returns a ContextMap associated with current thread.
-     * If the thread doesn't have a ContextMap associated with it and
-     * autocreate is true then a new ContextMap is created.
-     *
-     * @param autocreate true if a ContextMap is to be created if it doesn't exist
-     * @return the current ContextMap
-     */
-    public static final ContextMap getCurrentContext( final boolean autocreate )
-    {
-        //Check security permission here???
-        ContextMap context = (ContextMap)c_localContext.get();
+    return context;
+  }
 
-        if( null == context && autocreate )
-        {
-            context = new ContextMap();
-            c_localContext.set( context );
-        }
+  /**
+   * Bind a particular ContextMap to current thread.
+   *
+   * @param context the context map (may be null)
+   */
+  public static final void bind(final ContextMap context) {
+    // Check security permission here??
+    c_localContext.set(context);
+  }
 
-        return context;
+  /**
+   * Default constructor.
+   */
+  public ContextMap() { this(null); }
+
+  /**
+   * Constructor that sets parent contextMap.
+   *
+   * @param parent the parent ContextMap
+   */
+  public ContextMap(final ContextMap parent) { m_parent = parent; }
+
+  /**
+   * Make the context read-only.
+   * This makes it safe to allow untrusted code reference
+   * to ContextMap.
+   */
+  public void makeReadOnly() { m_readOnly = true; }
+
+  /**
+   * Determine if context is read-only.
+   *
+   * @return true if Context is read only, false otherwise
+   */
+  public boolean isReadOnly() { return m_readOnly; }
+
+  /**
+   * Empty the context map.
+   *
+   */
+  public void clear() {
+    checkReadable();
+
+    m_map.clear();
+  }
+
+  /**
+   * Get an entry from the context.
+   *
+   * @param key the key to map
+   * @param defaultObject a default object to return if key does not exist
+   * @return the object in context
+   */
+  public Object get(final String key, final Object defaultObject) {
+    final Object object = get(key);
+
+    if (null != object) {
+      return object;
+    } else {
+      return defaultObject;
+    }
+  }
+
+  /**
+   * Get an entry from the context.
+   *
+   * @param key the key to map
+   * @return the object in context or null if none with specified key
+   */
+  public Object get(final String key) {
+    if (key == null) {
+      return null;
     }
 
-    /**
-     * Bind a particular ContextMap to current thread.
-     *
-     * @param context the context map (may be null)
-     */
-    public static final void bind( final ContextMap context )
-    {
-        //Check security permission here??
-        c_localContext.set( context );
+    final Object result = m_map.get(key);
+
+    if (null == result && null != m_parent) {
+      return m_parent.get(key);
     }
 
-    /**
-     * Default constructor.
-     */
-    public ContextMap()
-    {
-        this( null );
+    return result;
+  }
+
+  /**
+   * Set a value in context
+   *
+   * @param key the key
+   * @param value the value (may be null)
+   */
+  public void set(final String key, final Object value) {
+    checkReadable();
+
+    if (value == null) {
+      m_map.remove(key);
+    } else {
+      m_map.put(key, value);
     }
+  }
 
-    /**
-     * Constructor that sets parent contextMap.
-     *
-     * @param parent the parent ContextMap
-     */
-    public ContextMap( final ContextMap parent )
-    {
-        m_parent = parent;
+  /**
+   * Retrieve keys of entries into context map.
+   *
+   * @return the keys of items in context
+   */
+  /*
+  public String[] getKeys()
+  {
+      return (String[])m_map.keySet().toArray( new String[ 0 ] );
+  }
+  */
+
+  /**
+   * Get the number of contexts in map.
+   *
+   * @return the number of contexts in map
+   */
+  public int getSize() { return m_map.size(); }
+
+  /**
+   * Helper method that sets context to read-only after de-serialization.
+   *
+   * @return the corrected object version
+   */
+  private Object readResolve() {
+    makeReadOnly();
+    return this;
+  }
+
+  /**
+   * Utility method to verify that Context is read-only.
+   */
+  private void checkReadable() {
+    if (isReadOnly()) {
+      throw new IllegalStateException(
+          "ContextMap is read only and can not be modified");
     }
-
-    /**
-     * Make the context read-only.
-     * This makes it safe to allow untrusted code reference
-     * to ContextMap.
-     */
-    public void makeReadOnly()
-    {
-        m_readOnly = true;
-    }
-
-    /**
-     * Determine if context is read-only.
-     *
-     * @return true if Context is read only, false otherwise
-     */
-    public boolean isReadOnly()
-    {
-        return m_readOnly;
-    }
-
-    /**
-     * Empty the context map.
-     *
-     */
-    public void clear()
-    {
-        checkReadable();
-
-        m_map.clear();
-    }
-
-    /**
-     * Get an entry from the context.
-     *
-     * @param key the key to map
-     * @param defaultObject a default object to return if key does not exist
-     * @return the object in context
-     */
-    public Object get( final String key, final Object defaultObject )
-    {
-        final Object object = get( key );
-
-        if( null != object )
-        {
-            return object;
-        }
-        else
-        {
-            return defaultObject;
-        }
-    }
-
-    /**
-     * Get an entry from the context.
-     *
-     * @param key the key to map
-     * @return the object in context or null if none with specified key
-     */
-    public Object get( final String key )
-    {
-        if( key == null )
-        {
-            return null;
-        }
-
-        final Object result = m_map.get( key );
-
-        if( null == result && null != m_parent )
-        {
-            return m_parent.get( key );
-        }
-
-        return result;
-    }
-
-    /**
-     * Set a value in context
-     *
-     * @param key the key
-     * @param value the value (may be null)
-     */
-    public void set( final String key, final Object value )
-    {
-        checkReadable();
-
-        if( value == null )
-        {
-            m_map.remove( key );
-        }
-        else
-        {
-            m_map.put( key, value );
-        }
-    }
-
-    /**
-     * Retrieve keys of entries into context map.
-     *
-     * @return the keys of items in context
-     */
-    /*
-    public String[] getKeys()
-    {
-        return (String[])m_map.keySet().toArray( new String[ 0 ] );
-    }
-    */
-
-    /**
-     * Get the number of contexts in map.
-     *
-     * @return the number of contexts in map
-     */
-    public int getSize()
-    {
-        return m_map.size();
-    }
-
-    /**
-     * Helper method that sets context to read-only after de-serialization.
-     *
-     * @return the corrected object version
-     */
-    private Object readResolve()
-    {
-        makeReadOnly();
-        return this;
-    }
-
-    /**
-     * Utility method to verify that Context is read-only.
-     */
-    private void checkReadable()
-    {
-        if( isReadOnly() )
-        {
-            throw new IllegalStateException( "ContextMap is read only and can not be modified" );
-        }
-    }
+  }
 }

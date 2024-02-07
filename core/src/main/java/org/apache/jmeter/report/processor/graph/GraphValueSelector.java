@@ -27,15 +27,15 @@ import org.apache.jmeter.report.core.Sample;
  */
 public interface GraphValueSelector {
 
-    /**
-     * Do a projection from a sample to the value to aggregate for the specified
-     * series and key.
-     *
-     * @param series
-     *            the series where the value will be aggregated
-     * @param sample
-     *            the sample
-     * @return the value to aggregate or null if value should be ignored
-     */
-    Double select(String series, Sample sample);
+  /**
+   * Do a projection from a sample to the value to aggregate for the specified
+   * series and key.
+   *
+   * @param series
+   *            the series where the value will be aggregated
+   * @param sample
+   *            the sample
+   * @return the value to aggregate or null if value should be ignored
+   */
+  Double select(String series, Sample sample);
 }

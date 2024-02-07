@@ -18,7 +18,6 @@
 package org.apache.jmeter.control.gui;
 
 import java.awt.BorderLayout;
-
 import org.apache.jmeter.control.GenericController;
 import org.apache.jmeter.gui.TestElementMetadata;
 import org.apache.jmeter.testelement.TestElement;
@@ -29,40 +28,39 @@ import org.apache.jmeter.testelement.TestElement;
  */
 @TestElementMetadata(labelResource = "logic_controller_title")
 public class LogicControllerGui extends AbstractControllerGui {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    /**
-     * Create a new LogicControllerGui instance.
-     */
-    public LogicControllerGui() {
-        init();
-    }
+  /**
+   * Create a new LogicControllerGui instance.
+   */
+  public LogicControllerGui() { init(); }
 
-    /* Implements JMeterGUIComponent.createTestElement() */
-    @Override
-    public TestElement createTestElement() {
-        GenericController lc = new GenericController();
-        configureTestElement(lc);
-        return lc;
-    }
+  /* Implements JMeterGUIComponent.createTestElement() */
+  @Override
+  public TestElement createTestElement() {
+    GenericController lc = new GenericController();
+    configureTestElement(lc);
+    return lc;
+  }
 
-    /* Implements JMeterGUIComponent.modifyTestElement(TestElement) */
-    @Override
-    public void modifyTestElement(TestElement el) {
-        configureTestElement(el);
-    }
+  /* Implements JMeterGUIComponent.modifyTestElement(TestElement) */
+  @Override
+  public void modifyTestElement(TestElement el) {
+    configureTestElement(el);
+  }
 
-    @Override
-    public String getLabelResource() {
-        return "logic_controller_title"; // $NON-NLS-1$
-    }
+  @Override
+  public String getLabelResource() {
+    return "logic_controller_title"; // $NON-NLS-1$
+  }
 
-    /**
-     * Initialize the GUI components and layout for this component.
-     */
-    private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
-        setLayout(new BorderLayout());
-        setBorder(makeBorder());
-        add(makeTitlePanel(), BorderLayout.NORTH);
-    }
+  /**
+   * Initialize the GUI components and layout for this component.
+   */
+  private void init() { // WARNING: called from ctor so must not be overridden
+                        // (i.e. must be private or final)
+    setLayout(new BorderLayout());
+    setBorder(makeBorder());
+    add(makeTitlePanel(), BorderLayout.NORTH);
+  }
 }

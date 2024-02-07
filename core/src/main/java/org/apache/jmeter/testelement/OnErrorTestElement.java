@@ -22,63 +22,55 @@ import org.apache.jmeter.testelement.property.IntegerProperty;
 /**
  */
 public abstract class OnErrorTestElement extends AbstractTestElement {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    /* Action to be taken when a Sampler error occurs */
-    public static final int ON_ERROR_CONTINUE = 0;
+  /* Action to be taken when a Sampler error occurs */
+  public static final int ON_ERROR_CONTINUE = 0;
 
-    public static final int ON_ERROR_STOPTHREAD = 1;
+  public static final int ON_ERROR_STOPTHREAD = 1;
 
-    public static final int ON_ERROR_STOPTEST = 2;
+  public static final int ON_ERROR_STOPTEST = 2;
 
-    public static final int ON_ERROR_STOPTEST_NOW = 3;
+  public static final int ON_ERROR_STOPTEST_NOW = 3;
 
-    public static final int ON_ERROR_START_NEXT_THREAD_LOOP = 4;
+  public static final int ON_ERROR_START_NEXT_THREAD_LOOP = 4;
 
-    public static final int ON_ERROR_START_NEXT_ITERATION_OF_CURRENT_LOOP = 5;
+  public static final int ON_ERROR_START_NEXT_ITERATION_OF_CURRENT_LOOP = 5;
 
-    public static final int ON_ERROR_BREAK_CURRENT_LOOP = 6;
+  public static final int ON_ERROR_BREAK_CURRENT_LOOP = 6;
 
-    /* Property name */
-    public static final String ON_ERROR_ACTION = "OnError.action";
+  /* Property name */
+  public static final String ON_ERROR_ACTION = "OnError.action";
 
-    protected OnErrorTestElement() {
-        super();
-    }
+  protected OnErrorTestElement() { super(); }
 
-    public void setErrorAction(int value) {
-        setProperty(new IntegerProperty(ON_ERROR_ACTION, value));
-    }
+  public void setErrorAction(int value) {
+    setProperty(new IntegerProperty(ON_ERROR_ACTION, value));
+  }
 
-    public int getErrorAction() {
-        return getPropertyAsInt(ON_ERROR_ACTION);
-    }
+  public int getErrorAction() { return getPropertyAsInt(ON_ERROR_ACTION); }
 
-    public boolean isContinue() {
-        return getErrorAction() == ON_ERROR_CONTINUE;
-    }
+  public boolean isContinue() { return getErrorAction() == ON_ERROR_CONTINUE; }
 
-    public boolean isStopThread() {
-        return getErrorAction() == ON_ERROR_STOPTHREAD;
-    }
+  public boolean isStopThread() {
+    return getErrorAction() == ON_ERROR_STOPTHREAD;
+  }
 
-    public boolean isStopTest() {
-        return getErrorAction() == ON_ERROR_STOPTEST;
-    }
+  public boolean isStopTest() { return getErrorAction() == ON_ERROR_STOPTEST; }
 
-    public boolean isStopTestNow() {
-        return getErrorAction() == ON_ERROR_STOPTEST_NOW;
-    }
+  public boolean isStopTestNow() {
+    return getErrorAction() == ON_ERROR_STOPTEST_NOW;
+  }
 
-    public boolean isStartNextThreadLoop() {
-        return getErrorAction() == ON_ERROR_START_NEXT_THREAD_LOOP;
-    }
+  public boolean isStartNextThreadLoop() {
+    return getErrorAction() == ON_ERROR_START_NEXT_THREAD_LOOP;
+  }
 
-    public boolean isStartNextIterationOfCurrentLoop() {
-        return getErrorAction() == ON_ERROR_START_NEXT_ITERATION_OF_CURRENT_LOOP;
-    }
+  public boolean isStartNextIterationOfCurrentLoop() {
+    return getErrorAction() == ON_ERROR_START_NEXT_ITERATION_OF_CURRENT_LOOP;
+  }
 
-    public boolean isBreakCurrentLoop() {
-        return getErrorAction() == ON_ERROR_BREAK_CURRENT_LOOP;
-    }
+  public boolean isBreakCurrentLoop() {
+    return getErrorAction() == ON_ERROR_BREAK_CURRENT_LOOP;
+  }
 }

@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
-
 import org.apache.jmeter.functions.Function;
 import org.apache.jmeter.functions.InvalidVariableException;
 import org.apache.jmeter.samplers.SampleResult;
@@ -40,197 +39,205 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class CompoundVariable implements Function {
-    private static final Logger log = LoggerFactory.getLogger(CompoundVariable.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(CompoundVariable.class);
 
-    private String rawParameters;
+  private String rawParameters;
 
-    private static final FunctionParser functionParser = new FunctionParser();
+  private static final FunctionParser functionParser = new FunctionParser();
 
-    // Created during class init; not modified thereafter
-    private static final Map<String, Class<? extends Function>> functions = new HashMap<>();
+  // Created during class init; not modified thereafter
+  private static final Map<String, Class<? extends Function>> functions =
+      new HashMap<>();
 
-    private boolean hasFunction;
-    private boolean isDynamic;
+  private boolean hasFunction;
+  private boolean isDynamic;
 
-    private String permanentResults;
+  private String permanentResults;
 
-    // Type is ArrayList, so we can use ArrayList#clone
-    private ArrayList<Object> compiledComponents = new ArrayList<>();
+  // Type is ArrayList, so we can use ArrayList#clone
+  private ArrayList<Object> compiledComponents = new ArrayList<>();
 
-    static {
-        try {
-            final String contain = // Classnames must contain this string [.functions.]
-                JMeterUtils.getProperty("classfinder.functions.contain"); // $NON-NLS-1$
-            final String notContain = // Classnames must not contain this string [.gui.]
-                JMeterUtils.getProperty("classfinder.functions.notContain"); // $NON-NLS-1$
-            if (contain!=null){
-                log.info("Note: Function class names must contain the string: '{}'", contain);
-            }
-            if (notContain!=null){
-                log.info("Note: Function class names must not contain the string: '{}'", notContain);
-            }
+  static {
+    try {
+      final String
+          contain = // Classnames must contain this string [.functions.]
+          JMeterUtils.getProperty(
+              "classfinder.functions.contain"); // $NON-NLS-1$
+      final String
+          notContain = // Classnames must not contain this string [.gui.]
+          JMeterUtils.getProperty(
+              "classfinder.functions.notContain"); // $NON-NLS-1$
+      if (contain != null) {
+        log.info("Note: Function class names must contain the string: '{}'",
+                 contain);
+      }
+      if (notContain != null) {
+        log.info("Note: Function class names must not contain the string: '{}'",
+                 notContain);
+      }
 
-            for (Function function : JMeterUtils.loadServicesAndScanJars(
-                    Function.class,
-                    ServiceLoader.load(Function.class),
-                    Thread.currentThread().getContextClassLoader(),
-                    new LogAndIgnoreServiceLoadExceptionHandler(log)
-            )) {
-                String referenceKey = function.getReferenceKey();
-                if (referenceKey.length() > 0) { // ignore self
-                    functions.put(referenceKey, function.getClass());
-                }
-            }
-
-            if (functions.isEmpty()) {
-                log.warn("Did not find any functions");
-            } else {
-                log.debug("Function count: {}", functions.size());
-            }
-        } catch (Exception err) {
-            log.error("Exception occurred in static initialization of CompoundVariable.", err);
+      for (Function function : JMeterUtils.loadServicesAndScanJars(
+               Function.class, ServiceLoader.load(Function.class),
+               Thread.currentThread().getContextClassLoader(),
+               new LogAndIgnoreServiceLoadExceptionHandler(log))) {
+        String referenceKey = function.getReferenceKey();
+        if (referenceKey.length() > 0) { // ignore self
+          functions.put(referenceKey, function.getClass());
         }
+      }
+
+      if (functions.isEmpty()) {
+        log.warn("Did not find any functions");
+      } else {
+        log.debug("Function count: {}", functions.size());
+      }
+    } catch (Exception err) {
+      log.error(
+          "Exception occurred in static initialization of CompoundVariable.",
+          err);
+    }
+  }
+
+  public CompoundVariable() { hasFunction = false; }
+
+  public CompoundVariable(String parameters) {
+    this();
+    try {
+      setParameters(parameters);
+    } catch (InvalidVariableException e) {
+      // TODO should level be more than debug ?
+      log.debug("Invalid variable: {}", parameters, e);
+    }
+  }
+
+  public String execute() {
+    if (isDynamic || permanentResults == null) {
+      JMeterContext context = JMeterContextService.getContext();
+      SampleResult previousResult = context.getPreviousResult();
+      Sampler currentSampler = context.getCurrentSampler();
+      return execute(previousResult, currentSampler);
+    }
+    return permanentResults; // $NON-NLS-1$
+  }
+
+  /**
+   * Allows the retrieval of the original String prior to it being compiled.
+   *
+   * @return String
+   */
+  public String getRawParameters() { return rawParameters; }
+
+  /** {@inheritDoc} */
+  @Override
+  public String execute(SampleResult previousResult, Sampler currentSampler) {
+    if (compiledComponents == null || compiledComponents.isEmpty()) {
+      return ""; // $NON-NLS-1$
     }
 
-    public CompoundVariable() {
-        hasFunction = false;
-    }
-
-    public CompoundVariable(String parameters) {
-        this();
+    StringBuilder results = new StringBuilder();
+    for (Object item : compiledComponents) {
+      if (item instanceof Function) {
         try {
-            setParameters(parameters);
+          results.append(
+              ((Function)item).execute(previousResult, currentSampler));
         } catch (InvalidVariableException e) {
-            // TODO should level be more than debug ?
-            log.debug("Invalid variable: {}", parameters, e);
+          // TODO should level be more than debug ?
+          log.debug("Invalid variable: {}", item, e);
         }
+      } else if (item instanceof SimpleVariable) {
+        results.append(((SimpleVariable)item).toString());
+      } else {
+        results.append(item);
+      }
+    }
+    if (!isDynamic) {
+      permanentResults = results.toString();
+    }
+    return results.toString();
+  }
+
+  @SuppressWarnings("unchecked") // clone will produce correct type
+  public CompoundVariable getFunction() {
+    CompoundVariable func = new CompoundVariable();
+    func.compiledComponents = (ArrayList<Object>)compiledComponents.clone();
+    func.rawParameters = rawParameters;
+    func.hasFunction = hasFunction;
+    func.isDynamic = isDynamic;
+    return func;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public List<String> getArgumentDesc() {
+    return new ArrayList<>();
+  }
+
+  public void clear() {
+    // TODO should this also clear isDynamic, rawParameters, permanentResults?
+    hasFunction = false;
+    compiledComponents.clear();
+  }
+
+  public void setParameters(String parameters) throws InvalidVariableException {
+    this.rawParameters = parameters;
+    if (parameters == null || parameters.length() == 0) {
+      return;
     }
 
-    public String execute() {
-        if (isDynamic || permanentResults == null) {
-            JMeterContext context = JMeterContextService.getContext();
-            SampleResult previousResult = context.getPreviousResult();
-            Sampler currentSampler = context.getCurrentSampler();
-            return execute(previousResult, currentSampler);
-        }
-        return permanentResults; // $NON-NLS-1$
+    compiledComponents = functionParser.compileString(parameters);
+    if (compiledComponents.size() > 1 ||
+        !(compiledComponents.get(0) instanceof String)) {
+      hasFunction = true;
     }
-
-    /**
-     * Allows the retrieval of the original String prior to it being compiled.
-     *
-     * @return String
-     */
-    public String getRawParameters() {
-        return rawParameters;
+    permanentResults = null; // To be calculated and cached on first execution
+    isDynamic = false;
+    for (Object item : compiledComponents) {
+      if (item instanceof Function || item instanceof SimpleVariable) {
+        isDynamic = true;
+        break;
+      }
     }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public String execute(SampleResult previousResult, Sampler currentSampler) {
-        if (compiledComponents == null || compiledComponents.isEmpty()) {
-            return ""; // $NON-NLS-1$
-        }
-
-        StringBuilder results = new StringBuilder();
-        for (Object item : compiledComponents) {
-            if (item instanceof Function) {
-                try {
-                    results.append(((Function) item).execute(previousResult, currentSampler));
-                } catch (InvalidVariableException e) {
-                    // TODO should level be more than debug ?
-                    log.debug("Invalid variable: {}", item, e);
-                }
-            } else if (item instanceof SimpleVariable) {
-                results.append(((SimpleVariable) item).toString());
-            } else {
-                results.append(item);
-            }
-        }
-        if (!isDynamic) {
-            permanentResults = results.toString();
-        }
-        return results.toString();
+  static Object getNamedFunction(String functionName)
+      throws InvalidVariableException {
+    if (functions.containsKey(functionName)) {
+      try {
+        return functions.get(functionName)
+            .getDeclaredConstructor()
+            .newInstance();
+      } catch (Exception e) {
+        log.error("Exception occurred while instantiating a function: {}",
+                  functionName, e); // $NON-NLS-1$
+        throw new InvalidVariableException(e);
+      }
     }
+    return new SimpleVariable(functionName);
+  }
 
-    @SuppressWarnings("unchecked") // clone will produce correct type
-    public CompoundVariable getFunction() {
-        CompoundVariable func = new CompoundVariable();
-        func.compiledComponents = (ArrayList<Object>) compiledComponents.clone();
-        func.rawParameters = rawParameters;
-        func.hasFunction = hasFunction;
-        func.isDynamic = isDynamic;
-        return func;
-    }
+  // For use by FunctionHelper
+  public static Class<? extends Function> getFunctionClass(String className) {
+    return functions.get(className);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public List<String> getArgumentDesc() {
-        return new ArrayList<>();
-    }
+  // For use by FunctionHelper
+  public static String[] getFunctionNames() {
+    return functions.keySet().toArray(new String[functions.size()]);
+  }
 
-    public void clear() {
-        // TODO should this also clear isDynamic, rawParameters, permanentResults?
-        hasFunction = false;
-        compiledComponents.clear();
-    }
+  public boolean hasFunction() { return hasFunction; }
 
-    public void setParameters(String parameters) throws InvalidVariableException {
-        this.rawParameters = parameters;
-        if (parameters == null || parameters.length() == 0) {
-            return;
-        }
+  // Dummy methods needed by Function interface
 
-        compiledComponents = functionParser.compileString(parameters);
-        if (compiledComponents.size() > 1 || !(compiledComponents.get(0) instanceof String)) {
-            hasFunction = true;
-        }
-        permanentResults = null; // To be calculated and cached on first execution
-        isDynamic = false;
-        for (Object item : compiledComponents) {
-            if (item instanceof Function || item instanceof SimpleVariable) {
-                isDynamic = true;
-                break;
-            }
-        }
-    }
+  /** {@inheritDoc} */
+  @Override
+  public String getReferenceKey() {
+    return ""; // $NON-NLS-1$
+  }
 
-    static Object getNamedFunction(String functionName) throws InvalidVariableException {
-        if (functions.containsKey(functionName)) {
-            try {
-                return functions.get(functionName).getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
-                log.error("Exception occurred while instantiating a function: {}", functionName, e); // $NON-NLS-1$
-                throw new InvalidVariableException(e);
-            }
-        }
-        return new SimpleVariable(functionName);
-    }
-
-    // For use by FunctionHelper
-    public static Class<? extends Function> getFunctionClass(String className) {
-        return functions.get(className);
-    }
-
-    // For use by FunctionHelper
-    public static String[] getFunctionNames() {
-        return functions.keySet().toArray(new String[functions.size()]);
-    }
-
-    public boolean hasFunction() {
-        return hasFunction;
-    }
-
-    // Dummy methods needed by Function interface
-
-    /** {@inheritDoc} */
-    @Override
-    public String getReferenceKey() {
-        return ""; // $NON-NLS-1$
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setParameters(Collection<CompoundVariable> parameters) throws InvalidVariableException {
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void setParameters(Collection<CompoundVariable> parameters)
+      throws InvalidVariableException {}
 }

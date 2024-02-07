@@ -22,21 +22,23 @@ import org.apache.jmeter.samplers.Remoteable;
 import org.apache.jmeter.testelement.ThreadListener;
 
 /**
- * Empty implementation only used to be able to do replacement by {@link ConvertListeners}
+ * Empty implementation only used to be able to do replacement by {@link
+ * ConvertListeners}
  * @since 2.10
  */
-public class RemoteThreadsListenerTestElement implements Remoteable, ThreadListener {
+public class RemoteThreadsListenerTestElement
+    implements Remoteable, ThreadListener {
 
-    @Override
-    public void threadStarted() {
-        // NOOP
-    }
+  @Override
+  public void threadStarted() {
+    // NOOP
+  }
 
-    /**
-     *
-     */
-    @Override
-    public void threadFinished() {
-        // NOOP
-    }
+  /**
+   *
+   */
+  @Override
+  public void threadFinished() {
+    // NOOP
+  }
 }

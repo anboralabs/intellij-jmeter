@@ -24,49 +24,48 @@ package org.apache.jmeter.report.processor;
  */
 public class MinAggregator implements Aggregator {
 
-    private long count = 0L;
-    private double value = Double.MAX_VALUE;
+  private long count = 0L;
+  private double value = Double.MAX_VALUE;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#getCount()
-     */
-    @Override
-    public long getCount() {
-        return count;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#getCount()
+   */
+  @Override
+  public long getCount() {
+    return count;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#getResult()
-     */
-    @Override
-    public double getResult() {
-        return value;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#getResult()
+   */
+  @Override
+  public double getResult() {
+    return value;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#addValue(double)
-     */
-    @Override
-    public void addValue(double value) {
-        this.value = Math.min(this.value, value);
-        count++;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#addValue(double)
+   */
+  @Override
+  public void addValue(double value) {
+    this.value = Math.min(this.value, value);
+    count++;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#reset()
-     */
-    @Override
-    public void reset() {
-        count = 0L;
-        value = Double.MAX_VALUE;
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#reset()
+   */
+  @Override
+  public void reset() {
+    count = 0L;
+    value = Double.MAX_VALUE;
+  }
 }

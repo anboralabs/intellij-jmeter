@@ -22,30 +22,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Clones the test tree,  skipping test elements that implement {@link Timer} by default.
+ * Clones the test tree,  skipping test elements that implement {@link Timer} by
+ * default.
  */
-public class TreeClonerNoTimer extends TreeCloner{
-    private static final Logger log = LoggerFactory.getLogger(TreeClonerNoTimer.class);
+public class TreeClonerNoTimer extends TreeCloner {
+  private static final Logger log =
+      LoggerFactory.getLogger(TreeClonerNoTimer.class);
 
-    public TreeClonerNoTimer() {
-        super();
-    }
+  public TreeClonerNoTimer() { super(); }
 
-    public TreeClonerNoTimer(boolean honourNoThreadClone) {
-        super(honourNoThreadClone);
-    }
+  public TreeClonerNoTimer(boolean honourNoThreadClone) {
+    super(honourNoThreadClone);
+  }
 
-    /**
-     * Doesn't add Timer to tree
-     * @see org.apache.jmeter.engine.TreeCloner#addNodeToTree(java.lang.Object)
-     */
-    @Override
-    protected Object addNodeToTree(Object node) {
-        if(node instanceof Timer) {
-            log.debug("Ignoring timer node: {}", node);
-            return node; // don't add the timer
-        } else {
-            return super.addNodeToTree(node);
-        }
+  /**
+   * Doesn't add Timer to tree
+   * @see org.apache.jmeter.engine.TreeCloner#addNodeToTree(java.lang.Object)
+   */
+  @Override
+  protected Object addNodeToTree(Object node) {
+    if (node instanceof Timer) {
+      log.debug("Ignoring timer node: {}", node);
+      return node; // don't add the timer
+    } else {
+      return super.addNodeToTree(node);
     }
+  }
 }

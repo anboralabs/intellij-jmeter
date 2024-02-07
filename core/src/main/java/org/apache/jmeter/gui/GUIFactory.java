@@ -20,10 +20,8 @@ package org.apache.jmeter.gui;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-
 import org.apache.jmeter.testbeans.gui.TestBeanGUI;
 
 /**
@@ -31,147 +29,150 @@ import org.apache.jmeter.testbeans.gui.TestBeanGUI;
  *
  */
 public final class GUIFactory {
-    /** A Map from String to JMeterGUIComponent of registered GUI classes. */
-    private static final Map<String, JMeterGUIComponent> GUI_MAP = new HashMap<>();
+  /** A Map from String to JMeterGUIComponent of registered GUI classes. */
+  private static final Map<String, JMeterGUIComponent> GUI_MAP =
+      new HashMap<>();
 
-    /** A Map from String to ImageIcon of registered icons. */
-    private static final Map<String, ImageIcon> ICON_MAP = new HashMap<>();
+  /** A Map from String to ImageIcon of registered icons. */
+  private static final Map<String, ImageIcon> ICON_MAP = new HashMap<>();
 
-    /** A Map from String to ImageIcon of registered icons. */
-    private static final Map<String, ImageIcon> DISABLED_ICON_MAP = new HashMap<>();
+  /** A Map from String to ImageIcon of registered icons. */
+  private static final Map<String, ImageIcon> DISABLED_ICON_MAP =
+      new HashMap<>();
 
-    /**
-     * Prevent instantiation since this is a static utility class.
-     */
-    private GUIFactory() {
+  /**
+   * Prevent instantiation since this is a static utility class.
+   */
+  private GUIFactory() {}
+
+  /**
+   * Get an icon which has previously been registered for this class object.
+   *
+   * @param elementClass
+   *            the class object which we want to get an icon for
+   *
+   * @return the associated icon, or null if this class or its superclass has
+   *         not been registered
+   */
+  public static ImageIcon getIcon(Class<?> elementClass) {
+    return getIcon(elementClass, true);
+  }
+
+  /**
+   * Get icon/disabledicon which has previously been registered for this class
+   * object.
+   *
+   * @param elementClass
+   *            the class object which we want to get an icon for
+   * @param enabled -
+   *            is icon enabled
+   *
+   * @return the associated icon, or null if this class or its superclass has
+   *         not been registered
+   */
+  public static ImageIcon getIcon(Class<?> elementClass, boolean enabled) {
+    String key = elementClass.getName();
+    ImageIcon icon = enabled ? ICON_MAP.get(key) : DISABLED_ICON_MAP.get(key);
+
+    if (icon != null) {
+      return icon;
     }
 
-    /**
-     * Get an icon which has previously been registered for this class object.
-     *
-     * @param elementClass
-     *            the class object which we want to get an icon for
-     *
-     * @return the associated icon, or null if this class or its superclass has
-     *         not been registered
-     */
-    public static ImageIcon getIcon(Class<?> elementClass) {
-        return getIcon(elementClass, true);
+    if (elementClass.getSuperclass() != null) {
+      return getIcon(elementClass.getSuperclass(), enabled);
     }
 
-    /**
-     * Get icon/disabledicon which has previously been registered for this class
-     * object.
-     *
-     * @param elementClass
-     *            the class object which we want to get an icon for
-     * @param enabled -
-     *            is icon enabled
-     *
-     * @return the associated icon, or null if this class or its superclass has
-     *         not been registered
-     */
-    public static ImageIcon getIcon(Class<?> elementClass, boolean enabled) {
-        String key = elementClass.getName();
-        ImageIcon icon = enabled ? ICON_MAP.get(key) : DISABLED_ICON_MAP.get(key);
+    return null;
+  }
 
-        if (icon != null) {
-            return icon;
-        }
+  /**
+   * Get a component instance which has previously been registered for this
+   * class object.
+   *
+   * @param elementClass
+   *            the class object which we want to get an instance of
+   *
+   * @return an instance of the class, or null if this class or its superclass
+   *         has not been registered
+   */
+  public static JComponent getGUI(Class<?> elementClass) {
+    // TODO: This method doesn't appear to be used.
+    String key = elementClass.getName();
+    JComponent gui = (JComponent)GUI_MAP.get(key);
 
-        if (elementClass.getSuperclass() != null) {
-            return getIcon(elementClass.getSuperclass(), enabled);
-        }
-
-        return null;
+    if (gui != null) {
+      return gui;
     }
 
-    /**
-     * Get a component instance which has previously been registered for this
-     * class object.
-     *
-     * @param elementClass
-     *            the class object which we want to get an instance of
-     *
-     * @return an instance of the class, or null if this class or its superclass
-     *         has not been registered
-     */
-    public static JComponent getGUI(Class<?> elementClass) {
-        // TODO: This method doesn't appear to be used.
-        String key = elementClass.getName();
-        JComponent gui = (JComponent) GUI_MAP.get(key);
-
-        if (gui != null) {
-            return gui;
-        }
-
-        if (elementClass.getSuperclass() != null) {
-            return getGUI(elementClass.getSuperclass());
-        }
-
-        return null;
+    if (elementClass.getSuperclass() != null) {
+      return getGUI(elementClass.getSuperclass());
     }
 
-    /**
-     * Register an icon so that it can later be retrieved via
-     * {@link #getIcon(Class)}. The key should match the fully-qualified class
-     * name for the class used as the parameter when retrieving the icon.
-     *
-     * @param key
-     *            the name which can be used to retrieve this icon later
-     * @param icon
-     *            the icon to store
-     */
-    public static void registerIcon(String key, ImageIcon icon) {
-        ICON_MAP.put(key, icon);
-    }
+    return null;
+  }
 
-    /**
-     * Register an icon so that it can later be retrieved via
-     * {@link #getIcon(Class)}. The key should match the fully-qualified class
-     * name for the class used as the parameter when retrieving the icon.
-     *
-     * @param key
-     *            the name which can be used to retrieve this icon later
-     * @param icon
-     *            the icon to store
-     */
-    public static void registerDisabledIcon(String key, ImageIcon icon) {
-        DISABLED_ICON_MAP.put(key, icon);
-    }
+  /**
+   * Register an icon so that it can later be retrieved via
+   * {@link #getIcon(Class)}. The key should match the fully-qualified class
+   * name for the class used as the parameter when retrieving the icon.
+   *
+   * @param key
+   *            the name which can be used to retrieve this icon later
+   * @param icon
+   *            the icon to store
+   */
+  public static void registerIcon(String key, ImageIcon icon) {
+    ICON_MAP.put(key, icon);
+  }
 
-    /**
-     * Register a GUI class so that it can later be retrieved via
-     * {@link #getGUI(Class)}. The key should match the fully-qualified class
-     * name for the class used as the parameter when retrieving the GUI.
-     *
-     * @param key
-     *            the name which can be used to retrieve this GUI later
-     * @param guiClass
-     *            the class object for the GUI component
-     * @param testClass
-     *            the class of the objects edited by this GUI
-     *
-     * @throws InstantiationException
-     *             if an instance of the GUI class can not be instantiated
-     * @throws IllegalAccessException
-     *             if access rights do not permit an instance of the GUI class
-     *             to be created
-     * @throws NoSuchMethodException
-     *             when no constructor can be found on the given {@code guiClass}
-     * @throws InvocationTargetException
-     *             when the called constructor throws an exception
-     */
-    public static void registerGUI(String key, Class<?> guiClass, Class<?> testClass) throws InstantiationException,
-            IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        // TODO: This method doesn't appear to be used.
-        JMeterGUIComponent gui;
+  /**
+   * Register an icon so that it can later be retrieved via
+   * {@link #getIcon(Class)}. The key should match the fully-qualified class
+   * name for the class used as the parameter when retrieving the icon.
+   *
+   * @param key
+   *            the name which can be used to retrieve this icon later
+   * @param icon
+   *            the icon to store
+   */
+  public static void registerDisabledIcon(String key, ImageIcon icon) {
+    DISABLED_ICON_MAP.put(key, icon);
+  }
 
-        if (guiClass == TestBeanGUI.class) {
-            gui = new TestBeanGUI(testClass);
-        } else {
-            gui = (JMeterGUIComponent) guiClass.getDeclaredConstructor().newInstance();
-        }
-        GUI_MAP.put(key, gui);
+  /**
+   * Register a GUI class so that it can later be retrieved via
+   * {@link #getGUI(Class)}. The key should match the fully-qualified class
+   * name for the class used as the parameter when retrieving the GUI.
+   *
+   * @param key
+   *            the name which can be used to retrieve this GUI later
+   * @param guiClass
+   *            the class object for the GUI component
+   * @param testClass
+   *            the class of the objects edited by this GUI
+   *
+   * @throws InstantiationException
+   *             if an instance of the GUI class can not be instantiated
+   * @throws IllegalAccessException
+   *             if access rights do not permit an instance of the GUI class
+   *             to be created
+   * @throws NoSuchMethodException
+   *             when no constructor can be found on the given {@code guiClass}
+   * @throws InvocationTargetException
+   *             when the called constructor throws an exception
+   */
+  public static void registerGUI(String key, Class<?> guiClass,
+                                 Class<?> testClass)
+      throws InstantiationException, IllegalAccessException,
+             NoSuchMethodException, InvocationTargetException {
+    // TODO: This method doesn't appear to be used.
+    JMeterGUIComponent gui;
+
+    if (guiClass == TestBeanGUI.class) {
+      gui = new TestBeanGUI(testClass);
+    } else {
+      gui = (JMeterGUIComponent)guiClass.getDeclaredConstructor().newInstance();
     }
+    GUI_MAP.put(key, gui);
+  }
 }

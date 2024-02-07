@@ -18,38 +18,41 @@
 package org.apache.jmeter.gui.action;
 
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * Searcher implementation that searches text as is
  */
 public class RawTextSearcher implements Searcher {
-    private final boolean caseSensitive;
-    private final String textToSearch;
+  private final boolean caseSensitive;
+  private final String textToSearch;
 
-    /**
-     * Constructor
-     * @param caseSensitive is search case-sensitive
-     * @param textToSearch Text to search
-     */
-    public RawTextSearcher(boolean caseSensitive, String textToSearch) {
-        this.caseSensitive = caseSensitive;
-        this.textToSearch = textToSearch;
-    }
+  /**
+   * Constructor
+   * @param caseSensitive is search case-sensitive
+   * @param textToSearch Text to search
+   */
+  public RawTextSearcher(boolean caseSensitive, String textToSearch) {
+    this.caseSensitive = caseSensitive;
+    this.textToSearch = textToSearch;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean search(List<String> textTokens) {
-        return textTokens.stream()
-                .filter(StringUtils::isNotEmpty)
-                .anyMatch(token -> caseSensitive ? token.contains(textToSearch) : StringUtils.containsAnyIgnoreCase(token, textToSearch));
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean search(List<String> textTokens) {
+    return textTokens.stream()
+        .filter(StringUtils::isNotEmpty)
+        .anyMatch(token
+                  -> caseSensitive ? token.contains(textToSearch)
+                                   : StringUtils.containsAnyIgnoreCase(
+                                         token, textToSearch));
+  }
 
-    @Override
-    public String toString() {
-        return "RawTextSearcher [caseSensitive=" + caseSensitive + ", textToSearch=" + textToSearch + "]";
-    }
+  @Override
+  public String toString() {
+    return "RawTextSearcher [caseSensitive=" + caseSensitive +
+        ", textToSearch=" + textToSearch + "]";
+  }
 }

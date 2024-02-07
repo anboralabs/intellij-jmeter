@@ -24,45 +24,43 @@ package org.apache.jmeter.report.processor;
  */
 public class PercentileAggregatorFactory extends AbstractAggregatorFactory {
 
-    private double percentileIndex;
-    private Aggregator lastAggregator;
+  private double percentileIndex;
+  private Aggregator lastAggregator;
 
-    /**
-     * Gets the percentile index.
-     *
-     * @return the percentile index
-     */
-    public final double getPercentileIndex() {
-        return percentileIndex;
+  /**
+   * Gets the percentile index.
+   *
+   * @return the percentile index
+   */
+  public final double getPercentileIndex() { return percentileIndex; }
+
+  /**
+   * Sets the percentile index.
+   *
+   * @param percentileIndex
+   *            the index of the percentile to set
+   */
+  public void setPercentileIndex(double percentileIndex) {
+    this.percentileIndex = percentileIndex;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.core.AbstractAggregatorFactory#createAggregator
+   * ()
+   */
+  @Override
+  protected Aggregator createAggregator() {
+    Aggregator newAggregator = null;
+    if (lastAggregator != null) {
+      newAggregator =
+          new PercentileAggregator((PercentileAggregator)lastAggregator);
+    } else {
+      newAggregator = new PercentileAggregator(percentileIndex);
     }
-
-    /**
-     * Sets the percentile index.
-     *
-     * @param percentileIndex
-     *            the index of the percentile to set
-     */
-    public void setPercentileIndex(double percentileIndex) {
-        this.percentileIndex = percentileIndex;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.core.AbstractAggregatorFactory#createAggregator
-     * ()
-     */
-    @Override
-    protected Aggregator createAggregator() {
-        Aggregator newAggregator = null;
-        if(lastAggregator != null) {
-            newAggregator = new PercentileAggregator((PercentileAggregator)lastAggregator);
-        } else {
-            newAggregator = new PercentileAggregator(percentileIndex);
-        }
-        lastAggregator = newAggregator;
-        return newAggregator;
-    }
-
+    lastAggregator = newAggregator;
+    return newAggregator;
+  }
 }

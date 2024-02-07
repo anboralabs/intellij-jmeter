@@ -27,13 +27,12 @@ import java.util.List;
  * string.
  */
 public interface Searchable {
-    /**
-     * Get a list of all tokens that should be visible to searching
-     *
-     * @return List of searchable tokens
-     * @throws Exception
-     *             when something fails while getting the searchable tokens
-     */
-    List<String> getSearchableTokens()
-        throws Exception;
+  /**
+   * Get a list of all tokens that should be visible to searching
+   *
+   * @return List of searchable tokens
+   * @throws Exception
+   *             when something fails while getting the searchable tokens
+   */
+  List<String> getSearchableTokens() throws Exception;
 }

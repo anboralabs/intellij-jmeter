@@ -23,218 +23,178 @@ package org.apache.jmeter.report.dashboard;
  *
  */
 public class SamplingStatistic {
-    private String transaction;
-    private long sampleCount;
-    private long errorCount;
-    private float errorPct;
-    private double meanResTime;
-    private double medianResTime;
-    private double minResTime;
-    private double maxResTime;
-    private double pct1ResTime;
-    private double pct2ResTime;
-    private double pct3ResTime;
-    private double throughput;
-    private double receivedKBytesPerSec;
-    private double sentKBytesPerSec;
+  private String transaction;
+  private long sampleCount;
+  private long errorCount;
+  private float errorPct;
+  private double meanResTime;
+  private double medianResTime;
+  private double minResTime;
+  private double maxResTime;
+  private double pct1ResTime;
+  private double pct2ResTime;
+  private double pct3ResTime;
+  private double throughput;
+  private double receivedKBytesPerSec;
+  private double sentKBytesPerSec;
 
-    public SamplingStatistic() {
-        super();
-    }
+  public SamplingStatistic() { super(); }
 
-    /**
-     * @return the transaction
-     */
-    public String getTransaction() {
-        return transaction;
-    }
+  /**
+   * @return the transaction
+   */
+  public String getTransaction() { return transaction; }
 
-    /**
-     * @param transaction the transaction to set
-     */
-    public void setTransaction(String transaction) {
-        this.transaction = transaction;
-    }
+  /**
+   * @param transaction the transaction to set
+   */
+  public void setTransaction(String transaction) {
+    this.transaction = transaction;
+  }
 
-    /**
-     * @return the sampleCount
-     */
-    public long getSampleCount() {
-        return sampleCount;
-    }
+  /**
+   * @return the sampleCount
+   */
+  public long getSampleCount() { return sampleCount; }
 
-    /**
-     * @param sampleCount the sampleCount to set
-     */
-    public void setSampleCount(long sampleCount) {
-        this.sampleCount = sampleCount;
-    }
+  /**
+   * @param sampleCount the sampleCount to set
+   */
+  public void setSampleCount(long sampleCount) {
+    this.sampleCount = sampleCount;
+  }
 
-    /**
-     * @return the errorCount
-     */
-    public long getErrorCount() {
-        return errorCount;
-    }
+  /**
+   * @return the errorCount
+   */
+  public long getErrorCount() { return errorCount; }
 
-    /**
-     * @param errorCount the errorCount to set
-     */
-    public void setErrorCount(long errorCount) {
-        this.errorCount = errorCount;
-    }
+  /**
+   * @param errorCount the errorCount to set
+   */
+  public void setErrorCount(long errorCount) { this.errorCount = errorCount; }
 
-    /**
-     * @return the errorPct
-     */
-    public float getErrorPct() {
-        return errorPct;
-    }
+  /**
+   * @return the errorPct
+   */
+  public float getErrorPct() { return errorPct; }
 
-    /**
-     * @param errorPct the errorPct to set
-     */
-    public void setErrorPct(float errorPct) {
-        this.errorPct = errorPct;
-    }
+  /**
+   * @param errorPct the errorPct to set
+   */
+  public void setErrorPct(float errorPct) { this.errorPct = errorPct; }
 
-    /**
-     * @return the meanResTime
-     */
-    public double getMeanResTime() {
-        return meanResTime;
-    }
+  /**
+   * @return the meanResTime
+   */
+  public double getMeanResTime() { return meanResTime; }
 
-    /**
-     * @param meanResTime the meanResTime to set
-     */
-    public void setMeanResTime(double meanResTime) {
-        this.meanResTime = meanResTime;
-    }
+  /**
+   * @param meanResTime the meanResTime to set
+   */
+  public void setMeanResTime(double meanResTime) {
+    this.meanResTime = meanResTime;
+  }
 
-    /**
-     * @return medianResTime
-     */
-    public double getMedianResTime() {
-        return medianResTime;
-    }
+  /**
+   * @return medianResTime
+   */
+  public double getMedianResTime() { return medianResTime; }
 
-    /**
-     * @param medianResTime the meanResTime to set
-     */
-    public void setMedianResTime(double medianResTime) {
-        this.medianResTime = medianResTime;
-    }
+  /**
+   * @param medianResTime the meanResTime to set
+   */
+  public void setMedianResTime(double medianResTime) {
+    this.medianResTime = medianResTime;
+  }
 
-    /**
-     * @return the minResTime
-     */
-    public double getMinResTime() {
-        return minResTime;
-    }
+  /**
+   * @return the minResTime
+   */
+  public double getMinResTime() { return minResTime; }
 
-    /**
-     * @param minResTime the minResTime to set
-     */
-    public void setMinResTime(double minResTime) {
-        this.minResTime = minResTime;
-    }
+  /**
+   * @param minResTime the minResTime to set
+   */
+  public void setMinResTime(double minResTime) { this.minResTime = minResTime; }
 
-    /**
-     * @return the maxResTime
-     */
-    public double getMaxResTime() {
-        return maxResTime;
-    }
+  /**
+   * @return the maxResTime
+   */
+  public double getMaxResTime() { return maxResTime; }
 
-    /**
-     * @param maxResTime the maxResTime to set
-     */
-    public void setMaxResTime(double maxResTime) {
-        this.maxResTime = maxResTime;
-    }
+  /**
+   * @param maxResTime the maxResTime to set
+   */
+  public void setMaxResTime(double maxResTime) { this.maxResTime = maxResTime; }
 
-    /**
-     * @return the pct1ResTime
-     */
-    public double getPct1ResTime() {
-        return pct1ResTime;
-    }
+  /**
+   * @return the pct1ResTime
+   */
+  public double getPct1ResTime() { return pct1ResTime; }
 
-    /**
-     * @param pct1ResTime the pct1ResTime to set
-     */
-    public void setPct1ResTime(double pct1ResTime) {
-        this.pct1ResTime = pct1ResTime;
-    }
+  /**
+   * @param pct1ResTime the pct1ResTime to set
+   */
+  public void setPct1ResTime(double pct1ResTime) {
+    this.pct1ResTime = pct1ResTime;
+  }
 
-    /**
-     * @return the pct2ResTime
-     */
-    public double getPct2ResTime() {
-        return pct2ResTime;
-    }
+  /**
+   * @return the pct2ResTime
+   */
+  public double getPct2ResTime() { return pct2ResTime; }
 
-    /**
-     * @param pct2ResTime the pct2ResTime to set
-     */
-    public void setPct2ResTime(double pct2ResTime) {
-        this.pct2ResTime = pct2ResTime;
-    }
+  /**
+   * @param pct2ResTime the pct2ResTime to set
+   */
+  public void setPct2ResTime(double pct2ResTime) {
+    this.pct2ResTime = pct2ResTime;
+  }
 
-    /**
-     * @return the pct3ResTime
-     */
-    public double getPct3ResTime() {
-        return pct3ResTime;
-    }
+  /**
+   * @return the pct3ResTime
+   */
+  public double getPct3ResTime() { return pct3ResTime; }
 
-    /**
-     * @param pct3ResTime the pct3ResTime to set
-     */
-    public void setPct3ResTime(double pct3ResTime) {
-        this.pct3ResTime = pct3ResTime;
-    }
+  /**
+   * @param pct3ResTime the pct3ResTime to set
+   */
+  public void setPct3ResTime(double pct3ResTime) {
+    this.pct3ResTime = pct3ResTime;
+  }
 
-    /**
-     * @return the throughput
-     */
-    public double getThroughput() {
-        return throughput;
-    }
+  /**
+   * @return the throughput
+   */
+  public double getThroughput() { return throughput; }
 
-    /**
-     * @param throughput the throughput to set
-     */
-    public void setThroughput(double throughput) {
-        this.throughput = throughput;
-    }
+  /**
+   * @param throughput the throughput to set
+   */
+  public void setThroughput(double throughput) { this.throughput = throughput; }
 
-    /**
-     * @return the receivedKBytesPerSec
-     */
-    public double getReceivedKBytesPerSec() {
-        return receivedKBytesPerSec;
-    }
+  /**
+   * @return the receivedKBytesPerSec
+   */
+  public double getReceivedKBytesPerSec() { return receivedKBytesPerSec; }
 
-    /**
-     * @param receivedKBytesPerSec the receivedKBytesPerSec to set
-     */
-    public void setReceivedKBytesPerSec(double receivedKBytesPerSec) {
-        this.receivedKBytesPerSec = receivedKBytesPerSec;
-    }
+  /**
+   * @param receivedKBytesPerSec the receivedKBytesPerSec to set
+   */
+  public void setReceivedKBytesPerSec(double receivedKBytesPerSec) {
+    this.receivedKBytesPerSec = receivedKBytesPerSec;
+  }
 
-    /**
-     * @return the sentKBytesPerSec
-     */
-    public double getSentKBytesPerSec() {
-        return sentKBytesPerSec;
-    }
+  /**
+   * @return the sentKBytesPerSec
+   */
+  public double getSentKBytesPerSec() { return sentKBytesPerSec; }
 
-    /**
-     * @param sentKBytesPerSec the sentKBytesPerSec to set
-     */
-    public void setSentKBytesPerSec(double sentKBytesPerSec) {
-        this.sentKBytesPerSec = sentKBytesPerSec;
-    }
+  /**
+   * @param sentKBytesPerSec the sentKBytesPerSec to set
+   */
+  public void setSentKBytesPerSec(double sentKBytesPerSec) {
+    this.sentKBytesPerSec = sentKBytesPerSec;
+  }
 }

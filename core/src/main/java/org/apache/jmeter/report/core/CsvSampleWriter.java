@@ -20,7 +20,6 @@ package org.apache.jmeter.report.core;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.Writer;
-
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.jmeter.save.CSVSaveService;
@@ -37,113 +36,112 @@ import org.apache.jmeter.save.CSVSaveService;
  */
 public class CsvSampleWriter extends AbstractSampleWriter {
 
-    /** The number of columns for each row */
-    private final int columnCount;
+  /** The number of columns for each row */
+  private final int columnCount;
 
-    /** The separator to be used in between data on each row */
-    private char separator;
+  /** The separator to be used in between data on each row */
+  private char separator;
 
-    /** Description of the columns */
-    private final SampleMetadata metadata;
+  /** Description of the columns */
+  private final SampleMetadata metadata;
 
-    /** Number of samples written */
-    private long sampleCount;
+  /** Number of samples written */
+  private long sampleCount;
 
-    /**
-     * The new instance has to be supplied with a Writer to work properly.
-     *
-     * @param metadata the description for data that this writer will write
-     *                 ({@code metadata} must not be {@code null}).
-     */
-    public CsvSampleWriter(SampleMetadata metadata) {
-        super();
-        this.metadata = metadata;
-        this.columnCount = metadata.getColumnCount();
-        this.separator = metadata.getSeparator();
-        this.sampleCount = 0;
+  /**
+   * The new instance has to be supplied with a Writer to work properly.
+   *
+   * @param metadata the description for data that this writer will write
+   *                 ({@code metadata} must not be {@code null}).
+   */
+  public CsvSampleWriter(SampleMetadata metadata) {
+    super();
+    this.metadata = metadata;
+    this.columnCount = metadata.getColumnCount();
+    this.separator = metadata.getSeparator();
+    this.sampleCount = 0;
+  }
+
+  /**
+   * @param output   the writer to write data to. (Must not be {@code null})
+   * @param metadata the description for data that this writer will write. (
+   *                 {@code metadata} must not be {@code null}.)
+   */
+  public CsvSampleWriter(Writer output, SampleMetadata metadata) {
+    this(metadata);
+    setWriter(output);
+  }
+
+  /**
+   * @param output   the output stream to write data to. (Must not be {@code
+   *     null})
+   * @param metadata the description for data that this writer will write. (
+   *                 {@code metadata} must not be {@code null}.)
+   */
+  public CsvSampleWriter(OutputStream output, SampleMetadata metadata) {
+    this(metadata);
+    setOutputStream(output);
+  }
+
+  /**
+   * @param output   the output file to write data to. (Must not be {@code
+   *     null})
+   * @param metadata the description for data that this writer will write. (
+   *                 {@code metadata} must not be {@code null}.)
+   */
+  public CsvSampleWriter(File output, SampleMetadata metadata) {
+    this(metadata);
+    setOutputFile(output);
+  }
+
+  /**
+   * Set the char to use for separation of data in a line.
+   *
+   * @param separator to use
+   */
+  public void setSeparator(char separator) { this.separator = separator; }
+
+  private void reset() { sampleCount = 0; }
+
+  @Override
+  public void setWriter(Writer writer) {
+    super.setWriter(writer);
+    reset();
+  }
+
+  /**
+   * Write the csv header. If samples have already been written then a row with
+   * header information will be written in the middle of the file.
+   */
+  public void writeHeader() {
+    Validate.validState(writer != null,
+                        "No writer set! Call setWriter() first!");
+    StringBuilder row = new StringBuilder();
+    for (int i = 0; i < columnCount; i++) {
+      row.append(metadata.getColumnName(i));
+      if (i < columnCount - 1) {
+        row.append(separator);
+      }
     }
+    writer.println(row.toString());
+  }
 
-    /**
-     * @param output   the writer to write data to. (Must not be {@code null})
-     * @param metadata the description for data that this writer will write. (
-     *                 {@code metadata} must not be {@code null}.)
-     */
-    public CsvSampleWriter(Writer output, SampleMetadata metadata) {
-        this(metadata);
-        setWriter(output);
+  @Override
+  public long write(Sample sample) {
+    Validate.validState(writer != null,
+                        "No writer set! Call setWriter() first!");
+    StringBuilder row = new StringBuilder();
+    char[] specials = new char[] {separator, CSVSaveService.QUOTING_CHAR,
+                                  CharUtils.CR, CharUtils.LF};
+    for (int i = 0; i < columnCount; i++) {
+      String data = sample.getData(i);
+      row.append(CSVSaveService.quoteDelimiters(data, specials))
+          .append(separator);
     }
+    row.setLength(row.length() - 1);
+    writer.println(row.toString());
+    sampleCount++;
 
-    /**
-     * @param output   the output stream to write data to. (Must not be {@code null})
-     * @param metadata the description for data that this writer will write. (
-     *                 {@code metadata} must not be {@code null}.)
-     */
-    public CsvSampleWriter(OutputStream output, SampleMetadata metadata) {
-        this(metadata);
-        setOutputStream(output);
-    }
-
-    /**
-     * @param output   the output file to write data to. (Must not be {@code null})
-     * @param metadata the description for data that this writer will write. (
-     *                 {@code metadata} must not be {@code null}.)
-     */
-    public CsvSampleWriter(File output, SampleMetadata metadata) {
-        this(metadata);
-        setOutputFile(output);
-    }
-
-    /**
-     * Set the char to use for separation of data in a line.
-     *
-     * @param separator to use
-     */
-    public void setSeparator(char separator) {
-        this.separator = separator;
-    }
-
-    private void reset() {
-        sampleCount = 0;
-    }
-
-    @Override
-    public void setWriter(Writer writer) {
-        super.setWriter(writer);
-        reset();
-    }
-
-    /**
-     * Write the csv header. If samples have already been written then a row with
-     * header information will be written in the middle of the file.
-     */
-    public void writeHeader() {
-        Validate.validState(writer != null, "No writer set! Call setWriter() first!");
-        StringBuilder row = new StringBuilder();
-        for (int i = 0; i < columnCount; i++) {
-            row.append(metadata.getColumnName(i));
-            if (i < columnCount - 1) {
-                row.append(separator);
-            }
-        }
-        writer.println(row.toString());
-    }
-
-    @Override
-    public long write(Sample sample) {
-        Validate.validState(writer != null, "No writer set! Call setWriter() first!");
-        StringBuilder row = new StringBuilder();
-        char[] specials = new char[] { separator,
-                CSVSaveService.QUOTING_CHAR, CharUtils.CR, CharUtils.LF };
-        for (int i = 0; i < columnCount; i++) {
-            String data = sample.getData(i);
-            row.append(CSVSaveService.quoteDelimiters(data, specials))
-                    .append(separator);
-        }
-        row.setLength(row.length() - 1);
-        writer.println(row.toString());
-        sampleCount++;
-
-        return sampleCount;
-    }
-
+    return sampleCount;
+  }
 }

@@ -17,6 +17,7 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -24,15 +25,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jmeter.util.SSLManager;
-
-import com.google.auto.service.AutoService;
 
 //
 /**
@@ -56,86 +53,89 @@ import com.google.auto.service.AutoService;
  */
 @AutoService(Command.class)
 public class SSLManagerCommand extends AbstractAction {
-    private static final Set<String> commandSet;
-    static {
-        Set<String> commands = new HashSet<>();
-        commands.add(ActionNames.SSL_MANAGER);
-        commandSet = Collections.unmodifiableSet(commands);
+  private static final Set<String> commandSet;
+  static {
+    Set<String> commands = new HashSet<>();
+    commands.add(ActionNames.SSL_MANAGER);
+    commandSet = Collections.unmodifiableSet(commands);
+  }
+
+  /**
+   * Handle the "sslmanager" action by displaying the "SSL CLient Manager"
+   * dialog box. The Dialog Box is NOT modal, because those should be avoided
+   * if at all possible.
+   */
+  @Override
+  public void doAction(ActionEvent e) {
+    if (e.getActionCommand().equals(ActionNames.SSL_MANAGER)) {
+      SSLManagerCommand.sslManager();
+    }
+  }
+
+  /**
+   * Provide the list of Action names that are available in this command.
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return SSLManagerCommand.commandSet;
+  }
+
+  /**
+   * Called by sslManager button. Raises sslManager dialog.
+   * I.e. a FileChooser for PCSI12 (.p12|.P12) or JKS files.
+   */
+  private static void sslManager() {
+    SSLManager.reset();
+
+    JFileChooser keyStoreChooser =
+        new JFileChooser(System.getProperty("user.dir")); //$NON-NLS-1$
+    keyStoreChooser.setDialogTitle(
+        JMeterUtils.getResString("sslmanager.title"));
+    keyStoreChooser.addChoosableFileFilter(new AcceptPKCS12OrJKSFileFilter());
+    keyStoreChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    int retVal =
+        keyStoreChooser.showOpenDialog(GuiPackage.getInstance().getMainFrame());
+
+    if (JFileChooser.APPROVE_OPTION == retVal) {
+      File selectedFile = keyStoreChooser.getSelectedFile();
+      try {
+        System.setProperty(SSLManager.JAVAX_NET_SSL_KEY_STORE,
+                           selectedFile.getCanonicalPath());
+      } catch (IOException e) {
+        // Ignored
+      }
     }
 
+    SSLManager.getInstance();
+  }
+
+  /**
+   * Internal class to add a PKCS12 file format filter for JFileChooser.
+   */
+  private static class AcceptPKCS12OrJKSFileFilter extends FileFilter {
     /**
-     * Handle the "sslmanager" action by displaying the "SSL CLient Manager"
-     * dialog box. The Dialog Box is NOT modal, because those should be avoided
-     * if at all possible.
+     * Get the description that shows up in JFileChooser filter menu.
+     *
+     * @return description
      */
     @Override
-    public void doAction(ActionEvent e) {
-        if (e.getActionCommand().equals(ActionNames.SSL_MANAGER)) {
-            SSLManagerCommand.sslManager();
-        }
+    public String getDescription() {
+      return JMeterUtils.getResString("keystore_desc"); //$NON-NLS-1$
     }
 
     /**
-     * Provide the list of Action names that are available in this command.
+     * Tests to see if the file ends with "*.p12" or "*.P12".
+     *
+     * @param testFile
+     *            file to test
+     * @return true if file is accepted, false otherwise
      */
     @Override
-    public Set<String> getActionNames() {
-        return SSLManagerCommand.commandSet;
+    public boolean accept(File testFile) {
+      String lowerCaseName = testFile.getName().toLowerCase(Locale.ROOT);
+      return testFile.isDirectory() ||
+          lowerCaseName.endsWith(".p12") //$NON-NLS-1$
+          || lowerCaseName.endsWith(".jks") || lowerCaseName.endsWith(".pfx");
     }
-
-    /**
-     * Called by sslManager button. Raises sslManager dialog.
-     * I.e. a FileChooser for PCSI12 (.p12|.P12) or JKS files.
-     */
-    private static void sslManager() {
-        SSLManager.reset();
-
-        JFileChooser keyStoreChooser = new JFileChooser(System.getProperty("user.dir")); //$NON-NLS-1$
-        keyStoreChooser.setDialogTitle(JMeterUtils.getResString("sslmanager.title"));
-        keyStoreChooser.addChoosableFileFilter(new AcceptPKCS12OrJKSFileFilter());
-        keyStoreChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int retVal = keyStoreChooser.showOpenDialog(GuiPackage.getInstance().getMainFrame());
-
-        if (JFileChooser.APPROVE_OPTION == retVal) {
-            File selectedFile = keyStoreChooser.getSelectedFile();
-            try {
-                System.setProperty(SSLManager.JAVAX_NET_SSL_KEY_STORE, selectedFile.getCanonicalPath());
-            } catch (IOException e) {
-                //Ignored
-            }
-        }
-
-        SSLManager.getInstance();
-    }
-
-    /**
-     * Internal class to add a PKCS12 file format filter for JFileChooser.
-     */
-    private static class AcceptPKCS12OrJKSFileFilter extends FileFilter {
-        /**
-         * Get the description that shows up in JFileChooser filter menu.
-         *
-         * @return description
-         */
-        @Override
-        public String getDescription() {
-            return JMeterUtils.getResString("keystore_desc"); //$NON-NLS-1$
-        }
-
-        /**
-         * Tests to see if the file ends with "*.p12" or "*.P12".
-         *
-         * @param testFile
-         *            file to test
-         * @return true if file is accepted, false otherwise
-         */
-        @Override
-        public boolean accept(File testFile) {
-            String lowerCaseName = testFile.getName().toLowerCase(Locale.ROOT);
-            return testFile.isDirectory()
-            || lowerCaseName.endsWith(".p12")  //$NON-NLS-1$
-            || lowerCaseName.endsWith(".jks")
-            || lowerCaseName.endsWith(".pfx");
-        }
-    }
+  }
 }

@@ -17,18 +17,17 @@
 
 package org.apache.jmeter.timers;
 
-
 /**
  * This interface identifies Modifiable timers to which a factor can be applied
  * @since 3.1
  */
 public interface ModifiableTimer extends Timer {
 
-    /**
-     * @return true if factor can be applied to it
-     */
-    @Override
-    default boolean isModifiable() {
-        return true;
-    }
+  /**
+   * @return true if factor can be applied to it
+   */
+  @Override
+  default boolean isModifiable() {
+    return true;
+  }
 }

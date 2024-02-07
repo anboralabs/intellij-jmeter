@@ -18,52 +18,48 @@
 package org.apache.jmeter.testelement.property;
 
 public abstract class NumberProperty extends AbstractProperty {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    protected NumberProperty() {
-        super();
+  protected NumberProperty() { super(); }
+
+  protected NumberProperty(String name) { super(name); }
+
+  /**
+   * Set the value of the property with a Number object.
+   *
+   * @param n the value to set
+   */
+  protected abstract void setNumberValue(Number n);
+
+  /**
+   * Set the value of the property with a String object.
+   *
+   * @param n
+   *            the number to set as a string representation
+   * @throws NumberFormatException
+   *             if the number <code>n</code> can not be converted to a
+   *             {@link Number}
+   */
+  protected abstract void setNumberValue(String n) throws NumberFormatException;
+
+  @Override
+  public void setObjectValue(Object v) {
+    if (v instanceof Number) {
+      setNumberValue((Number)v);
+    } else {
+      try {
+        setNumberValue(v.toString());
+      } catch (RuntimeException ignored) {
+        // Intentionally left blank
+      }
     }
+  }
 
-    protected NumberProperty(String name) {
-        super(name);
-    }
-
-    /**
-     * Set the value of the property with a Number object.
-     *
-     * @param n the value to set
-     */
-    protected abstract void setNumberValue(Number n);
-
-    /**
-     * Set the value of the property with a String object.
-     *
-     * @param n
-     *            the number to set as a string representation
-     * @throws NumberFormatException
-     *             if the number <code>n</code> can not be converted to a
-     *             {@link Number}
-     */
-    protected abstract void setNumberValue(String n) throws NumberFormatException;
-
-    @Override
-    public void setObjectValue(Object v) {
-        if (v instanceof Number) {
-            setNumberValue((Number) v);
-        } else {
-            try {
-                setNumberValue(v.toString());
-            } catch (RuntimeException ignored) {
-                // Intentionally left blank
-            }
-        }
-    }
-
-    /**
-     * @see Comparable#compareTo(Object)
-     */
-    @Override
-    public int compareTo(JMeterProperty arg0) {
-        return Double.compare(getDoubleValue(), arg0.getDoubleValue());
-    }
+  /**
+   * @see Comparable#compareTo(Object)
+   */
+  @Override
+  public int compareTo(JMeterProperty arg0) {
+    return Double.compare(getDoubleValue(), arg0.getDoubleValue());
+  }
 }

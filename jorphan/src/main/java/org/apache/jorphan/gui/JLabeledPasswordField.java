@@ -23,24 +23,20 @@ import javax.swing.*;
  */
 public class JLabeledPasswordField extends JLabeledTextField {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public JLabeledPasswordField() {
-        super();
-    }
+  public JLabeledPasswordField() { super(); }
 
-    /**
-     * Constructs a new component with the label displaying the passed text.
-     *
-     * @param pLabel
-     *            The text to in the label.
-     */
-    public JLabeledPasswordField(String pLabel) {
-        super(pLabel);
-    }
+  /**
+   * Constructs a new component with the label displaying the passed text.
+   *
+   * @param pLabel
+   *            The text to in the label.
+   */
+  public JLabeledPasswordField(String pLabel) { super(pLabel); }
 
-    @Override
-    protected JTextField createTextField(int size) {
-        return new JPasswordField(size);
-    }
+  @Override
+  protected JTextField createTextField(int size) {
+    return new JPasswordField(size);
+  }
 }

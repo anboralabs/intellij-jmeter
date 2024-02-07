@@ -18,7 +18,6 @@
 package org.apache.jmeter.report.processor;
 
 import java.math.BigDecimal;
-
 import org.apache.jmeter.report.core.Sample;
 import org.apache.jmeter.util.JMeterUtils;
 
@@ -42,167 +41,180 @@ import org.apache.jmeter.util.JMeterUtils;
  *
  * @since 3.0
  */
-public class StatisticsSummaryConsumer extends
-        AbstractSummaryConsumer<StatisticsSummaryData> {
-    private static final String PCT1_LABEL = JMeterUtils.getPropDefault(
-            "aggregate_rpt_pct1", "90");
-    private static final String PCT2_LABEL = JMeterUtils.getPropDefault(
-            "aggregate_rpt_pct2", "95");
-    private static final String PCT3_LABEL = JMeterUtils.getPropDefault(
-            "aggregate_rpt_pct3", "99");
+public class StatisticsSummaryConsumer
+    extends AbstractSummaryConsumer<StatisticsSummaryData> {
+  private static final String PCT1_LABEL =
+      JMeterUtils.getPropDefault("aggregate_rpt_pct1", "90");
+  private static final String PCT2_LABEL =
+      JMeterUtils.getPropDefault("aggregate_rpt_pct2", "95");
+  private static final String PCT3_LABEL =
+      JMeterUtils.getPropDefault("aggregate_rpt_pct3", "99");
 
-    private static final double PERCENTILE_INDEX1 = new BigDecimal(PCT1_LABEL).doubleValue();
-    private static final double PERCENTILE_INDEX2 = new BigDecimal(PCT2_LABEL).doubleValue();
-    private static final double PERCENTILE_INDEX3 = new BigDecimal(PCT3_LABEL).doubleValue();
+  private static final double PERCENTILE_INDEX1 =
+      new BigDecimal(PCT1_LABEL).doubleValue();
+  private static final double PERCENTILE_INDEX2 =
+      new BigDecimal(PCT2_LABEL).doubleValue();
+  private static final double PERCENTILE_INDEX3 =
+      new BigDecimal(PCT3_LABEL).doubleValue();
 
-    /**
-     * Instantiates a new statistics summary consumer.
-     */
-    public StatisticsSummaryConsumer() {
-        super(true);
+  /**
+   * Instantiates a new statistics summary consumer.
+   */
+  public StatisticsSummaryConsumer() { super(true); }
+
+  /**
+   *
+   * @param sample {@link Sample}
+   * @param data {@link StatisticsSummaryData}
+   * @param isOverall boolean indicating if aggregation concerns the Overall
+   *     results in which case we ignore Transaction Controller's SampleResult
+   */
+  private static void aggregateSample(Sample sample, StatisticsSummaryData data,
+                                      boolean isOverall) {
+    if (isOverall && sample.isController()) {
+      return;
+    }
+    data.incTotal();
+    data.incBytes(sample.getReceivedBytes());
+    data.incSentBytes(sample.getSentBytes());
+
+    if (!sample.getSuccess()) {
+      data.incErrors();
     }
 
-    /**
-     *
-     * @param sample {@link Sample}
-     * @param data {@link StatisticsSummaryData}
-     * @param isOverall boolean indicating if aggregation concerns the Overall results in which case we ignore Transaction Controller's SampleResult
-     */
-    private static void aggregateSample(Sample sample, StatisticsSummaryData data, boolean isOverall) {
-        if(isOverall && sample.isController()) {
-            return;
-        }
-        data.incTotal();
-        data.incBytes(sample.getReceivedBytes());
-        data.incSentBytes(sample.getSentBytes());
+    long elapsedTime = sample.getElapsedTime();
+    data.getPercentile1().addValue((double)elapsedTime);
+    data.getPercentile2().addValue((double)elapsedTime);
+    data.getPercentile3().addValue((double)elapsedTime);
+    data.getMean().addValue((double)elapsedTime);
+    data.getMedian().addValue((double)elapsedTime);
+    data.setMin(elapsedTime);
+    data.setMax(elapsedTime);
 
-        if (!sample.getSuccess()) {
-            data.incErrors();
-        }
+    data.setFirstTime(sample.getStartTime());
 
-        long elapsedTime = sample.getElapsedTime();
-        data.getPercentile1().addValue((double) elapsedTime);
-        data.getPercentile2().addValue((double) elapsedTime);
-        data.getPercentile3().addValue((double) elapsedTime);
-        data.getMean().addValue((double) elapsedTime);
-        data.getMedian().addValue((double) elapsedTime);
-        data.setMin(elapsedTime);
-        data.setMax(elapsedTime);
+    data.setEndTime(sample.getEndTime());
+  }
 
-        data.setFirstTime(sample.getStartTime());
-
-        data.setEndTime(sample.getEndTime());
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.AbstractSummaryConsumer#updateData
+   * (org.apache.jmeter.report.processor.AbstractSummaryConsumer.SummaryInfo,
+   * org.apache.jmeter.report.core.Sample)
+   */
+  @Override
+  protected void updateData(SummaryInfo info, Sample sample) {
+    SummaryInfo overallInfo = getOverallInfo();
+    StatisticsSummaryData overallData = overallInfo.getData();
+    if (overallData == null) {
+      overallData = new StatisticsSummaryData(
+          PERCENTILE_INDEX1, PERCENTILE_INDEX2, PERCENTILE_INDEX3);
+      overallInfo.setData(overallData);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.AbstractSummaryConsumer#updateData
-     * (org.apache.jmeter.report.processor.AbstractSummaryConsumer.SummaryInfo,
-     * org.apache.jmeter.report.core.Sample)
-     */
-    @Override
-    protected void updateData(SummaryInfo info, Sample sample) {
-        SummaryInfo overallInfo = getOverallInfo();
-        StatisticsSummaryData overallData = overallInfo.getData();
-        if (overallData == null) {
-            overallData = new StatisticsSummaryData(PERCENTILE_INDEX1,
-                            PERCENTILE_INDEX2, PERCENTILE_INDEX3);
-            overallInfo.setData(overallData);
-        }
-
-        StatisticsSummaryData data = info.getData();
-        if (data == null) {
-            data = new StatisticsSummaryData(PERCENTILE_INDEX1,
-                        PERCENTILE_INDEX2, PERCENTILE_INDEX3);
-            info.setData(data);
-        }
-
-        if(!sample.isEmptyController()) {
-            aggregateSample(sample, data, false);
-            aggregateSample(sample, overallData, true);
-        }
+    StatisticsSummaryData data = info.getData();
+    if (data == null) {
+      data = new StatisticsSummaryData(PERCENTILE_INDEX1, PERCENTILE_INDEX2,
+                                       PERCENTILE_INDEX3);
+      info.setData(data);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.AbstractSummaryConsumer#createDataResult
-     * (java.lang.String)
-     */
-    @Override
-    protected ListResultData createDataResult(String key,
-            StatisticsSummaryData data) {
-        ListResultData result = new ListResultData();
-        result.addResult(new ValueResultData(
-                key != null ? key : JMeterUtils.getResString("reportgenerator_summary_total")));
-        long total = data.getTotal();
-        long errors = data.getErrors();
-        result.addResult(new ValueResultData(total));
-        result.addResult(new ValueResultData(errors));
-        result.addResult(new ValueResultData((double) errors * 100 / total));
-        result.addResult(new ValueResultData(data.getMean().getResult()));
-        result.addResult(new ValueResultData(data.getMin()));
-        result.addResult(new ValueResultData(data.getMax()));
-        result.addResult(new ValueResultData(data.getMedian().getResult()));
-        result.addResult(new ValueResultData(data.getPercentile1().getResult()));
-        result.addResult(new ValueResultData(data.getPercentile2().getResult()));
-        result.addResult(new ValueResultData(data.getPercentile3().getResult()));
-        result.addResult(new ValueResultData(data.getThroughput()));
-        result.addResult(new ValueResultData(data.getKBytesPerSecond()));
-        result.addResult(new ValueResultData(data.getSentKBytesPerSecond()));
-        return result;
+    if (!sample.isEmptyController()) {
+      aggregateSample(sample, data, false);
+      aggregateSample(sample, overallData, true);
     }
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.AbstractSummaryConsumer#getKeyFromSample
-     * (org.apache.jmeter.report.core.Sample)
-     */
-    @Override
-    protected String getKeyFromSample(Sample sample) {
-        return sample.getName();
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.AbstractSummaryConsumer#createDataResult
+   * (java.lang.String)
+   */
+  @Override
+  protected ListResultData createDataResult(String key,
+                                            StatisticsSummaryData data) {
+    ListResultData result = new ListResultData();
+    result.addResult(new ValueResultData(
+        key != null
+            ? key
+            : JMeterUtils.getResString("reportgenerator_summary_total")));
+    long total = data.getTotal();
+    long errors = data.getErrors();
+    result.addResult(new ValueResultData(total));
+    result.addResult(new ValueResultData(errors));
+    result.addResult(new ValueResultData((double)errors * 100 / total));
+    result.addResult(new ValueResultData(data.getMean().getResult()));
+    result.addResult(new ValueResultData(data.getMin()));
+    result.addResult(new ValueResultData(data.getMax()));
+    result.addResult(new ValueResultData(data.getMedian().getResult()));
+    result.addResult(new ValueResultData(data.getPercentile1().getResult()));
+    result.addResult(new ValueResultData(data.getPercentile2().getResult()));
+    result.addResult(new ValueResultData(data.getPercentile3().getResult()));
+    result.addResult(new ValueResultData(data.getThroughput()));
+    result.addResult(new ValueResultData(data.getKBytesPerSecond()));
+    result.addResult(new ValueResultData(data.getSentKBytesPerSecond()));
+    return result;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.AbstractSummaryConsumer#createResultTitles
-     * ()
-     */
-    @Override
-    protected ListResultData createResultTitles() {
-        ListResultData titles = new ListResultData();
-        titles.addResult(new ValueResultData(JMeterUtils
-            .getResString("reportgenerator_summary_statistics_label")));
-        titles.addResult(new ValueResultData(JMeterUtils
-            .getResString("reportgenerator_summary_statistics_count")));
-        titles.addResult(new ValueResultData(JMeterUtils
-            .getResString("reportgenerator_summary_statistics_error_count")));
-        titles.addResult(new ValueResultData(
-            JMeterUtils.getResString("reportgenerator_summary_statistics_error_percent")));
-        titles.addResult(new ValueResultData(
-                JMeterUtils.getResString("reportgenerator_summary_statistics_mean")));
-        titles.addResult(new ValueResultData(JMeterUtils.getResString("reportgenerator_summary_statistics_min")));
-        titles.addResult(new ValueResultData(JMeterUtils.getResString("reportgenerator_summary_statistics_max")));
-        titles.addResult(new ValueResultData(JMeterUtils.getResString("reportgenerator_summary_statistics_median")));
-        titles.addResult(new ValueResultData(formatPercentile(PCT1_LABEL)));
-        titles.addResult(new ValueResultData(formatPercentile(PCT2_LABEL)));
-        titles.addResult(new ValueResultData(formatPercentile(PCT3_LABEL)));
-        titles.addResult(new ValueResultData(JMeterUtils.getResString("reportgenerator_summary_statistics_throughput")));
-        titles.addResult(new ValueResultData(JMeterUtils.getResString("reportgenerator_summary_statistics_kbytes")));
-        titles.addResult(new ValueResultData(JMeterUtils.getResString("reportgenerator_summary_statistics_sent_kbytes")));
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.AbstractSummaryConsumer#getKeyFromSample
+   * (org.apache.jmeter.report.core.Sample)
+   */
+  @Override
+  protected String getKeyFromSample(Sample sample) {
+    return sample.getName();
+  }
 
-        return titles;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.AbstractSummaryConsumer#createResultTitles
+   * ()
+   */
+  @Override
+  protected ListResultData createResultTitles() {
+    ListResultData titles = new ListResultData();
+    titles.addResult(new ValueResultData(
+        JMeterUtils.getResString("reportgenerator_summary_statistics_label")));
+    titles.addResult(new ValueResultData(
+        JMeterUtils.getResString("reportgenerator_summary_statistics_count")));
+    titles.addResult(new ValueResultData(JMeterUtils.getResString(
+        "reportgenerator_summary_statistics_error_count")));
+    titles.addResult(new ValueResultData(JMeterUtils.getResString(
+        "reportgenerator_summary_statistics_error_percent")));
+    titles.addResult(new ValueResultData(
+        JMeterUtils.getResString("reportgenerator_summary_statistics_mean")));
+    titles.addResult(new ValueResultData(
+        JMeterUtils.getResString("reportgenerator_summary_statistics_min")));
+    titles.addResult(new ValueResultData(
+        JMeterUtils.getResString("reportgenerator_summary_statistics_max")));
+    titles.addResult(new ValueResultData(
+        JMeterUtils.getResString("reportgenerator_summary_statistics_median")));
+    titles.addResult(new ValueResultData(formatPercentile(PCT1_LABEL)));
+    titles.addResult(new ValueResultData(formatPercentile(PCT2_LABEL)));
+    titles.addResult(new ValueResultData(formatPercentile(PCT3_LABEL)));
+    titles.addResult(new ValueResultData(JMeterUtils.getResString(
+        "reportgenerator_summary_statistics_throughput")));
+    titles.addResult(new ValueResultData(
+        JMeterUtils.getResString("reportgenerator_summary_statistics_kbytes")));
+    titles.addResult(new ValueResultData(JMeterUtils.getResString(
+        "reportgenerator_summary_statistics_sent_kbytes")));
 
-    private static String formatPercentile(String percentileLabel) {
-        return String.format(JMeterUtils.getResString("reportgenerator_summary_statistics_percentile_fmt"),
-                percentileLabel);
-    }
+    return titles;
+  }
+
+  private static String formatPercentile(String percentileLabel) {
+    return String.format(
+        JMeterUtils.getResString(
+            "reportgenerator_summary_statistics_percentile_fmt"),
+        percentileLabel);
+  }
 }

@@ -18,12 +18,10 @@
 package org.apache.jmeter.control;
 
 import java.io.Serializable;
-
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.SimpleScriptContext;
-
 import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.testelement.ThreadListener;
 import org.apache.jmeter.testelement.schema.PropertiesAccessor;
@@ -59,225 +57,233 @@ import org.slf4j.LoggerFactory;
 
 // for unit test code @see TestIfController
 
-public class IfController extends GenericController implements Serializable, ThreadListener {
+public class IfController
+    extends GenericController implements Serializable, ThreadListener {
 
-    private static final Logger log = LoggerFactory.getLogger(IfController.class);
+  private static final Logger log = LoggerFactory.getLogger(IfController.class);
 
-    private static final long serialVersionUID = 242L;
+  private static final long serialVersionUID = 242L;
 
-    private static final String NASHORN_ENGINE_NAME = "nashorn"; //$NON-NLS-1$
+  private static final String NASHORN_ENGINE_NAME = "nashorn"; //$NON-NLS-1$
 
-    private static final String USE_RHINO_ENGINE_PROPERTY = "javascript.use_rhino"; //$NON-NLS-1$
+  private static final String USE_RHINO_ENGINE_PROPERTY =
+      "javascript.use_rhino"; //$NON-NLS-1$
 
-    private static final boolean USE_RHINO_ENGINE =
-            JMeterUtils.getPropDefault(USE_RHINO_ENGINE_PROPERTY, false) ||
-            getInstance().getEngineByName(NASHORN_ENGINE_NAME) == null;
+  private static final boolean USE_RHINO_ENGINE =
+      JMeterUtils.getPropDefault(USE_RHINO_ENGINE_PROPERTY, false) ||
+      getInstance().getEngineByName(NASHORN_ENGINE_NAME) == null;
 
+  private static final ThreadLocal<ScriptEngine> NASHORN_ENGINE =
+      ThreadLocal.withInitial(
+          () -> getInstance().getEngineByName(NASHORN_ENGINE_NAME));
 
-    private static final ThreadLocal<ScriptEngine> NASHORN_ENGINE = ThreadLocal
-            .withInitial(() -> getInstance().getEngineByName(NASHORN_ENGINE_NAME));
+  private interface JsEvaluator {
+    boolean evaluate(String testElementName, String condition);
+  }
 
-    private interface JsEvaluator {
-        boolean evaluate(String testElementName, String condition);
-    }
-
-    private static class RhinoJsEngine implements JsEvaluator {
-        @Override
-        public boolean evaluate(String testElementName, String condition) {
-            boolean result = false;
-            // now evaluate the condition using JavaScript
-            Context cx = Context.enter();
-            try {
-                Scriptable scope = cx.initStandardObjects(null);
-                Object cxResultObject = cx.evaluateString(scope, condition
-                , "<cmd>", 1, null);
-                result = computeResultFromString(condition, Context.toString(cxResultObject));
-            } catch (Exception e) {
-                log.error("{}: error while processing [{}]", testElementName, condition, e);
-            } finally {
-                Context.exit();
-            }
-            return result;
-        }
-    }
-
-    private static class NashornJsEngine implements JsEvaluator {
-        @Override
-        public boolean evaluate(String testElementName, String condition) {
-            try {
-                ScriptContext newContext = new SimpleScriptContext();
-                newContext.setBindings(NASHORN_ENGINE.get().createBindings(), ScriptContext.ENGINE_SCOPE);
-                Object o = NASHORN_ENGINE.get().eval(condition, newContext);
-                return computeResultFromString(condition, o.toString());
-            } catch (Exception ex) {
-                log.error("{}: error while processing [{}]", testElementName, condition, ex);
-            }
-            return false;
-        }
-    }
-
-    private static final JsEvaluator JAVASCRIPT_EVALUATOR = USE_RHINO_ENGINE ? new RhinoJsEngine() : new NashornJsEngine();
-
-    /**
-     * Initialization On Demand Holder pattern
-     */
-    private static class LazyHolder {
-        public static final ScriptEngineManager INSTANCE = new ScriptEngineManager();
-    }
-
-    /**
-     * @return ScriptEngineManager singleton
-     */
-    private static ScriptEngineManager getInstance() {
-            return LazyHolder.INSTANCE;
-    }
-    /**
-     * constructor
-     */
-    public IfController() {
-        super();
-    }
-
-    /**
-     * constructor
-     * @param condition The condition for this controller
-     */
-    public IfController(String condition) {
-        super();
-        this.setCondition(condition);
-    }
-
+  private static class RhinoJsEngine implements JsEvaluator {
     @Override
-    public IfControllerSchema getSchema() {
-        return IfControllerSchema.INSTANCE;
+    public boolean evaluate(String testElementName, String condition) {
+      boolean result = false;
+      // now evaluate the condition using JavaScript
+      Context cx = Context.enter();
+      try {
+        Scriptable scope = cx.initStandardObjects(null);
+        Object cxResultObject =
+            cx.evaluateString(scope, condition, "<cmd>", 1, null);
+        result = computeResultFromString(condition,
+                                         Context.toString(cxResultObject));
+      } catch (Exception e) {
+        log.error("{}: error while processing [{}]", testElementName, condition,
+                  e);
+      } finally {
+        Context.exit();
+      }
+      return result;
     }
+  }
 
+  private static class NashornJsEngine implements JsEvaluator {
     @Override
-    public PropertiesAccessor<? extends IfController, ? extends IfControllerSchema> getProps() {
-        return new PropertiesAccessor<>(this, getSchema());
+    public boolean evaluate(String testElementName, String condition) {
+      try {
+        ScriptContext newContext = new SimpleScriptContext();
+        newContext.setBindings(NASHORN_ENGINE.get().createBindings(),
+                               ScriptContext.ENGINE_SCOPE);
+        Object o = NASHORN_ENGINE.get().eval(condition, newContext);
+        return computeResultFromString(condition, o.toString());
+      } catch (Exception ex) {
+        log.error("{}: error while processing [{}]", testElementName, condition,
+                  ex);
+      }
+      return false;
+    }
+  }
+
+  private static final JsEvaluator JAVASCRIPT_EVALUATOR =
+      USE_RHINO_ENGINE ? new RhinoJsEngine() : new NashornJsEngine();
+
+  /**
+   * Initialization On Demand Holder pattern
+   */
+  private static class LazyHolder {
+    public static final ScriptEngineManager INSTANCE =
+        new ScriptEngineManager();
+  }
+
+  /**
+   * @return ScriptEngineManager singleton
+   */
+  private static ScriptEngineManager getInstance() {
+    return LazyHolder.INSTANCE;
+  }
+  /**
+   * constructor
+   */
+  public IfController() { super(); }
+
+  /**
+   * constructor
+   * @param condition The condition for this controller
+   */
+  public IfController(String condition) {
+    super();
+    this.setCondition(condition);
+  }
+
+  @Override
+  public IfControllerSchema getSchema() {
+    return IfControllerSchema.INSTANCE;
+  }
+
+  @Override
+  public PropertiesAccessor<? extends IfController, ?
+                                extends IfControllerSchema>
+  getProps() {
+    return new PropertiesAccessor<>(this, getSchema());
+  }
+
+  /**
+   * Condition Accessor - this is gonna be like <code>${count} &lt; 10</code>
+   * @param condition The condition for this controller
+   */
+  public void setCondition(String condition) {
+    set(getSchema().getCondition(), condition);
+  }
+
+  /**
+   * Condition Accessor - this is gonna be like <code>${count} &lt; 10</code>
+   * @return the condition associated with this controller
+   */
+  public String getCondition() {
+    return get(getSchema().getCondition()).trim();
+  }
+
+  /**
+   * evaluate the condition clause log error if bad condition
+   */
+  private boolean evaluateCondition(String cond) {
+    log.debug("    getCondition() : [{}]", cond);
+    return JAVASCRIPT_EVALUATOR.evaluate(getName(), cond);
+  }
+
+  /**
+   * @param condition
+   * @param resultStr
+   * @return boolean
+   * @throws Exception
+   */
+  private static boolean computeResultFromString(String condition,
+                                                 String resultStr)
+      throws Exception {
+    boolean result;
+    switch (resultStr) {
+    case "false":
+      result = false;
+      break;
+    case "true":
+      result = true;
+      break;
+    default:
+      throw new Exception(" BAD CONDITION :: " + condition +
+                          " :: expected true or false");
+    }
+    log.debug("    >> evaluate Condition -  [{}] results is  [{}]", condition,
+              result);
+    return result;
+  }
+
+  private static boolean evaluateExpression(String cond) {
+    log.debug("    >> evaluate Expression [{}] equals (ignoring case) 'true'",
+              cond);
+    return cond.equalsIgnoreCase("true"); // $NON-NLS-1$
+  }
+
+  @Override
+  public boolean isDone() {
+    // bug 26672 : the isDone result should always be false and not based on the
+    // expression evaluation if an IfController ever gets evaluated to false it
+    // gets removed from the test tree. The problem is that the condition might
+    // get evaluated to true the next iteration, which we don't get the
+    // opportunity for
+    return false;
+  }
+
+  /**
+   * @see org.apache.jmeter.control.Controller#next()
+   */
+  @Override
+  public Sampler next() {
+    // We should only evaluate the condition if it is the first
+    // time ( first "iteration" ) we are called.
+    // For subsequent calls, we are inside the IfControllerGroup,
+    // so then we just pass the control to the next item inside the if control
+    boolean result = true;
+    if (isEvaluateAll() || isFirst()) {
+      result = isUseExpression() ? evaluateExpression(getCondition())
+                                 : evaluateCondition(getCondition());
     }
 
-    /**
-     * Condition Accessor - this is gonna be like <code>${count} &lt; 10</code>
-     * @param condition The condition for this controller
-     */
-    public void setCondition(String condition) {
-        set(getSchema().getCondition(), condition);
+    if (result) {
+      return super.next();
     }
-
-    /**
-     * Condition Accessor - this is gonna be like <code>${count} &lt; 10</code>
-     * @return the condition associated with this controller
-     */
-    public String getCondition() {
-        return get(getSchema().getCondition()).trim();
+    // If-test is false, need to re-initialize indexes
+    try {
+      initializeSubControllers();
+      return nextIsNull();
+    } catch (NextIsNullException e1) {
+      return null;
     }
+  }
 
-    /**
-     * evaluate the condition clause log error if bad condition
-     */
-    private boolean evaluateCondition(String cond) {
-        log.debug("    getCondition() : [{}]", cond);
-        return JAVASCRIPT_EVALUATOR.evaluate(getName(), cond);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void triggerEndOfLoop() {
+    super.initializeSubControllers();
+    super.triggerEndOfLoop();
+  }
 
-    /**
-     * @param condition
-     * @param resultStr
-     * @return boolean
-     * @throws Exception
-     */
-    private static boolean computeResultFromString(
-            String condition, String resultStr) throws Exception {
-        boolean result;
-        switch(resultStr) {
-            case "false":
-                result = false;
-                break;
-            case "true":
-                result = true;
-                break;
-            default:
-                throw new Exception(" BAD CONDITION :: " + condition + " :: expected true or false");
-        }
-        log.debug("    >> evaluate Condition -  [{}] results is  [{}]", condition, result);
-        return result;
-    }
+  public boolean isEvaluateAll() { return get(getSchema().getEvaluateAll()); }
 
+  public void setEvaluateAll(boolean b) {
+    set(getSchema().getEvaluateAll(), b);
+  }
 
-    private static boolean evaluateExpression(String cond) {
-        log.debug("    >> evaluate Expression [{}] equals (ignoring case) 'true'", cond);
-        return cond.equalsIgnoreCase("true"); // $NON-NLS-1$
-    }
+  public boolean isUseExpression() {
+    return get(getSchema().getUseExpression());
+  }
 
-    @Override
-    public boolean isDone() {
-        // bug 26672 : the isDone result should always be false and not based on the expression evaluation
-        // if an IfController ever gets evaluated to false it gets removed from the test tree.
-        // The problem is that the condition might get evaluated to true the next iteration,
-        // which we don't get the opportunity for
-        return false;
-    }
+  public void setUseExpression(boolean selected) {
+    set(getSchema().getUseExpression(), selected);
+  }
 
-    /**
-     * @see org.apache.jmeter.control.Controller#next()
-     */
-    @Override
-    public Sampler next() {
-        // We should only evaluate the condition if it is the first
-        // time ( first "iteration" ) we are called.
-        // For subsequent calls, we are inside the IfControllerGroup,
-        // so then we just pass the control to the next item inside the if control
-        boolean result = true;
-        if(isEvaluateAll() || isFirst()) {
-            result = isUseExpression() ?
-                    evaluateExpression(getCondition())
-                    :
-                    evaluateCondition(getCondition());
-        }
+  @Override
+  public void threadStarted() {}
 
-        if (result) {
-            return super.next();
-        }
-        // If-test is false, need to re-initialize indexes
-        try {
-            initializeSubControllers();
-            return nextIsNull();
-        } catch (NextIsNullException e1) {
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void triggerEndOfLoop() {
-        super.initializeSubControllers();
-        super.triggerEndOfLoop();
-    }
-
-    public boolean isEvaluateAll() {
-        return get(getSchema().getEvaluateAll());
-    }
-
-    public void setEvaluateAll(boolean b) {
-        set(getSchema().getEvaluateAll(), b);
-    }
-
-    public boolean isUseExpression() {
-        return get(getSchema().getUseExpression());
-    }
-
-    public void setUseExpression(boolean selected) {
-        set(getSchema().getUseExpression(), selected);
-    }
-
-    @Override
-    public void threadStarted() {}
-
-    @Override
-    public void threadFinished() {
-       NASHORN_ENGINE.remove();
-    }
+  @Override
+  public void threadFinished() {
+    NASHORN_ENGINE.remove();
+  }
 }

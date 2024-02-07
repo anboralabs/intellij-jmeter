@@ -18,16 +18,16 @@
 package org.apache.jmeter.samplers;
 
 /**
- * Samplers which are able to interrupt a potentially long-running operation should
- * implement this interface.
+ * Samplers which are able to interrupt a potentially long-running operation
+ * should implement this interface.
  *
  */
 public interface Interruptible {
 
-    /**
-     * Interrupt the current operation if possible.
-     *
-     * @return <code>true</code> if there was an operation to interrupt.
-     */
-    boolean interrupt();
+  /**
+   * Interrupt the current operation if possible.
+   *
+   * @return <code>true</code> if there was an operation to interrupt.
+   */
+  boolean interrupt();
 }

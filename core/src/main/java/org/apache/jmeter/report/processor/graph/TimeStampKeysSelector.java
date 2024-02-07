@@ -27,60 +27,55 @@ import org.apache.jmeter.report.core.Sample;
  */
 public class TimeStampKeysSelector implements GraphKeysSelector {
 
-    private long granularity = 1;
-    private boolean selectBeginTime = false;
+  private long granularity = 1;
+  private boolean selectBeginTime = false;
 
-    /**
-     * Gets the granularity.
-     *
-     * @return the granularity
-     */
-    public long getGranularity() {
-        return granularity;
-    }
+  /**
+   * Gets the granularity.
+   *
+   * @return the granularity
+   */
+  public long getGranularity() { return granularity; }
 
-    /**
-     * Sets the granularity.
-     *
-     * @param granularity
-     *            the granularity to set
-     */
-    public void setGranularity(long granularity) {
-        this.granularity = granularity;
-    }
+  /**
+   * Sets the granularity.
+   *
+   * @param granularity
+   *            the granularity to set
+   */
+  public void setGranularity(long granularity) {
+    this.granularity = granularity;
+  }
 
-    /**
-     * Gets a status defining whether the projection is done with the begin or
-     * end time of the sample.
-     *
-     * @return true if the begin time is used; false otherwise.
-     */
-    public final boolean selectsBeginTime() {
-        return selectBeginTime;
-    }
+  /**
+   * Gets a status defining whether the projection is done with the begin or
+   * end time of the sample.
+   *
+   * @return true if the begin time is used; false otherwise.
+   */
+  public final boolean selectsBeginTime() { return selectBeginTime; }
 
-    /**
-     * Sets the status defining whether the projection is done with the begin or
-     * end time of the sample.
-     *
-     * @param selectBeginTime
-     *            the status to set
-     */
-    public final void setSelectBeginTime(boolean selectBeginTime) {
-        this.selectBeginTime = selectBeginTime;
-    }
+  /**
+   * Sets the status defining whether the projection is done with the begin or
+   * end time of the sample.
+   *
+   * @param selectBeginTime
+   *            the status to set
+   */
+  public final void setSelectBeginTime(boolean selectBeginTime) {
+    this.selectBeginTime = selectBeginTime;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.core.SampleSelector#select(org.apache.jmeter
-     * .report.core.Sample)
-     */
-    @Override
-    public Double select(Sample sample) {
-        long time = selectBeginTime ? sample.getStartTime() : sample.getEndTime();
-        return (double) time - time % granularity;
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.core.SampleSelector#select(org.apache.jmeter
+   * .report.core.Sample)
+   */
+  @Override
+  public Double select(Sample sample) {
+    long time = selectBeginTime ? sample.getStartTime() : sample.getEndTime();
+    return (double)time - time % granularity;
+  }
 }

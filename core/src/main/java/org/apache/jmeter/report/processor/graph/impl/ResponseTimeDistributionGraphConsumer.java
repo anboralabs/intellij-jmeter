@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph.impl;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.apache.jmeter.report.processor.MapResultData;
 import org.apache.jmeter.report.processor.SumAggregatorFactory;
 import org.apache.jmeter.report.processor.ValueResultData;
@@ -36,67 +35,63 @@ import org.apache.jmeter.report.processor.graph.NameSeriesSelector;
  *
  * @since 3.0
  */
-public class ResponseTimeDistributionGraphConsumer extends
-        AbstractGraphConsumer {
+public class ResponseTimeDistributionGraphConsumer
+    extends AbstractGraphConsumer {
 
-    private long granularity = 1L;
+  private long granularity = 1L;
 
-    /**
-     * Gets the granularity.
-     *
-     * @return the granularity
-     */
-    public final long getGranularity() {
-        return granularity;
-    }
+  /**
+   * Gets the granularity.
+   *
+   * @return the granularity
+   */
+  public final long getGranularity() { return granularity; }
 
-    /**
-     * @param granularity the granularity to set
-     */
-    public final void setGranularity(long granularity) {
-        this.granularity = granularity;
-    }
+  /**
+   * @param granularity the granularity to set
+   */
+  public final void setGranularity(long granularity) {
+    this.granularity = granularity;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createKeysSelector()
-     */
-    @Override
-    protected final GraphKeysSelector createKeysSelector() {
-        return sample -> {
-            long elapsed = sample.getElapsedTime();
-            return (double) elapsed - elapsed % granularity;
-        };
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createKeysSelector()
+   */
+  @Override
+  protected final GraphKeysSelector createKeysSelector() {
+    return sample -> {
+      long elapsed = sample.getElapsedTime();
+      return (double)elapsed - elapsed % granularity;
+    };
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected Map<String, GroupInfo> createGroupInfos() {
-        return Collections.singletonMap(
-                AbstractGraphConsumer.DEFAULT_GROUP,
-                new GroupInfo(
-                        new SumAggregatorFactory(), new NameSeriesSelector(),
-                        // We include Transaction Controller results
-                        new CountValueSelector(false), false, false));
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override
+  protected Map<String, GroupInfo> createGroupInfos() {
+    return Collections.singletonMap(
+        AbstractGraphConsumer.DEFAULT_GROUP,
+        new GroupInfo(new SumAggregatorFactory(), new NameSeriesSelector(),
+                      // We include Transaction Controller results
+                      new CountValueSelector(false), false, false));
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
-     * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
-     */
-    @Override
-    protected void initializeExtraResults(MapResultData parentResult) {
-        parentResult.setResult(
-                AbstractOverTimeGraphConsumer.RESULT_CTX_GRANULARITY,
-                new ValueResultData(granularity));
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
+   * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
+   */
+  @Override
+  protected void initializeExtraResults(MapResultData parentResult) {
+    parentResult.setResult(AbstractOverTimeGraphConsumer.RESULT_CTX_GRANULARITY,
+                           new ValueResultData(granularity));
+  }
 }

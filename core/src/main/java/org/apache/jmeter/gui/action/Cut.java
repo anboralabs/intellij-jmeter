@@ -17,48 +17,46 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Implements the Cut menu item command
  */
 @AutoService(Command.class)
 public class Cut extends AbstractAction {
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.CUT);
+  static { commands.add(ActionNames.CUT); }
+
+  /**
+   * @see Command#getActionNames()
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
+
+  /**
+   * @see Command#doAction(ActionEvent)
+   */
+  @Override
+  public void doAction(ActionEvent e) {
+    GuiPackage guiPack = GuiPackage.getInstance();
+    ActionRouter.getInstance().actionPerformed(
+        new ActionEvent(e.getSource(), e.getID(), ActionNames.CHECK_CUT));
+    JMeterTreeNode[] currentNodes =
+        guiPack.getTreeListener().getSelectedNodes();
+
+    currentNodes = Copy.keepOnlyAncestors(currentNodes);
+    Copy.setCopiedNodes(currentNodes);
+    for (JMeterTreeNode currentNode : currentNodes) {
+      guiPack.getTreeModel().removeNodeFromParent(currentNode);
     }
-
-    /**
-     * @see Command#getActionNames()
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
-
-    /**
-     * @see Command#doAction(ActionEvent)
-     */
-    @Override
-    public void doAction(ActionEvent e) {
-        GuiPackage guiPack = GuiPackage.getInstance();
-        ActionRouter.getInstance().actionPerformed(new ActionEvent(e.getSource(), e.getID(), ActionNames.CHECK_CUT));
-        JMeterTreeNode[] currentNodes = guiPack.getTreeListener().getSelectedNodes();
-
-        currentNodes = Copy.keepOnlyAncestors(currentNodes);
-        Copy.setCopiedNodes(currentNodes);
-        for (JMeterTreeNode currentNode : currentNodes) {
-            guiPack.getTreeModel().removeNodeFromParent(currentNode);
-        }
-        guiPack.getMainFrame().repaint();
-    }
+    guiPack.getMainFrame().repaint();
+  }
 }

@@ -21,12 +21,9 @@ import java.util.Iterator;
 
 public interface PropertyIterator extends Iterator<JMeterProperty> {
 
-    @Override
-    boolean hasNext();
+  @Override boolean hasNext();
 
-    @Override
-    JMeterProperty next();
+  @Override JMeterProperty next();
 
-    @Override
-    void remove();
+  @Override void remove();
 }

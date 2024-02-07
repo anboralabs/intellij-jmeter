@@ -22,9 +22,9 @@ package org.apache.jmeter.processor;
  *
  */
 public interface PostProcessor {
-    /**
-     * Provides the PostProcessor with a SampleResult object from which to
-     * extract values for use in future Queries.
-     */
-    void process();
+  /**
+   * Provides the PostProcessor with a SampleResult object from which to
+   * extract values for use in future Queries.
+   */
+  void process();
 }

@@ -17,14 +17,12 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.gui.JMeterUIDefaults;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Zoom IN/OUT
@@ -32,36 +30,38 @@ import com.google.auto.service.AutoService;
  */
 @AutoService(Command.class)
 public class ZoomInOut extends AbstractAction {
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    private static final float ZOOM_SCALE = JMeterUtils.getPropDefault("zoom_scale", 1.1f);
+  private static final float ZOOM_SCALE =
+      JMeterUtils.getPropDefault("zoom_scale", 1.1f);
 
-    static {
-        commands.add(ActionNames.ZOOM_IN);
-        commands.add(ActionNames.ZOOM_OUT);
+  static {
+    commands.add(ActionNames.ZOOM_IN);
+    commands.add(ActionNames.ZOOM_OUT);
+  }
+
+  /**
+   * @see
+   *     org.apache.jmeter.gui.action.AbstractActionWithNoRunningTest#doActionAfterCheck(ActionEvent)
+   */
+  @Override
+  public void doAction(ActionEvent e) {
+    final String actionCommand = e.getActionCommand();
+    float scale = JMeterUIDefaults.INSTANCE.getScale();
+    if (actionCommand.equals(ActionNames.ZOOM_IN)) {
+      scale *= ZOOM_SCALE;
+    } else if (actionCommand.equals(ActionNames.ZOOM_OUT)) {
+      scale /= ZOOM_SCALE;
     }
+    JMeterUIDefaults.INSTANCE.setScale(scale);
+    JMeterUtils.refreshUI();
+  }
 
-    /**
-     * @see org.apache.jmeter.gui.action.AbstractActionWithNoRunningTest#doActionAfterCheck(ActionEvent)
-     */
-    @Override
-    public void doAction(ActionEvent e) {
-        final String actionCommand = e.getActionCommand();
-        float scale = JMeterUIDefaults.INSTANCE.getScale();
-        if (actionCommand.equals(ActionNames.ZOOM_IN)) {
-            scale *= ZOOM_SCALE;
-        } else if (actionCommand.equals(ActionNames.ZOOM_OUT)) {
-            scale /= ZOOM_SCALE;
-        }
-        JMeterUIDefaults.INSTANCE.setScale(scale);
-        JMeterUtils.refreshUI();
-    }
-
-    /**
-     * @see org.apache.jmeter.gui.action.Command#getActionNames()
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * @see org.apache.jmeter.gui.action.Command#getActionNames()
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 }

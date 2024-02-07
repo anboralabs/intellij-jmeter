@@ -23,15 +23,15 @@ package org.apache.jmeter.samplers;
  */
 public interface SampleMonitor {
 
-    /**
-     * Will be called when a sample is about to start
-     * @param sampler sample that will be started
-     */
-    void sampleStarting(Sampler sampler);
+  /**
+   * Will be called when a sample is about to start
+   * @param sampler sample that will be started
+   */
+  void sampleStarting(Sampler sampler);
 
-    /**
-     * Will be called when a sample has just finished
-     * @param sampler finished sample
-     */
-    void sampleEnded(Sampler sampler);
+  /**
+   * Will be called when a sample has just finished
+   * @param sampler finished sample
+   */
+  void sampleEnded(Sampler sampler);
 }

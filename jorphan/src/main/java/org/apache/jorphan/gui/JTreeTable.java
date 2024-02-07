@@ -17,50 +17,44 @@
 
 package org.apache.jorphan.gui;
 
-import javax.swing.*;
 import java.util.Vector;
+import javax.swing.*;
 
 public class JTreeTable extends JTable {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    /**
-     * The default implementation will use DefaultTreeTableModel
-     */
-    public JTreeTable() {
-        super(new DefaultTreeTableModel());
-    }
+  /**
+   * The default implementation will use DefaultTreeTableModel
+   */
+  public JTreeTable() { super(new DefaultTreeTableModel()); }
 
-    /**
-     * @param numRows number of rows the table holds
-     * @param numColumns number of columns the table holds
-     */
-    public JTreeTable(int numRows, int numColumns) {
-        super(numRows, numColumns);
-    }
+  /**
+   * @param numRows number of rows the table holds
+   * @param numColumns number of columns the table holds
+   */
+  public JTreeTable(int numRows, int numColumns) { super(numRows, numColumns); }
 
-    /**
-     * @param dm the data model to use
-     */
-    public JTreeTable(TreeTableModel dm) {
-        super(dm);
-    }
+  /**
+   * @param dm the data model to use
+   */
+  public JTreeTable(TreeTableModel dm) { super(dm); }
 
-    /**
-     * @param rowData the data for the table
-     * @param columnNames the names for the columns
-     */
-    public JTreeTable(Object[][] rowData, Object[] columnNames) {
-        super(rowData, columnNames);
-    }
+  /**
+   * @param rowData the data for the table
+   * @param columnNames the names for the columns
+   */
+  public JTreeTable(Object[][] rowData, Object[] columnNames) {
+    super(rowData, columnNames);
+  }
 
-    /**
-     * @param rowData the data for the table. Has to be a {@link Vector} of {@link Vector}s.
-     * @param columnNames the names for the columns
-     */
-    @SuppressWarnings("unchecked")
-    public JTreeTable(Vector<?> rowData, Vector<?> columnNames) {
-        super((Vector<? extends Vector<?>>) rowData, columnNames);
-    }
-
+  /**
+   * @param rowData the data for the table. Has to be a {@link Vector} of {@link
+   *     Vector}s.
+   * @param columnNames the names for the columns
+   */
+  @SuppressWarnings("unchecked")
+  public JTreeTable(Vector<?> rowData, Vector<?> columnNames) {
+    super((Vector<? extends Vector<?>>)rowData, columnNames);
+  }
 }

@@ -18,36 +18,37 @@
 package org.apache.jmeter.gui.action;
 
 import java.awt.event.ActionEvent;
-
 import javax.swing.JOptionPane;
-
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.util.JMeterUtils;
 
 /**
  * {@link AbstractAction} implementation that check no test is running
- * before calling {@link AbstractActionWithNoRunningTest#doActionAfterCheck(ActionEvent)}
+ * before calling {@link
+ * AbstractActionWithNoRunningTest#doActionAfterCheck(ActionEvent)}
  * @since 3.1
  */
 public abstract class AbstractActionWithNoRunningTest extends AbstractAction {
 
-    @Override
-    public final void doAction(ActionEvent e) throws IllegalUserActionException {
-        if (JMeterUtils.isTestRunning()) {
-            JOptionPane.showMessageDialog(GuiPackage.getInstance().getMainFrame(),
-                    JMeterUtils.getResString("action_check_message"),  //$NON-NLS-1$
-                    JMeterUtils.getResString("action_check_title"),  //$NON-NLS-1$
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        doActionAfterCheck(e);
+  @Override
+  public final void doAction(ActionEvent e) throws IllegalUserActionException {
+    if (JMeterUtils.isTestRunning()) {
+      JOptionPane.showMessageDialog(
+          GuiPackage.getInstance().getMainFrame(),
+          JMeterUtils.getResString("action_check_message"), //$NON-NLS-1$
+          JMeterUtils.getResString("action_check_title"),   //$NON-NLS-1$
+          JOptionPane.WARNING_MESSAGE);
+      return;
     }
+    doActionAfterCheck(e);
+  }
 
-    /**
-     * Called to handle {@link ActionEvent} only if no test is running
-     * @param e {@link ActionEvent}
-     * @throws IllegalUserActionException when user action is invalid
-     */
-    protected abstract void doActionAfterCheck(ActionEvent e) throws IllegalUserActionException;
+  /**
+   * Called to handle {@link ActionEvent} only if no test is running
+   * @param e {@link ActionEvent}
+   * @throws IllegalUserActionException when user action is invalid
+   */
+  protected abstract void doActionAfterCheck(ActionEvent e)
+      throws IllegalUserActionException;
 }

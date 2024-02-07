@@ -26,111 +26,108 @@ import java.util.Set;
  * @since 3.3
  */
 class UnmodifiableJMeterVariables extends JMeterVariables {
-    private final JMeterVariables variables;
+  private final JMeterVariables variables;
 
-    /**
-     * Wrap the {@code variables} to make them unmodifiable.
-     * @param variables to wrap
-     */
-    public UnmodifiableJMeterVariables(JMeterVariables variables) {
-        this.variables = variables;
+  /**
+   * Wrap the {@code variables} to make them unmodifiable.
+   * @param variables to wrap
+   */
+  public UnmodifiableJMeterVariables(JMeterVariables variables) {
+    this.variables = variables;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((variables == null) ? 0 : variables.hashCode());
+    return result;
+  }
+
+  @Override
+  public String getThreadName() {
+    return variables.getThreadName();
+  }
+
+  @Override
+  public int getIteration() {
+    return variables.getIteration();
+  }
+
+  @Override
+  public void incIteration() {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Object remove(String key) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void put(String key, String value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void putObject(String key, Object value) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void putAll(Map<String, ?> vars) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void putAll(JMeterVariables vars) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public String get(String key) {
+    return variables.get(key);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((variables == null) ? 0 : variables.hashCode());
-        return result;
+    if (obj == null) {
+      return false;
     }
-
-
-    @Override
-    public String getThreadName() {
-        return variables.getThreadName();
+    if (getClass() != obj.getClass()) {
+      return false;
     }
-
-    @Override
-    public int getIteration() {
-        return variables.getIteration();
+    UnmodifiableJMeterVariables other = (UnmodifiableJMeterVariables)obj;
+    if (variables == null) {
+      if (other.variables != null) {
+        return false;
+      }
+    } else if (!variables.equals(other.variables)) {
+      return false;
     }
+    return true;
+  }
 
-    @Override
-    public void incIteration() {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public Object getObject(String key) {
+    return variables.getObject(key);
+  }
 
-    @Override
-    public Object remove(String key) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public Iterator<Map.Entry<String, Object>> getIterator() {
+    return variables.getIterator();
+  }
 
-    @Override
-    public void put(String key, String value) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public Set<Map.Entry<String, Object>> entrySet() {
+    return variables.entrySet();
+  }
 
-    @Override
-    public void putObject(String key, Object value) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void putAll(Map<String, ?> vars) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void putAll(JMeterVariables vars) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String get(String key) {
-        return variables.get(key);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        UnmodifiableJMeterVariables other = (UnmodifiableJMeterVariables) obj;
-        if (variables == null) {
-            if (other.variables != null) {
-                return false;
-            }
-        } else if (!variables.equals(other.variables)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public Object getObject(String key) {
-        return variables.getObject(key);
-    }
-
-    @Override
-    public Iterator<Map.Entry<String, Object>> getIterator() {
-        return variables.getIterator();
-    }
-
-    @Override
-    public Set<Map.Entry<String, Object>> entrySet() {
-        return variables.entrySet();
-    }
-
-    @Override
-    public String toString() {
-        return variables.toString();
-    }
-
+  @Override
+  public String toString() {
+    return variables.toString();
+  }
 }

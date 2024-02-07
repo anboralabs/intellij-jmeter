@@ -28,70 +28,70 @@ import java.util.ArrayList;
  */
 public class AbstractSampleProcessor implements SampleProcessor {
 
-    private SampleContext sampleContext;
+  private SampleContext sampleContext;
 
-    private final ArrayList<ChannelContext> channelContexts = new ArrayList<>();
+  private final ArrayList<ChannelContext> channelContexts = new ArrayList<>();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.SampleProcessor#getSampleContext()
-     */
-    @Override
-    public SampleContext getSampleContext() {
-        return sampleContext;
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.SampleProcessor#getSampleContext()
+   */
+  @Override
+  public SampleContext getSampleContext() {
+    return sampleContext;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.SampleProcessor#setSampleContext
+   * (org.apache.jmeter.report.csv.processor.SampleContext)
+   */
+  @Override
+  public void setSampleContext(SampleContext sampleContext) {
+    this.sampleContext = sampleContext;
+  }
+
+  /**
+   * Get the ChannelContext associated to the specified channel. If the
+   * specified channel does not have a context associated to it then one will
+   * be created and associated.
+   *
+   * @param channel
+   *            The channel number whose context is to be returned
+   * @return The channel context associated to the specified channel.
+   */
+  private ChannelContext getChannelContext(int channel) {
+    while (channelContexts.size() <= channel) {
+      channelContexts.add(new ChannelContext());
     }
+    return channelContexts.get(channel);
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.SampleProcessor#setSampleContext
-     * (org.apache.jmeter.report.csv.processor.SampleContext)
-     */
-    @Override
-    public void setSampleContext(SampleContext sampleContext) {
-        this.sampleContext = sampleContext;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.SampleProcessor#setChannelAttribute
+   * (int, java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setChannelAttribute(int channel, String key, Object value) {
+    getChannelContext(channel).put(key, value);
+  }
 
-    /**
-     * Get the ChannelContext associated to the specified channel. If the
-     * specified channel does not have a context associated to it then one will
-     * be created and associated.
-     *
-     * @param channel
-     *            The channel number whose context is to be returned
-     * @return The channel context associated to the specified channel.
-     */
-    private ChannelContext getChannelContext(int channel) {
-        while (channelContexts.size() <= channel) {
-            channelContexts.add(new ChannelContext());
-        }
-        return channelContexts.get(channel);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.SampleProcessor#setChannelAttribute
-     * (int, java.lang.String, java.lang.Object)
-     */
-    @Override
-    public void setChannelAttribute(int channel, String key, Object value) {
-        getChannelContext(channel).put(key, value);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.SampleProcessor#getChannelAttribute
-     * (int, java.lang.String)
-     */
-    @Override
-    public Object getChannelAttribute(int channel, String key) {
-        return getChannelContext(channel).get(key);
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.SampleProcessor#getChannelAttribute
+   * (int, java.lang.String)
+   */
+  @Override
+  public Object getChannelAttribute(int channel, String key) {
+    return getChannelContext(channel).get(key);
+  }
 }

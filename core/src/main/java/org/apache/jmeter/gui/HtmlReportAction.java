@@ -17,15 +17,14 @@
 
 package org.apache.jmeter.gui;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.MenuElement;
-
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.action.AbstractAction;
 import org.apache.jmeter.gui.action.ActionNames;
@@ -34,66 +33,58 @@ import org.apache.jmeter.gui.action.Command;
 import org.apache.jmeter.gui.plugin.MenuCreator;
 import org.apache.jmeter.util.JMeterUtils;
 
-import com.google.auto.service.AutoService;
-
-@AutoService({
-        Command.class,
-        MenuCreator.class
-})
+@AutoService({Command.class, MenuCreator.class})
 public class HtmlReportAction extends AbstractAction implements MenuCreator {
-    private static final Set<String> commands = new HashSet<>();
-    private HtmlReportUI htmlReportPanel;
+  private static final Set<String> commands = new HashSet<>();
+  private HtmlReportUI htmlReportPanel;
 
-    static {
-        commands.add(ActionNames.HTML_REPORT);
+  static { commands.add(ActionNames.HTML_REPORT); }
+
+  public HtmlReportAction() { super(); }
+
+  @Override
+  public void doAction(ActionEvent e) throws IllegalUserActionException {
+    htmlReportPanel = new HtmlReportUI();
+    // htmlReportPanel.showInputDialog(getParentFrame(e));
+  }
+
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
+
+  @Override
+  public JMenuItem[] getMenuItemsAtLocation(MENU_LOCATION location) {
+    if (location != MENU_LOCATION.TOOLS) {
+      return new JMenuItem[0];
     }
 
-    public HtmlReportAction() {
-        super();
-    }
+    // Use the action name as resource key because the action name is used by
+    // JMeterMenuBar too when changing languages.
+    JMenuItem menuItem =
+        new JMenuItem(JMeterUtils.getResString(ActionNames.HTML_REPORT),
+                      KeyEvent.VK_UNDEFINED);
+    menuItem.setName(ActionNames.HTML_REPORT);
+    menuItem.setActionCommand(ActionNames.HTML_REPORT);
+    menuItem.setAccelerator(null);
+    menuItem.addActionListener(ActionRouter.getInstance());
+    return new JMenuItem[] {menuItem};
+  }
 
-    @Override
-    public void doAction(ActionEvent e) throws IllegalUserActionException {
-        htmlReportPanel = new HtmlReportUI();
-        // htmlReportPanel.showInputDialog(getParentFrame(e));
-    }
+  @Override
+  public JMenu[] getTopLevelMenus() {
+    return new JMenu[0];
+  }
 
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  @Override
+  public boolean localeChanged(MenuElement menu) {
+    return false;
+  }
 
-    @Override
-    public JMenuItem[] getMenuItemsAtLocation(MENU_LOCATION location) {
-        if (location != MENU_LOCATION.TOOLS) {
-            return new JMenuItem[0];
-        }
+  @Override
+  public void localeChanged() {
+    // NOOP
+  }
 
-        // Use the action name as resource key because the action name is used by JMeterMenuBar too when changing languages.
-        JMenuItem menuItem = new JMenuItem(JMeterUtils.getResString(ActionNames.HTML_REPORT), KeyEvent.VK_UNDEFINED);
-        menuItem.setName(ActionNames.HTML_REPORT);
-        menuItem.setActionCommand(ActionNames.HTML_REPORT);
-        menuItem.setAccelerator(null);
-        menuItem.addActionListener(ActionRouter.getInstance());
-        return new JMenuItem[] { menuItem };
-    }
-
-    @Override
-    public JMenu[] getTopLevelMenus() {
-        return new JMenu[0];
-    }
-
-    @Override
-    public boolean localeChanged(MenuElement menu) {
-        return false;
-    }
-
-    @Override
-    public void localeChanged() {
-        // NOOP
-    }
-
-    public HtmlReportUI getHtmlReportPanel() {
-        return htmlReportPanel;
-    }
+  public HtmlReportUI getHtmlReportPanel() { return htmlReportPanel; }
 }

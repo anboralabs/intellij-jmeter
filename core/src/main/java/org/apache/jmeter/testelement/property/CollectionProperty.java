@@ -20,202 +20,195 @@ package org.apache.jmeter.testelement.property;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.apache.jmeter.testelement.TestElement;
 
 public class CollectionProperty extends MultiProperty {
 
-    private static final long serialVersionUID = 221L; // Remember to change this when the class changes ...
+  private static final long serialVersionUID =
+      221L; // Remember to change this when the class changes ...
 
-    private Collection<JMeterProperty> value;
+  private Collection<JMeterProperty> value;
 
-    private transient Collection<JMeterProperty> savedValue;
+  private transient Collection<JMeterProperty> savedValue;
 
-    public CollectionProperty(String name, Collection<?> value) {
-        super(name);
-        this.value = normalizeList(value);
+  public CollectionProperty(String name, Collection<?> value) {
+    super(name);
+    this.value = normalizeList(value);
+  }
+
+  public CollectionProperty() {
+    super();
+    value = new ArrayList<>();
+  }
+
+  @Override
+  @SuppressWarnings("UndefinedEquals")
+  public boolean equals(Object o) {
+    if (o instanceof CollectionProperty && value != null) {
+      // TODO: Collection does not have well-defined equals behavior
+      return value.equals(((JMeterProperty)o).getObjectValue());
     }
+    return false;
+  }
 
-    public CollectionProperty() {
-        super();
-        value = new ArrayList<>();
+  @Override
+  public int hashCode() {
+    return value == null ? 0 : value.hashCode();
+  }
+
+  public void remove(String prop) {
+    PropertyIterator iter = iterator();
+    while (iter.hasNext()) {
+      if (iter.next().getName().equals(prop)) {
+        iter.remove();
+      }
     }
+  }
 
-    @Override
-    @SuppressWarnings("UndefinedEquals")
-    public boolean equals(Object o) {
-        if (o instanceof CollectionProperty && value != null) {
-            // TODO: Collection does not have well-defined equals behavior
-            return value.equals(((JMeterProperty) o).getObjectValue());
-        }
-        return false;
+  public void set(int index, String prop) {
+    if (value instanceof List<?>) {
+      ((List<JMeterProperty>)value).set(index, new StringProperty(prop, prop));
     }
+  }
 
-    @Override
-    public int hashCode() {
-        return value == null ? 0 : value.hashCode();
+  public void set(int index, JMeterProperty prop) {
+    if (value instanceof List<?>) {
+      ((List<JMeterProperty>)value).set(index, prop);
     }
+  }
 
-    public void remove(String prop) {
-        PropertyIterator iter = iterator();
-        while (iter.hasNext()) {
-            if (iter.next().getName().equals(prop)) {
-                iter.remove();
-            }
-        }
+  public JMeterProperty get(int row) {
+    if (value instanceof List<?>) {
+      return ((List<JMeterProperty>)value).get(row);
     }
+    return null;
+  }
 
-    public void set(int index, String prop) {
-        if (value instanceof List<?>) {
-            ((List<JMeterProperty>) value).set(index, new StringProperty(prop, prop));
-        }
+  public void remove(int index) {
+    if (value instanceof List<?>) {
+      ((List<?>)value).remove(index);
     }
+  }
 
-    public void set(int index, JMeterProperty prop) {
-        if (value instanceof List<?>) {
-            ((List<JMeterProperty>) value).set(index, prop);
-        }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setObjectValue(Object v) {
+    if (v instanceof Collection<?>) {
+      setCollection((Collection<?>)v);
     }
+  }
 
-    public JMeterProperty get(int row) {
-        if (value instanceof List<?>) {
-            return ((List<JMeterProperty>) value).get(row);
-        }
-        return null;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public PropertyIterator iterator() {
+    return getIterator(value);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getStringValue() {
+    return value.toString();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getObjectValue() {
+    return value;
+  }
+
+  public int size() { return value.size(); }
+
+  public boolean isEmpty() { return value.isEmpty(); }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public CollectionProperty clone() {
+    CollectionProperty prop = (CollectionProperty)super.clone();
+    prop.value = cloneCollection();
+    return prop;
+  }
+
+  private Collection<JMeterProperty> cloneCollection() {
+    try {
+      @SuppressWarnings("unchecked")
+      // value is of type Collection<JMeterProperty>
+      Collection<JMeterProperty> newCol =
+          value.getClass().getDeclaredConstructor().newInstance();
+      for (JMeterProperty jMeterProperty : this) {
+        newCol.add(jMeterProperty.clone());
+      }
+      return newCol;
+    } catch (Exception e) {
+      log.error("Couldn't clone collection", e);
+      return value;
     }
+  }
 
-    public void remove(int index) {
-        if (value instanceof List<?>) {
-            ((List<?>) value).remove(index);
-        }
+  public void setCollection(Collection<?> coll) { value = normalizeList(coll); }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void clear() {
+    value.clear();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addProperty(JMeterProperty prop) {
+    value.add(prop);
+  }
+
+  public void addItem(Object item) { addProperty(convertObject(item)); }
+
+  /**
+   * Figures out what kind of properties this collection is holding and
+   * returns the class type.
+   *
+   * @see AbstractProperty#getPropertyType()
+   */
+  @Override
+  protected Class<? extends JMeterProperty> getPropertyType() {
+    if (value != null && !value.isEmpty()) {
+      return value.iterator().next().getClass();
     }
+    return NullProperty.class;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setObjectValue(Object v) {
-        if (v instanceof Collection<?>) {
-            setCollection((Collection<?>) v);
-        }
-
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    if (savedValue != null) {
+      value = savedValue;
     }
+    recoverRunningVersionOfSubElements(owner);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PropertyIterator iterator() {
-        return getIterator(value);
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setRunningVersion(boolean running) {
+    super.setRunningVersion(running);
+    if (running) {
+      savedValue = value;
+    } else {
+      savedValue = null;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getStringValue() {
-        return value.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object getObjectValue() {
-        return value;
-    }
-
-    public int size() {
-        return value.size();
-    }
-
-    public boolean isEmpty() {
-        return value.isEmpty();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public CollectionProperty clone() {
-        CollectionProperty prop = (CollectionProperty) super.clone();
-        prop.value = cloneCollection();
-        return prop;
-    }
-
-    private Collection<JMeterProperty> cloneCollection() {
-        try {
-            @SuppressWarnings("unchecked") // value is of type Collection<JMeterProperty>
-            Collection<JMeterProperty> newCol = value.getClass().getDeclaredConstructor().newInstance();
-            for (JMeterProperty jMeterProperty : this) {
-                newCol.add(jMeterProperty.clone());
-            }
-            return newCol;
-        } catch (Exception e) {
-            log.error("Couldn't clone collection", e);
-            return value;
-        }
-    }
-
-    public void setCollection(Collection<?> coll) {
-        value = normalizeList(coll);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void clear() {
-        value.clear();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addProperty(JMeterProperty prop) {
-        value.add(prop);
-    }
-
-    public void addItem(Object item) {
-        addProperty(convertObject(item));
-    }
-
-    /**
-     * Figures out what kind of properties this collection is holding and
-     * returns the class type.
-     *
-     * @see AbstractProperty#getPropertyType()
-     */
-    @Override
-    protected Class<? extends JMeterProperty> getPropertyType() {
-        if (value != null && !value.isEmpty()) {
-            return value.iterator().next().getClass();
-        }
-        return NullProperty.class;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        if (savedValue != null) {
-            value = savedValue;
-        }
-        recoverRunningVersionOfSubElements(owner);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setRunningVersion(boolean running) {
-        super.setRunningVersion(running);
-        if (running) {
-            savedValue = value;
-        } else {
-            savedValue = null;
-        }
-    }
+  }
 }

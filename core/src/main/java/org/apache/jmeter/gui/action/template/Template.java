@@ -27,95 +27,75 @@ import java.util.Objects;
  * @since 2.10
  */
 public class Template {
-    private boolean isTestPlan;
-    private String name;
-    private String fileName;
-    private String description;
-    private transient File parent; // for relative links
-    private Map<String, String> parameters;
+  private boolean isTestPlan;
+  private String name;
+  private String fileName;
+  private String description;
+  private transient File parent; // for relative links
+  private Map<String, String> parameters;
 
-    /** @return the name */
-    public String getName() {
-        return name;
-    }
+  /** @return the name */
+  public String getName() { return name; }
 
-    /** @param name the name to set */
-    public void setName(String name) {
-        this.name = name;
-    }
+  /** @param name the name to set */
+  public void setName(String name) { this.name = name; }
 
-    /** @return the relativeFileName */
-    public String getFileName() {
-        return fileName;
-    }
+  /** @return the relativeFileName */
+  public String getFileName() { return fileName; }
 
-    /** @param relativeFileName the relativeFileName to set */
-    public void setFileName(String relativeFileName) {
-        fileName = relativeFileName;
-    }
+  /** @param relativeFileName the relativeFileName to set */
+  public void setFileName(String relativeFileName) {
+    fileName = relativeFileName;
+  }
 
-    /** @return the description */
-    public String getDescription() {
-        return description;
-    }
+  /** @return the description */
+  public String getDescription() { return description; }
 
-    /** @param description the description to set */
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  /** @param description the description to set */
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public boolean isTestPlan() {
-        return isTestPlan;
-    }
+  public boolean isTestPlan() { return isTestPlan; }
 
-    public void setTestPlan(boolean isTestPlan) {
-        this.isTestPlan = isTestPlan;
-    }
+  public void setTestPlan(boolean isTestPlan) { this.isTestPlan = isTestPlan; }
 
-    public File getParent() {
-        return parent;
-    }
+  public File getParent() { return parent; }
 
-    public void setParent(File parent) {
-        this.parent = parent;
-    }
+  public void setParent(File parent) { this.parent = parent; }
 
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
+  public Map<String, String> getParameters() { return parameters; }
 
-    public void setParameters(Map<String, String> parameters) {
-        this.parameters = parameters;
-    }
+  public void setParameters(Map<String, String> parameters) {
+    this.parameters = parameters;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Template other = (Template) o;
-        return isTestPlan == other.isTestPlan &&
-                Objects.equals(name, other.name) &&
-                Objects.equals(fileName, other.fileName) &&
-                Objects.equals(description, other.description) &&
-                Objects.equals(parent, other.parent) &&
-                Objects.equals(parameters, other.parameters);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Template other = (Template)o;
+    return isTestPlan == other.isTestPlan && Objects.equals(name, other.name) &&
+        Objects.equals(fileName, other.fileName) &&
+        Objects.equals(description, other.description) &&
+        Objects.equals(parent, other.parent) &&
+        Objects.equals(parameters, other.parameters);
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(isTestPlan, name, fileName, description, parent, parameters);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(isTestPlan, name, fileName, description, parent,
+                        parameters);
+  }
 
-    @Override
-    public String toString() {
-        return "Template [isTestPlan=" + isTestPlan +
-                ", name=" + name +
-                ", fileName=" + fileName +
-                ", description=" + description +
-                ", parameters=" + parameters + "]";
-    }
+  @Override
+  public String toString() {
+    return "Template [isTestPlan=" + isTestPlan + ", name=" + name +
+        ", fileName=" + fileName + ", description=" + description +
+        ", parameters=" + parameters + "]";
+  }
 }

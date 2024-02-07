@@ -19,51 +19,51 @@ package org.apache.jmeter.gui.util;
 
 import java.awt.Color;
 import java.awt.Component;
-
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 public class TextAreaCellRenderer implements TableCellRenderer {
 
-    private JSyntaxTextArea rend = createRenderer(""); //$NON-NLS-1$
+  private JSyntaxTextArea rend = createRenderer(""); //$NON-NLS-1$
 
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus,
-            int row, int column) {
-        if(value != null) {
-            rend = createRenderer((String)value);
-        } else {
-            rend = createRenderer(""); //$NON-NLS-1$
-        }
-        if (hasFocus || isSelected) {
-            rend.setBackground(Color.blue);
-            rend.setForeground(Color.white);
-        }
-        if (table.getRowHeight(row) < getPreferredHeight()) {
-            table.setRowHeight(row, getPreferredHeight());
-        }
-        return JTextScrollPane.getInstance(rend);
+  @Override
+  public Component
+  getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                boolean hasFocus, int row, int column) {
+    if (value != null) {
+      rend = createRenderer((String)value);
+    } else {
+      rend = createRenderer(""); //$NON-NLS-1$
     }
+    if (hasFocus || isSelected) {
+      rend.setBackground(Color.blue);
+      rend.setForeground(Color.white);
+    }
+    if (table.getRowHeight(row) < getPreferredHeight()) {
+      table.setRowHeight(row, getPreferredHeight());
+    }
+    return JTextScrollPane.getInstance(rend);
+  }
 
-    /**
-     * @param value initial value
-     * @return {@link JSyntaxTextArea}
-     */
-    private static JSyntaxTextArea createRenderer(String value) {
-        JSyntaxTextArea textArea = JSyntaxTextArea.getInstance(2, 50);
-        textArea.setLanguage("text"); //$NON-NLS-1$
-        textArea.setInitialText(value);
-        return textArea;
-    }
+  /**
+   * @param value initial value
+   * @return {@link JSyntaxTextArea}
+   */
+  private static JSyntaxTextArea createRenderer(String value) {
+    JSyntaxTextArea textArea = JSyntaxTextArea.getInstance(2, 50);
+    textArea.setLanguage("text"); //$NON-NLS-1$
+    textArea.setInitialText(value);
+    return textArea;
+  }
 
-    public int getPreferredHeight() {
-        // Allow override for unit testing only
-        // TODO Find a better way
-        if ("true".equals(System.getProperty("java.awt.headless"))) { // $NON-NLS-1$ $NON-NLS-2$
-            return 10;
-        } else {
-            return rend.getPreferredSize().height + 5;
-        }
+  public int getPreferredHeight() {
+    // Allow override for unit testing only
+    // TODO Find a better way
+    if ("true".equals(System.getProperty(
+            "java.awt.headless"))) { // $NON-NLS-1$ $NON-NLS-2$
+      return 10;
+    } else {
+      return rend.getPreferredSize().height + 5;
     }
+  }
 }

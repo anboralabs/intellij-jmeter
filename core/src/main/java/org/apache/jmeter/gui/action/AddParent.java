@@ -17,69 +17,66 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
 import org.apache.jmeter.testelement.TestElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.auto.service.AutoService;
-
 /**
  * Implements the Add Parent menu command
  */
 @AutoService(Command.class)
 public class AddParent extends AbstractAction {
-    private static final Logger log = LoggerFactory.getLogger(AddParent.class);
+  private static final Logger log = LoggerFactory.getLogger(AddParent.class);
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.ADD_PARENT);
+  static { commands.add(ActionNames.ADD_PARENT); }
+
+  public AddParent() {}
+
+  @Override
+  public void doAction(ActionEvent e) {
+    String name = ((Component)e.getSource()).getName();
+    GuiPackage guiPackage = GuiPackage.getInstance();
+    try {
+      guiPackage.updateCurrentNode();
+      TestElement controller = guiPackage.createTestElement(name);
+      addParentToTree(controller);
+    } catch (Exception err) {
+      log.error("Exception while adding a TestElement.", err);
     }
+  }
 
-    public AddParent() {
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
+
+  protected static void addParentToTree(TestElement newParent) {
+    GuiPackage guiPackage = GuiPackage.getInstance();
+    JMeterTreeNode newNode =
+        new JMeterTreeNode(newParent, guiPackage.getTreeModel());
+    JMeterTreeNode currentNode = guiPackage.getTreeListener().getCurrentNode();
+    JMeterTreeNode parentNode = (JMeterTreeNode)currentNode.getParent();
+    int index = parentNode.getIndex(currentNode);
+    guiPackage.getTreeModel().insertNodeInto(newNode, parentNode, index);
+    JMeterTreeNode[] nodes = guiPackage.getTreeListener().getSelectedNodes();
+    for (JMeterTreeNode node : nodes) {
+      moveNode(guiPackage, node, newNode);
     }
+  }
 
-    @Override
-    public void doAction(ActionEvent e) {
-        String name = ((Component) e.getSource()).getName();
-        GuiPackage guiPackage = GuiPackage.getInstance();
-        try {
-            guiPackage.updateCurrentNode();
-            TestElement controller = guiPackage.createTestElement(name);
-            addParentToTree(controller);
-        } catch (Exception err) {
-            log.error("Exception while adding a TestElement.", err);
-        }
-
-    }
-
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
-
-    protected static void addParentToTree(TestElement newParent) {
-        GuiPackage guiPackage = GuiPackage.getInstance();
-        JMeterTreeNode newNode = new JMeterTreeNode(newParent, guiPackage.getTreeModel());
-        JMeterTreeNode currentNode = guiPackage.getTreeListener().getCurrentNode();
-        JMeterTreeNode parentNode = (JMeterTreeNode) currentNode.getParent();
-        int index = parentNode.getIndex(currentNode);
-        guiPackage.getTreeModel().insertNodeInto(newNode, parentNode, index);
-        JMeterTreeNode[] nodes = guiPackage.getTreeListener().getSelectedNodes();
-        for (JMeterTreeNode node : nodes) {
-            moveNode(guiPackage, node, newNode);
-        }
-    }
-
-    private static void moveNode(GuiPackage guiPackage, JMeterTreeNode node, JMeterTreeNode newParentNode) {
-        guiPackage.getTreeModel().removeNodeFromParent(node);
-        guiPackage.getTreeModel().insertNodeInto(node, newParentNode, newParentNode.getChildCount());
-    }
+  private static void moveNode(GuiPackage guiPackage, JMeterTreeNode node,
+                               JMeterTreeNode newParentNode) {
+    guiPackage.getTreeModel().removeNodeFromParent(node);
+    guiPackage.getTreeModel().insertNodeInto(node, newParentNode,
+                                             newParentNode.getChildCount());
+  }
 }

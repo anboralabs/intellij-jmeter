@@ -17,13 +17,11 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.swing.JFrame;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Search nodes for a text
@@ -32,55 +30,51 @@ import com.google.auto.service.AutoService;
 @AutoService(Command.class)
 public class SearchTreeCommand extends AbstractAction {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.SEARCH_TREE);
+  static { commands.add(ActionNames.SEARCH_TREE); }
+
+  private SearchTreeDialog dialog;
+
+  /**
+   * <p>
+   * Create the search dialog from the specified source component.<br>
+   * This method tries to find a JFrame ancestor from the specified source in
+   * order to be the parent of the search dialog.<br>
+   * With no parent set the search dialog might be hidden by the main JFrame
+   * when focus is transferred to that JFrame.
+   * </p>
+   * <p>
+   * If no parent if found, then we give up and build a search dialog with no
+   * parent.
+   * </p>
+   *
+   * @param event The source event that originated the display of the dialog
+   * @return A freshly created search dialog with the parent frame that could be
+   *         found, or no parent otherwise.
+   */
+  /*private static SearchTreeDialog createSearchDialog(ActionEvent event) {
+      JFrame parent = getParentFrame(event);
+      return new SearchTreeDialog(parent);
+  }*/
+
+  /**
+   * @see Command#doAction(ActionEvent)
+   */
+  @Override
+  public void doAction(ActionEvent e) {
+    // we create the dialog upon first display event only
+    /*if (dialog == null) {
+        dialog = createSearchDialog(e);
     }
+    dialog.setVisible(true);*/
+  }
 
-    private SearchTreeDialog dialog;
-
-    /**
-     * <p>
-     * Create the search dialog from the specified source component.<br>
-     * This method tries to find a JFrame ancestor from the specified source in
-     * order to be the parent of the search dialog.<br>
-     * With no parent set the search dialog might be hidden by the main JFrame when
-     * focus is transferred to that JFrame.
-     * </p>
-     * <p>
-     * If no parent if found, then we give up and build a search dialog with no
-     * parent.
-     * </p>
-     *
-     * @param event The source event that originated the display of the dialog
-     * @return A freshly created search dialog with the parent frame that could be
-     *         found, or no parent otherwise.
-     */
-    /*private static SearchTreeDialog createSearchDialog(ActionEvent event) {
-        JFrame parent = getParentFrame(event);
-        return new SearchTreeDialog(parent);
-    }*/
-
-
-    /**
-     * @see Command#doAction(ActionEvent)
-     */
-    @Override
-    public void doAction(ActionEvent e) {
-        // we create the dialog upon first display event only
-        /*if (dialog == null) {
-            dialog = createSearchDialog(e);
-        }
-        dialog.setVisible(true);*/
-    }
-
-
-    /**
-     * @see Command#getActionNames()
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * @see Command#getActionNames()
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 }

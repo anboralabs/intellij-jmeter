@@ -23,25 +23,20 @@ package org.apache.jorphan.util;
  */
 public class JMeterException extends Exception {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public JMeterException() {
-        super();
-    }
+  public JMeterException() { super(); }
 
-    public JMeterException(String s) {
-        super(s);
-    }
+  public JMeterException(String s) { super(s); }
 
-    public JMeterException(Throwable cause) {
-        super(cause);
-    }
+  public JMeterException(Throwable cause) { super(cause); }
 
-    public JMeterException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public JMeterException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public JMeterException(String s, Throwable ex, boolean enableSuppression, boolean writableStackTrace) {
-        super(s, ex, enableSuppression, writableStackTrace);
-    }
+  public JMeterException(String s, Throwable ex, boolean enableSuppression,
+                         boolean writableStackTrace) {
+    super(s, ex, enableSuppression, writableStackTrace);
+  }
 }

@@ -27,7 +27,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -41,100 +40,101 @@ import javax.net.ssl.TrustManagerFactory;
  * @since 4.0
  */
 public class SSLRMIClientSocketFactory
-        implements RMIClientSocketFactory, Serializable {
+    implements RMIClientSocketFactory, Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private String alias;
-    private String keyStoreLocation;
-    private String keyStorePassword;
-    private String keyStoreType;
-    private String trustStoreLocation;
-    private String trustStorePassword;
-    private String trustStoreType;
+  private String alias;
+  private String keyStoreLocation;
+  private String keyStorePassword;
+  private String keyStoreType;
+  private String trustStoreLocation;
+  private String trustStorePassword;
+  private String trustStoreType;
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+  public void setAlias(String alias) { this.alias = alias; }
+
+  public void setKeystore(String location, String type, String password) {
+    this.keyStoreLocation = location;
+    this.keyStoreType = type;
+    this.keyStorePassword = password;
+  }
+
+  public void setTruststore(String location, String type, String password) {
+    this.trustStoreLocation = location;
+    this.trustStoreType = type;
+    this.trustStorePassword = password;
+  }
+
+  @Override
+  public Socket createSocket(String host, int port) throws IOException {
+
+    char[] passphrase = null;
+    if (keyStorePassword != null) {
+      passphrase = keyStorePassword.toCharArray();
     }
 
-    public void setKeystore(String location, String type, String password) {
-        this.keyStoreLocation = location;
-        this.keyStoreType = type;
-        this.keyStorePassword = password;
+    KeyStore keyStore = null;
+    if (keyStoreLocation != null) {
+      keyStore = loadStore(keyStoreLocation, passphrase, keyStoreType);
     }
 
-    public void setTruststore(String location, String type, String password) {
-        this.trustStoreLocation = location;
-        this.trustStoreType = type;
-        this.trustStorePassword = password;
+    KeyStore trustStore;
+    if (trustStoreLocation != null) {
+      trustStore = loadStore(trustStoreLocation,
+                             trustStorePassword.toCharArray(), trustStoreType);
+    } else {
+      trustStore = keyStore;
     }
 
-    @Override
-    public Socket createSocket(String host, int port) throws IOException {
-
-        char[] passphrase = null;
-        if (keyStorePassword != null) {
-            passphrase = keyStorePassword.toCharArray();
-        }
-
-        KeyStore keyStore = null;
-        if (keyStoreLocation != null) {
-            keyStore = loadStore(keyStoreLocation, passphrase, keyStoreType);
-        }
-
-        KeyStore trustStore;
-        if (trustStoreLocation != null) {
-            trustStore = loadStore(trustStoreLocation, trustStorePassword.toCharArray(), trustStoreType);
-        } else {
-            trustStore = keyStore;
-        }
-
-        if (alias == null) {
-            throw new IOException(
-                    "SSL certificate alias cannot be null; MUST be set for SSLServerSocketFactory!");
-        }
-
-        KeyManagerFactory kmf;
-        SSLContext ctx;
-        try {
-            kmf = KeyManagerFactory
-                    .getInstance(KeyManagerFactory.getDefaultAlgorithm());
-            kmf.init(keyStore, passphrase);
-            ctx = SSLContext.getInstance("TLS");
-            TrustManagerFactory tmf = TrustManagerFactory
-                    .getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            tmf.init(trustStore);
-            ctx.init(AliasKeyManager.wrap(kmf.getKeyManagers(), alias), tmf.getTrustManagers(), null);
-        } catch (GeneralSecurityException e) {
-            throw new IOException(e);
-        }
-        SSLSocketFactory factory = ctx.getSocketFactory();
-        if (factory == null) {
-            throw new IOException(
-                    "Unable to obtain SSLSocketFactory for provided KeyStore");
-        }
-
-        return factory.createSocket(host, port);
+    if (alias == null) {
+      throw new IOException(
+          "SSL certificate alias cannot be null; MUST be set for SSLServerSocketFactory!");
     }
 
-    private static KeyStore loadStore(String location, char[] passphrase, String type)
-            throws IOException {
-        try {
-            KeyStore store = KeyStore.getInstance(type);
-            try (FileInputStream fis = new FileInputStream(location)) {
-                store.load(fis, passphrase);
-            }
-            return store;
-        } catch (NoSuchAlgorithmException | CertificateException
-                | KeyStoreException e) {
-            throw new IOException("Can't load " + location + " as type " + type, e);
-        }
+    KeyManagerFactory kmf;
+    SSLContext ctx;
+    try {
+      kmf = KeyManagerFactory.getInstance(
+          KeyManagerFactory.getDefaultAlgorithm());
+      kmf.init(keyStore, passphrase);
+      ctx = SSLContext.getInstance("TLS");
+      TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+          TrustManagerFactory.getDefaultAlgorithm());
+      tmf.init(trustStore);
+      ctx.init(AliasKeyManager.wrap(kmf.getKeyManagers(), alias),
+               tmf.getTrustManagers(), null);
+    } catch (GeneralSecurityException e) {
+      throw new IOException(e);
+    }
+    SSLSocketFactory factory = ctx.getSocketFactory();
+    if (factory == null) {
+      throw new IOException(
+          "Unable to obtain SSLSocketFactory for provided KeyStore");
     }
 
-    @Override
-    public String toString() {
-        return "SSLRMIClientSocketFactory(keyStoreLocation=" + this.keyStoreLocation + ", type="
-                + this.keyStoreType +", trustStoreLocation=" + this.trustStoreLocation + ", type="
-                + this.trustStoreType + ", alias=" + this.alias + ')';
+    return factory.createSocket(host, port);
+  }
+
+  private static KeyStore loadStore(String location, char[] passphrase,
+                                    String type) throws IOException {
+    try {
+      KeyStore store = KeyStore.getInstance(type);
+      try (FileInputStream fis = new FileInputStream(location)) {
+        store.load(fis, passphrase);
+      }
+      return store;
+    } catch (NoSuchAlgorithmException | CertificateException |
+             KeyStoreException e) {
+      throw new IOException("Can't load " + location + " as type " + type, e);
     }
+  }
+
+  @Override
+  public String toString() {
+    return "SSLRMIClientSocketFactory(keyStoreLocation=" +
+        this.keyStoreLocation + ", type=" + this.keyStoreType +
+        ", trustStoreLocation=" + this.trustStoreLocation +
+        ", type=" + this.trustStoreType + ", alias=" + this.alias + ')';
+  }
 }

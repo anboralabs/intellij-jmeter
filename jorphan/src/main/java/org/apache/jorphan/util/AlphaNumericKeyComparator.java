@@ -21,24 +21,27 @@ import java.util.Comparator;
 import java.util.Map;
 
 /**
- * Comparator for {@link Map.Entry} Objects, that compares based on their keys only. The keys
- * will be compared in a human readable fashion by trying to parse numbers that appear in
- * the keys as integers and compare those, too.<p>
- * Heavily influenced by https://codereview.stackexchange.com/questions/37192/number-aware-string-sorting-with-comparator
+ * Comparator for {@link Map.Entry} Objects, that compares based on their keys
+ * only. The keys will be compared in a human readable fashion by trying to
+ * parse numbers that appear in the keys as integers and compare those, too.<p>
+ * Heavily influenced by
+ * https://codereview.stackexchange.com/questions/37192/number-aware-string-sorting-with-comparator
  */
-public class AlphaNumericKeyComparator implements Comparator<Map.Entry<Object, Object>> {
+public class AlphaNumericKeyComparator
+    implements Comparator<Map.Entry<Object, Object>> {
 
-    public static final AlphaNumericKeyComparator INSTANCE = new AlphaNumericKeyComparator();
-    private final AlphaNumericComparator<Map.Entry<Object, Object>> comparator;
+  public static final AlphaNumericKeyComparator INSTANCE =
+      new AlphaNumericKeyComparator();
+  private final AlphaNumericComparator<Map.Entry<Object, Object>> comparator;
 
-    private AlphaNumericKeyComparator() {
-        // don't instantiate this class on your own.
-        this.comparator = new AlphaNumericComparator<>(e -> e.getKey().toString());
-    }
+  private AlphaNumericKeyComparator() {
+    // don't instantiate this class on your own.
+    this.comparator = new AlphaNumericComparator<>(e -> e.getKey().toString());
+  }
 
-    @Override
-    public int compare(Map.Entry<Object, Object> o1, Map.Entry<Object, Object> o2) {
-        return this.comparator.compare(o1, o2);
-    }
-
+  @Override
+  public int compare(Map.Entry<Object, Object> o1,
+                     Map.Entry<Object, Object> o2) {
+    return this.comparator.compare(o1, o2);
+  }
 }

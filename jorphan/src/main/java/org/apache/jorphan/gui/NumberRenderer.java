@@ -17,33 +17,33 @@
 
 package org.apache.jorphan.gui;
 
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  * Renders numbers in a JTable with a specified format
  */
 public class NumberRenderer extends DefaultTableCellRenderer {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    protected final NumberFormat formatter;
+  protected final NumberFormat formatter;
 
-    public NumberRenderer() {
-        super();
-        formatter = NumberFormat.getInstance();
-        setHorizontalAlignment(SwingConstants.RIGHT);
-    }
+  public NumberRenderer() {
+    super();
+    formatter = NumberFormat.getInstance();
+    setHorizontalAlignment(SwingConstants.RIGHT);
+  }
 
-    public NumberRenderer(String format) {
-        super();
-        formatter = new DecimalFormat(format);
-        setHorizontalAlignment(SwingConstants.RIGHT);
-    }
+  public NumberRenderer(String format) {
+    super();
+    formatter = new DecimalFormat(format);
+    setHorizontalAlignment(SwingConstants.RIGHT);
+  }
 
-    @Override
-    public void setValue(Object value) {
-        setText((value == null) ? "" : formatter.format(value));
-    }
+  @Override
+  public void setValue(Object value) {
+    setText((value == null) ? "" : formatter.format(value));
+  }
 }

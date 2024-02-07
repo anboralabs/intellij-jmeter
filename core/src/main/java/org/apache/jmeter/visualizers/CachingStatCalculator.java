@@ -20,7 +20,6 @@ package org.apache.jmeter.visualizers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.jmeter.samplers.SampleResult;
 
 /**
@@ -28,38 +27,35 @@ import org.apache.jmeter.samplers.SampleResult;
  */
 public class CachingStatCalculator extends SamplingStatCalculator {
 
-    private final List<Sample> storedValues = Collections.synchronizedList(new ArrayList<>());
+  private final List<Sample> storedValues =
+      Collections.synchronizedList(new ArrayList<>());
 
-    public CachingStatCalculator(String string) {
-        super(string);
-    }
+  public CachingStatCalculator(String string) { super(string); }
 
-    public List<Sample> getSamples() {
-        return storedValues;
-    }
+  public List<Sample> getSamples() { return storedValues; }
 
-    public Sample getSample(int index) {
-        synchronized( storedValues ){
-            if (index < storedValues.size()) {
-                return storedValues.get(index);
-            }
-        }
-        return null;
+  public Sample getSample(int index) {
+    synchronized (storedValues) {
+      if (index < storedValues.size()) {
+        return storedValues.get(index);
+      }
     }
+    return null;
+  }
 
-    @Override
-    public synchronized void clear() {
-        super.clear();
-        storedValues.clear();
-    }
-    /**
-     * Records a sample.
-     *
-     */
-    @Override
-    public Sample addSample(SampleResult res) {
-        final Sample sample = super.addSample(res);
-        storedValues.add(sample);
-        return sample;
-    }
+  @Override
+  public synchronized void clear() {
+    super.clear();
+    storedValues.clear();
+  }
+  /**
+   * Records a sample.
+   *
+   */
+  @Override
+  public Sample addSample(SampleResult res) {
+    final Sample sample = super.addSample(res);
+    storedValues.add(sample);
+    return sample;
+  }
 }

@@ -20,9 +20,12 @@ package org.apache.jorphan.reflect;
 /**
  * Rethrows service loading failures as {@link IllegalStateException}.
  */
-public class RethrowServiceLoadExceptionHandler implements ServiceLoadExceptionHandler<Object> {
-    @Override
-    public void handle(Class<?> service, String className, Throwable throwable) {
-        throw new IllegalStateException("Can't load class " + className + " for instantiating service " + service, throwable);
-    }
+public class RethrowServiceLoadExceptionHandler
+    implements ServiceLoadExceptionHandler<Object> {
+  @Override
+  public void handle(Class<?> service, String className, Throwable throwable) {
+    throw new IllegalStateException("Can't load class " + className +
+                                        " for instantiating service " + service,
+                                    throwable);
+  }
 }

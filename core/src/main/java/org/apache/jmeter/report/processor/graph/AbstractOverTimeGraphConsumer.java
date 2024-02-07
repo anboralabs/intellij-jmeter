@@ -18,7 +18,6 @@
 package org.apache.jmeter.report.processor.graph;
 
 import java.util.Map;
-
 import org.apache.jmeter.report.processor.MapResultData;
 import org.apache.jmeter.report.processor.ValueResultData;
 
@@ -28,82 +27,78 @@ import org.apache.jmeter.report.processor.ValueResultData;
  *
  * @since 3.0
  */
-public abstract class AbstractOverTimeGraphConsumer extends
-        AbstractGraphConsumer {
+public abstract class AbstractOverTimeGraphConsumer
+    extends AbstractGraphConsumer {
 
-    public static final String RESULT_CTX_GRANULARITY = "granularity";
+  public static final String RESULT_CTX_GRANULARITY = "granularity";
 
-    private long granularity;
+  private long granularity;
 
-    /**
-     * Gets the granularity.
-     *
-     * @return the granularity
-     */
-    public long getGranularity() {
-        return granularity;
-    }
+  /**
+   * Gets the granularity.
+   *
+   * @return the granularity
+   */
+  public long getGranularity() { return granularity; }
 
-    /**
-     * Sets the granularity.
-     *
-     * @param granularity
-     *            the granularity to set
-     */
-    public void setGranularity(long granularity) {
-        this.granularity = granularity;
-    }
+  /**
+   * Sets the granularity.
+   *
+   * @param granularity
+   *            the granularity to set
+   */
+  public void setGranularity(long granularity) {
+    this.granularity = granularity;
+  }
 
-    /**
-     * Instantiates a new abstract over time graph consumer.
-     */
-    protected AbstractOverTimeGraphConsumer() {
-    }
+  /**
+   * Instantiates a new abstract over time graph consumer.
+   */
+  protected AbstractOverTimeGraphConsumer() {}
 
-    /**
-     * Creates the time stamp keys selector.
-     *
-     * @return the time stamp keys selector
-     */
-    protected abstract TimeStampKeysSelector createTimeStampKeysSelector();
+  /**
+   * Creates the time stamp keys selector.
+   *
+   * @return the time stamp keys selector
+   */
+  protected abstract TimeStampKeysSelector createTimeStampKeysSelector();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createKeysSelector()
-     */
-    @Override
-    protected final GraphKeysSelector createKeysSelector() {
-        TimeStampKeysSelector keysSelector = createTimeStampKeysSelector();
-        keysSelector.setGranularity(granularity);
-        return keysSelector;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createKeysSelector()
+   */
+  @Override
+  protected final GraphKeysSelector createKeysSelector() {
+    TimeStampKeysSelector keysSelector = createTimeStampKeysSelector();
+    keysSelector.setGranularity(granularity);
+    return keysSelector;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected abstract Map<String, GroupInfo> createGroupInfos();
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override protected abstract Map<String, GroupInfo> createGroupInfos();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
-     * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
-     */
-    @Override
-    protected void initializeExtraResults(MapResultData parentResult) {
-        parentResult.setResult(RESULT_CTX_GRANULARITY, new ValueResultData(
-                granularity));
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
+   * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
+   */
+  @Override
+  protected void initializeExtraResults(MapResultData parentResult) {
+    parentResult.setResult(RESULT_CTX_GRANULARITY,
+                           new ValueResultData(granularity));
+  }
 
-    @Override
-    public void initialize() {
-        super.initialize();
-        ((TimeStampKeysSelector) getKeysSelector()).setGranularity(granularity);
-    }
+  @Override
+  public void initialize() {
+    super.initialize();
+    ((TimeStampKeysSelector)getKeysSelector()).setGranularity(granularity);
+  }
 }

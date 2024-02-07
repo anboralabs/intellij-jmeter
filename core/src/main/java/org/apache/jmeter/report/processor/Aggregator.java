@@ -24,30 +24,30 @@ package org.apache.jmeter.report.processor;
  */
 public interface Aggregator {
 
-    /**
-     * Gets the number of aggregated values.
-     *
-     * @return the number of aggregated values
-     */
-    long getCount();
+  /**
+   * Gets the number of aggregated values.
+   *
+   * @return the number of aggregated values
+   */
+  long getCount();
 
-    /**
-     * Gets the result of the aggregation using stored values.
-     *
-     * @return the result of the aggregation.
-     */
-    double getResult();
+  /**
+   * Gets the result of the aggregation using stored values.
+   *
+   * @return the result of the aggregation.
+   */
+  double getResult();
 
-    /**
-     * Adds the specified value to the storage of the current aggregator.
-     *
-     * @param value
-     *            the value to aggregate
-     */
-    void addValue(double value);
+  /**
+   * Adds the specified value to the storage of the current aggregator.
+   *
+   * @param value
+   *            the value to aggregate
+   */
+  void addValue(double value);
 
-    /**
-     * Reset the state of the aggregator.
-     */
-    void reset();
+  /**
+   * Reset the state of the aggregator.
+   */
+  void reset();
 }

@@ -27,5 +27,4 @@ import java.beans.Customizer;
  * setElement can be called multiple times to change the element it works on.
  *
  */
-public interface SharedCustomizer extends Customizer {
-}
+public interface SharedCustomizer extends Customizer {}

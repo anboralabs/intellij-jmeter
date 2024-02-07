@@ -17,43 +17,39 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.JMeterGUIComponent;
 import org.apache.jorphan.gui.ui.TextComponentUI;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Implements the Edit menu item.
  */
 @AutoService(Command.class)
 public class EditCommand extends AbstractAction {
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.EDIT);
-    }
+  static { commands.add(ActionNames.EDIT); }
 
-    public EditCommand() {
-    }
+  public EditCommand() {}
 
-    @Override
-    public void doAction(ActionEvent e) {
-        GuiPackage guiPackage = GuiPackage.getInstance();
-        JMeterGUIComponent currentGui = guiPackage.getCurrentGui();
-        guiPackage.getMainFrame().setMainPanel((javax.swing.JComponent) currentGui);
-        guiPackage.getMainFrame().setEditMenu(guiPackage.getTreeListener().getCurrentNode().createPopupMenu());
-        TextComponentUI.INSTANCE.resetUndoHistory();
-        guiPackage.getMainFrame().setFileLoadEnabled(true);
-        guiPackage.getMainFrame().setFileSaveEnabled(true);
-    }
+  @Override
+  public void doAction(ActionEvent e) {
+    GuiPackage guiPackage = GuiPackage.getInstance();
+    JMeterGUIComponent currentGui = guiPackage.getCurrentGui();
+    guiPackage.getMainFrame().setMainPanel((javax.swing.JComponent)currentGui);
+    guiPackage.getMainFrame().setEditMenu(
+        guiPackage.getTreeListener().getCurrentNode().createPopupMenu());
+    TextComponentUI.INSTANCE.resetUndoHistory();
+    guiPackage.getMainFrame().setFileLoadEnabled(true);
+    guiPackage.getMainFrame().setFileSaveEnabled(true);
+  }
 
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 }

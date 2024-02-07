@@ -19,33 +19,33 @@ package org.apache.jmeter.assertions.gui;
 
 import java.util.Arrays;
 import java.util.Collection;
-
 import org.apache.jmeter.gui.AbstractScopedJMeterGuiComponent;
 import org.apache.jmeter.gui.util.MenuFactory;
 
 /**
  * This is the base class for JMeter GUI components which manage assertions.
  *
- * Assertions which can be applied to different scopes (parent, children or both)
- * need to use the createScopePanel() to add the panel to the GUI, and they also
- * need to use saveScopeSettings() and showScopeSettings() to keep the test element
- * and GUI in synch.
+ * Assertions which can be applied to different scopes (parent, children or
+ * both) need to use the createScopePanel() to add the panel to the GUI, and
+ * they also need to use saveScopeSettings() and showScopeSettings() to keep the
+ * test element and GUI in synch.
  */
-public abstract class AbstractAssertionGui extends AbstractScopedJMeterGuiComponent {
+public abstract class AbstractAssertionGui
+    extends AbstractScopedJMeterGuiComponent {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    /**
-     * This is the list of menu categories this gui component will be available
-     * under. This implementation returns
-     * {@link org.apache.jmeter.gui.util.MenuFactory#ASSERTIONS}, which is
-     * appropriate for most assertion components.
-     *
-     * @return a Collection of Strings, where each element is one of the
-     *         constants defined in MenuFactory
-     */
-    @Override
-    public Collection<String> getMenuCategories() {
-        return Arrays.asList(MenuFactory.ASSERTIONS);
-    }
+  /**
+   * This is the list of menu categories this gui component will be available
+   * under. This implementation returns
+   * {@link org.apache.jmeter.gui.util.MenuFactory#ASSERTIONS}, which is
+   * appropriate for most assertion components.
+   *
+   * @return a Collection of Strings, where each element is one of the
+   *         constants defined in MenuFactory
+   */
+  @Override
+  public Collection<String> getMenuCategories() {
+    return Arrays.asList(MenuFactory.ASSERTIONS);
+  }
 }

@@ -22,9 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javax.swing.JPopupMenu;
-
 import org.apache.jmeter.assertions.Assertion;
 import org.apache.jmeter.assertions.gui.AbstractAssertionGui;
 import org.apache.jmeter.config.ConfigElement;
@@ -52,131 +50,143 @@ import org.apiguardian.api.API;
 
 /**
  * Internal class to speedup the startup time.
- * <p>JMeter needs component names to create menus, however, default GUIComponent implementations
- * create UI elements in their constructors. This class implements just the minimal subset of the
- * methods to make menu factory happy.</p>
+ * <p>JMeter needs component names to create menus, however, default
+ * GUIComponent implementations create UI elements in their constructors. This
+ * class implements just the minimal subset of the methods to make menu factory
+ * happy.</p>
  */
 @API(since = "5.3", status = API.Status.INTERNAL)
 public class StaticJMeterGUIComponent implements JMeterGUIComponent {
-    private final String labelResource;
-    private final ResourceBundle resourceBundle;
-    private final Collection<String> groups;
+  private final String labelResource;
+  private final ResourceBundle resourceBundle;
+  private final Collection<String> groups;
 
-    public StaticJMeterGUIComponent(Class<?> c, TestElementMetadata metadata) {
-        this.labelResource = metadata.labelResource();
-        String resourceBundle = metadata.resourceBundle();
-        if (!resourceBundle.isEmpty()) {
-            this.resourceBundle = ResourceBundle.getBundle(c.getName() + "Resources");
-        } else if (labelResource.equals("displayName")) {
-            this.resourceBundle = ResourceBundle.getBundle(c.getName() + "Resources");
-        } else {
-            this.resourceBundle = null;
-        }
-        this.groups = getGroups(c, metadata);
+  public StaticJMeterGUIComponent(Class<?> c, TestElementMetadata metadata) {
+    this.labelResource = metadata.labelResource();
+    String resourceBundle = metadata.resourceBundle();
+    if (!resourceBundle.isEmpty()) {
+      this.resourceBundle = ResourceBundle.getBundle(c.getName() + "Resources");
+    } else if (labelResource.equals("displayName")) {
+      this.resourceBundle = ResourceBundle.getBundle(c.getName() + "Resources");
+    } else {
+      this.resourceBundle = null;
     }
+    this.groups = getGroups(c, metadata);
+  }
 
-    private static List<String> getGroups(Class<?> c, TestElementMetadata metadata) {
-        String[] groups = metadata.actionGroups();
-        if (groups.length == 1 && groups[0].equals("")) {
-            // Annotations can't hold null values, so we use empty string instead
-            return null;
-        }
-        if (groups.length != 0) {
-            return Collections.unmodifiableList(Arrays.asList(groups));
-        }
-        String group;
-        if (Assertion.class.isAssignableFrom(c) || AbstractAssertionGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.ASSERTIONS;
-        } else if (ConfigElement.class.isAssignableFrom(c) || AbstractConfigGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.CONFIG_ELEMENTS;
-        } else if (Controller.class.isAssignableFrom(c) || AbstractControllerGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.CONTROLLERS;
-        } else if (Visualizer.class.isAssignableFrom(c) || AbstractListenerGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.LISTENERS;
-        } else if (PostProcessor.class.isAssignableFrom(c) || AbstractPostProcessorGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.POST_PROCESSORS;
-        } else if (PreProcessor.class.isAssignableFrom(c) || AbstractPreProcessorGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.PRE_PROCESSORS;
-        } else if (Sampler.class.isAssignableFrom(c) || AbstractSamplerGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.SAMPLERS;
-        } else if (Timer.class.isAssignableFrom(c) || AbstractTimerGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.TIMERS;
-        } else if (ThreadGroup.class.isAssignableFrom(c) || AbstractThreadGroupGui.class.isAssignableFrom(c)) {
-            group = MenuFactory.THREADS;
-        } else {
-            throw new IllegalArgumentException("Unknown group for class " + c);
-        }
-        return Collections.singletonList(group);
+  private static List<String> getGroups(Class<?> c,
+                                        TestElementMetadata metadata) {
+    String[] groups = metadata.actionGroups();
+    if (groups.length == 1 && groups[0].equals("")) {
+      // Annotations can't hold null values, so we use empty string instead
+      return null;
     }
-
-    @Override
-    public String getLabelResource() {
-        return labelResource;
+    if (groups.length != 0) {
+      return Collections.unmodifiableList(Arrays.asList(groups));
     }
-
-    @Override
-    public String getStaticLabel() {
-        String labelResource = getLabelResource();
-        if (resourceBundle == null) {
-            return JMeterUtils.getResString(labelResource);
-        }
-        return resourceBundle.getString(labelResource);
+    String group;
+    if (Assertion.class.isAssignableFrom(c) ||
+        AbstractAssertionGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.ASSERTIONS;
+    } else if (ConfigElement.class.isAssignableFrom(c) ||
+               AbstractConfigGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.CONFIG_ELEMENTS;
+    } else if (Controller.class.isAssignableFrom(c) ||
+               AbstractControllerGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.CONTROLLERS;
+    } else if (Visualizer.class.isAssignableFrom(c) ||
+               AbstractListenerGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.LISTENERS;
+    } else if (PostProcessor.class.isAssignableFrom(c) ||
+               AbstractPostProcessorGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.POST_PROCESSORS;
+    } else if (PreProcessor.class.isAssignableFrom(c) ||
+               AbstractPreProcessorGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.PRE_PROCESSORS;
+    } else if (Sampler.class.isAssignableFrom(c) ||
+               AbstractSamplerGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.SAMPLERS;
+    } else if (Timer.class.isAssignableFrom(c) ||
+               AbstractTimerGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.TIMERS;
+    } else if (ThreadGroup.class.isAssignableFrom(c) ||
+               AbstractThreadGroupGui.class.isAssignableFrom(c)) {
+      group = MenuFactory.THREADS;
+    } else {
+      throw new IllegalArgumentException("Unknown group for class " + c);
     }
+    return Collections.singletonList(group);
+  }
 
-    @Override
-    public Collection<String> getMenuCategories() {
-        return groups;
+  @Override
+  public String getLabelResource() {
+    return labelResource;
+  }
+
+  @Override
+  public String getStaticLabel() {
+    String labelResource = getLabelResource();
+    if (resourceBundle == null) {
+      return JMeterUtils.getResString(labelResource);
     }
+    return resourceBundle.getString(labelResource);
+  }
 
-    // The rest throws UnsupportedOperationException since the methods are not intended to be used
+  @Override
+  public Collection<String> getMenuCategories() {
+    return groups;
+  }
 
-    @Override
-    public void setName(String name) {
-        throw new UnsupportedOperationException();
-    }
+  // The rest throws UnsupportedOperationException since the methods are not
+  // intended to be used
 
-    @Override
-    public String getName() {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void setName(String name) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public String getDocAnchor() {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public String getName() {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public TestElement createTestElement() {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public String getDocAnchor() {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void modifyTestElement(TestElement element) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public TestElement createTestElement() {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public boolean isEnabled() {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void modifyTestElement(TestElement element) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public boolean isEnabled() {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public JPopupMenu createPopupMenu() {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void setEnabled(boolean enabled) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void configure(TestElement element) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public JPopupMenu createPopupMenu() {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void clearGui() {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void configure(TestElement element) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void clearGui() {
+    throw new UnsupportedOperationException();
+  }
 }

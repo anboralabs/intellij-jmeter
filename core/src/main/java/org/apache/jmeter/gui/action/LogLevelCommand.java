@@ -17,10 +17,10 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -29,8 +29,6 @@ import org.apiguardian.api.API;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.auto.service.AutoService;
-
 /**
  * Implements log level setting menu item.
  * @since 3.2
@@ -38,36 +36,37 @@ import com.google.auto.service.AutoService;
 @AutoService(Command.class)
 public class LogLevelCommand extends AbstractAction {
 
-    private static final Logger log = LoggerFactory.getLogger(LogLevelCommand.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(LogLevelCommand.class);
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        for (Level level : Level.values()) {
-            commands.add(ActionNames.LOG_LEVEL_PREFIX + level.toString());
-        }
+  static {
+    for (Level level : Level.values()) {
+      commands.add(ActionNames.LOG_LEVEL_PREFIX + level.toString());
     }
+  }
 
-    public LogLevelCommand() {
-        super();
-    }
+  public LogLevelCommand() { super(); }
 
-    @Override
-    public void doAction(ActionEvent ev) {
-        String levelString = ev.getActionCommand().substring(ActionNames.LOG_LEVEL_PREFIX.length());
-        log.info("Setting root log level: {}", levelString);
-        Configurator.setRootLevel(Level.toLevel(levelString));
-    }
+  @Override
+  public void doAction(ActionEvent ev) {
+    String levelString =
+        ev.getActionCommand().substring(ActionNames.LOG_LEVEL_PREFIX.length());
+    log.info("Setting root log level: {}", levelString);
+    Configurator.setRootLevel(Level.toLevel(levelString));
+  }
 
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    @API(since = "5.3", status = API.Status.INTERNAL)
-    public static Level getRootLevel() {
-        final LoggerContext loggerContext = LoggerContext.getContext(false);
-        final LoggerConfig loggerConfig = loggerContext.getConfiguration().getRootLogger();
-        return loggerConfig.getLevel();
-    }
+  @API(since = "5.3", status = API.Status.INTERNAL)
+  public static Level getRootLevel() {
+    final LoggerContext loggerContext = LoggerContext.getContext(false);
+    final LoggerConfig loggerConfig =
+        loggerContext.getConfiguration().getRootLogger();
+    return loggerConfig.getLevel();
+  }
 }

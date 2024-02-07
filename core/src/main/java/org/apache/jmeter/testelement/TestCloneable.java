@@ -18,5 +18,5 @@
 package org.apache.jmeter.testelement;
 
 public interface TestCloneable extends Cloneable {
-    Object clone();
+  Object clone();
 }

@@ -24,18 +24,18 @@ package org.apache.jmeter.gui;
  *
  */
 public interface TestPlanListener {
-    /**
-     * Called before current test plan is cleared
-     */
-    void beforeTestPlanCleared();
+  /**
+   * Called before current test plan is cleared
+   */
+  void beforeTestPlanCleared();
 
-    /**
-     * Called after current test plan has been cleared
-     */
-    void afterTestPlanCleared();
+  /**
+   * Called after current test plan has been cleared
+   */
+  void afterTestPlanCleared();
 
-    /**
-     * Called after a new test plan has been loaded
-     */
-    void testPlanLoaded();
+  /**
+   * Called after a new test plan has been loaded
+   */
+  void testPlanLoaded();
 }

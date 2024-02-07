@@ -18,12 +18,13 @@
 package org.apache.jmeter.gui;
 
 /**
- * Interface that identifies processes to stop on close or load of new project files
+ * Interface that identifies processes to stop on close or load of new project
+ * files
  */
 public interface Stoppable {
 
-    /**
-     * Stop server
-     */
-    void stopServer();
+  /**
+   * Stop server
+   */
+  void stopServer();
 }

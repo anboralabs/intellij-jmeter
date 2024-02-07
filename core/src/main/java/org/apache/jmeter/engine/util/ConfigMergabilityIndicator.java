@@ -21,16 +21,17 @@ import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.threads.TestCompiler;
 
 /**
- * Interface that gives a hint about the merge policy to apply between Samplers and Config elements
+ * Interface that gives a hint about the merge policy to apply between Samplers
+ * and Config elements
  * @see TestCompiler#configureWithConfigElements
  * @since 2.7
  */
 public interface ConfigMergabilityIndicator {
 
-    /**
-     * Does configElement apply to Sampler
-     * @param configElement {@link ConfigTestElement}
-     * @return boolean
-     */
-    boolean applies(ConfigTestElement configElement);
+  /**
+   * Does configElement apply to Sampler
+   * @param configElement {@link ConfigTestElement}
+   * @return boolean
+   */
+  boolean applies(ConfigTestElement configElement);
 }

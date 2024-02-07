@@ -23,46 +23,39 @@ import org.apache.jmeter.threads.JMeterVariables;
 
 public class SimpleVariable {
 
-    private String name;
+  private String name;
 
-    public SimpleVariable(String name) {
-        this.name = name;
+  public SimpleVariable(String name) { this.name = name; }
+
+  public SimpleVariable() {
+    this.name = ""; //$NON-NLS-1$
+  }
+
+  public String getName() { return name; }
+
+  public void setName(String name) { this.name = name; }
+
+  /**
+   * @see org.apache.jmeter.functions.Function#execute
+   */
+  @Override
+  public String toString() {
+    String ret = null;
+    JMeterVariables vars = getVariables();
+
+    if (vars != null) {
+      ret = vars.get(name);
     }
 
-    public SimpleVariable() {
-        this.name = ""; //$NON-NLS-1$
+    if (ret == null) {
+      return "${" + name + "}";
     }
 
-    public String getName() {
-        return name;
-    }
+    return ret;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * @see org.apache.jmeter.functions.Function#execute
-     */
-    @Override
-    public String toString() {
-        String ret = null;
-        JMeterVariables vars = getVariables();
-
-        if (vars != null) {
-            ret = vars.get(name);
-        }
-
-        if (ret == null) {
-            return "${" + name + "}";
-        }
-
-        return ret;
-    }
-
-    private static JMeterVariables getVariables() {
-        JMeterContext context = JMeterContextService.getContext();
-        return context.getVariables();
-    }
-
+  private static JMeterVariables getVariables() {
+    JMeterContext context = JMeterContextService.getContext();
+    return context.getVariables();
+  }
 }

@@ -17,17 +17,15 @@
 
 package org.apache.jmeter.report.dashboard;
 
+import com.fasterxml.jackson.core.io.JsonStringEncoder;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.jmeter.report.core.JsonUtil;
 import org.apache.jmeter.report.processor.ListResultData;
 import org.apache.jmeter.report.processor.MapResultData;
 import org.apache.jmeter.report.processor.ResultData;
 import org.apache.jmeter.report.processor.ResultDataVisitor;
 import org.apache.jmeter.report.processor.ValueResultData;
-
-import com.fasterxml.jackson.core.io.JsonStringEncoder;
 /**
  * The class JsonizerVisitor provides a visitor that can get json-like string
  * from ResultData.
@@ -36,70 +34,72 @@ import com.fasterxml.jackson.core.io.JsonStringEncoder;
  */
 public class JsonizerVisitor implements ResultDataVisitor<String> {
 
-    /**
-     * Instantiates a new jsonizer visitor.
-     */
-    public JsonizerVisitor() {
-    }
+  /**
+   * Instantiates a new jsonizer visitor.
+   */
+  public JsonizerVisitor() {}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.ResultDataVisitor#visitListResult(
-     * org.apache.jmeter.report.processor.ListResultData)
-     */
-    @Override
-    public String visitListResult(ListResultData listResult) {
-        String result = "";
-        if (listResult != null) {
-            int count = listResult.getSize();
-            String[] items = new String[count];
-            for (int i = 0; i < count; i++) {
-                items[i] = listResult.get(i).accept(this);
-            }
-            result = JsonUtil.toJsonArray(items);
-        }
-        return result;
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.ResultDataVisitor#visitListResult(
+   * org.apache.jmeter.report.processor.ListResultData)
+   */
+  @Override
+  public String visitListResult(ListResultData listResult) {
+    String result = "";
+    if (listResult != null) {
+      int count = listResult.getSize();
+      String[] items = new String[count];
+      for (int i = 0; i < count; i++) {
+        items[i] = listResult.get(i).accept(this);
+      }
+      result = JsonUtil.toJsonArray(items);
     }
+    return result;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.ResultDataVisitor#visitMapResult(org
-     * .apache.jmeter.report.processor.MapResultData)
-     */
-    @Override
-    public String visitMapResult(MapResultData mapResult) {
-        String result = "";
-        if (mapResult != null) {
-            HashMap<String, String> map = new HashMap<>();
-            for (Map.Entry<String, ResultData> entry : mapResult.entrySet()) {
-                map.put(entry.getKey(), entry.getValue().accept(this));
-            }
-            result = JsonUtil.toJsonObject(map);
-        }
-        return result;
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.ResultDataVisitor#visitMapResult(org
+   * .apache.jmeter.report.processor.MapResultData)
+   */
+  @Override
+  public String visitMapResult(MapResultData mapResult) {
+    String result = "";
+    if (mapResult != null) {
+      HashMap<String, String> map = new HashMap<>();
+      for (Map.Entry<String, ResultData> entry : mapResult.entrySet()) {
+        map.put(entry.getKey(), entry.getValue().accept(this));
+      }
+      result = JsonUtil.toJsonObject(map);
     }
+    return result;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.ResultDataVisitor#visitValueResult
-     * (org.apache.jmeter.report.processor.ValueResultData)
-     */
-    @Override
-    public String visitValueResult(ValueResultData valueResult) {
-        String result = "";
-        if (valueResult != null) {
-            Object value = valueResult.getValue();
-            result = String.valueOf(value);
-            if (value instanceof String) {
-                result = '"' + new String(JsonStringEncoder.getInstance().quoteAsString(result)) + '"';
-            }
-        }
-        return result;
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.ResultDataVisitor#visitValueResult
+   * (org.apache.jmeter.report.processor.ValueResultData)
+   */
+  @Override
+  public String visitValueResult(ValueResultData valueResult) {
+    String result = "";
+    if (valueResult != null) {
+      Object value = valueResult.getValue();
+      result = String.valueOf(value);
+      if (value instanceof String) {
+        result =
+            '"' +
+            new String(JsonStringEncoder.getInstance().quoteAsString(result)) +
+            '"';
+      }
     }
+    return result;
+  }
 }

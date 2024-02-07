@@ -25,13 +25,10 @@ import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 
 /**
- * This is the BeanInfo object for the AbstractTestElement class. It acts as a "stopper"
- * for the introspector: we don't want it to look at properties defined at this
- * or higher classes.
- * <p>
- * Note this is really needed since using Introspector.getBeanInfo with a stop
- * class is not an option because:
- * <ol>
+ * This is the BeanInfo object for the AbstractTestElement class. It acts as a
+ * "stopper" for the introspector: we don't want it to look at properties
+ * defined at this or higher classes. <p> Note this is really needed since using
+ * Introspector.getBeanInfo with a stop class is not an option because: <ol>
  * <li>The API does not define a 3-parameter getBeanInfo in which you can use a
  * stop class AND flags. [Why? I guess this is a bug in the spec.]
  * <li>java.beans.Introspector is buggy and, opposite to what's stated in the
@@ -41,64 +38,64 @@ import java.beans.PropertyDescriptor;
  */
 public class AbstractTestElementBeanInfo implements BeanInfo {
 
-    @Override
-    public BeanInfo[] getAdditionalBeanInfo() {
-        return new BeanInfo[0];
-    }
+  @Override
+  public BeanInfo[] getAdditionalBeanInfo() {
+    return new BeanInfo[0];
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BeanDescriptor getBeanDescriptor() {
-        return null;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public BeanDescriptor getBeanDescriptor() {
+    return null;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getDefaultEventIndex() {
-        return 0;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getDefaultEventIndex() {
+    return 0;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getDefaultPropertyIndex() {
-        return 0;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getDefaultPropertyIndex() {
+    return 0;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EventSetDescriptor[] getEventSetDescriptors() {
-        return new EventSetDescriptor[0];
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public EventSetDescriptor[] getEventSetDescriptors() {
+    return new EventSetDescriptor[0];
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Image getIcon(int iconKind) {
-        return null;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Image getIcon(int iconKind) {
+    return null;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public MethodDescriptor[] getMethodDescriptors() {
-        return new MethodDescriptor[0];
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public MethodDescriptor[] getMethodDescriptors() {
+    return new MethodDescriptor[0];
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PropertyDescriptor[] getPropertyDescriptors() {
-        return new PropertyDescriptor[0];
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public PropertyDescriptor[] getPropertyDescriptors() {
+    return new PropertyDescriptor[0];
+  }
 }

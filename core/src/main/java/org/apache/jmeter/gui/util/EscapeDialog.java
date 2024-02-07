@@ -19,45 +19,42 @@ package org.apache.jmeter.gui.util;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
-
 import org.apache.jmeter.gui.action.KeyStrokes;
 
 public class EscapeDialog extends JDialog {
 
-    private static final long serialVersionUID = 1319421816741139938L;
+  private static final long serialVersionUID = 1319421816741139938L;
 
-    public EscapeDialog() {
-        super();
-    }
+  public EscapeDialog() { super(); }
 
-    public EscapeDialog(Frame frame, String title, boolean modal) {
-        super(frame, title, modal);
-    }
+  public EscapeDialog(Frame frame, String title, boolean modal) {
+    super(frame, title, modal);
+  }
 
-    @Override
-    protected JRootPane createRootPane() {
-        JRootPane rootPane = new JRootPane();
-        Action escapeAction = new AbstractAction("ESCAPE") {
-            /**
-             *
-             */
-            private static final long serialVersionUID = 2208129319916921772L;
+  @Override
+  protected JRootPane createRootPane() {
+    JRootPane rootPane = new JRootPane();
+    Action escapeAction = new AbstractAction("ESCAPE") {
+      /**
+       *
+       */
+      private static final long serialVersionUID = 2208129319916921772L;
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-            }
-        };
-        InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        inputMap.put(KeyStrokes.ESC, escapeAction.getValue(Action.NAME));
-        rootPane.getActionMap().put(escapeAction.getValue(Action.NAME), escapeAction);
-        return rootPane;
-    }
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        setVisible(false);
+      }
+    };
+    InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+    inputMap.put(KeyStrokes.ESC, escapeAction.getValue(Action.NAME));
+    rootPane.getActionMap().put(escapeAction.getValue(Action.NAME),
+                                escapeAction);
+    return rootPane;
+  }
 }

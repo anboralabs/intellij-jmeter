@@ -29,38 +29,33 @@ import java.util.Map;
  */
 public class SampleContext {
 
-    private File workingDirectory;
-    private final Map<String, Object> data = new HashMap<>();
+  private File workingDirectory;
+  private final Map<String, Object> data = new HashMap<>();
 
-    /**
-     * Return the root directory that consumers are authorized to use for
-     * intermediate work.<br>
-     * SampleConsumers are encourage to create their own work directories
-     * beneath this root work directory
-     *
-     * @return A file pointing to an existing directory
-     */
-    public final File getWorkingDirectory() {
-        return workingDirectory;
-    }
+  /**
+   * Return the root directory that consumers are authorized to use for
+   * intermediate work.<br>
+   * SampleConsumers are encourage to create their own work directories
+   * beneath this root work directory
+   *
+   * @return A file pointing to an existing directory
+   */
+  public final File getWorkingDirectory() { return workingDirectory; }
 
-    /**
-     * Sets the work directory.
-     *
-     * @param workingDirectory
-     *            the new working directory
-     */
-    public final void setWorkingDirectory(File workingDirectory) {
-        this.workingDirectory = workingDirectory;
-    }
+  /**
+   * Sets the work directory.
+   *
+   * @param workingDirectory
+   *            the new working directory
+   */
+  public final void setWorkingDirectory(File workingDirectory) {
+    this.workingDirectory = workingDirectory;
+  }
 
-    /**
-     * Gets the data storage.
-     *
-     * @return the data
-     */
-    public final Map<String, Object> getData() {
-        return data;
-    }
-
+  /**
+   * Gets the data storage.
+   *
+   * @return the data
+   */
+  public final Map<String, Object> getData() { return data; }
 }

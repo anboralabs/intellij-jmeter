@@ -19,24 +19,22 @@ package org.apache.jmeter.processor.gui;
 
 import java.util.Arrays;
 import java.util.Collection;
-
 import javax.swing.JPopupMenu;
-
 import org.apache.jmeter.gui.AbstractJMeterGuiComponent;
 import org.apache.jmeter.gui.util.MenuFactory;
 
-public abstract class AbstractPreProcessorGui extends AbstractJMeterGuiComponent {
+public abstract class AbstractPreProcessorGui
+    extends AbstractJMeterGuiComponent {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    @Override
-    public JPopupMenu createPopupMenu() {
-        return MenuFactory.getDefaultExtractorMenu();
-    }
+  @Override
+  public JPopupMenu createPopupMenu() {
+    return MenuFactory.getDefaultExtractorMenu();
+  }
 
-    @Override
-    public Collection<String> getMenuCategories() {
-        return Arrays.asList(MenuFactory.PRE_PROCESSORS);
-    }
-
+  @Override
+  public Collection<String> getMenuCategories() {
+    return Arrays.asList(MenuFactory.PRE_PROCESSORS);
+  }
 }

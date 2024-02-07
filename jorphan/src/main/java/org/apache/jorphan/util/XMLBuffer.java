@@ -26,92 +26,91 @@ import java.util.ArrayDeque;
  * Not synchronised.
  *
  */
-public class XMLBuffer{
-    private final StringBuilder sb = new StringBuilder(); // the string so far
+public class XMLBuffer {
+  private final StringBuilder sb = new StringBuilder(); // the string so far
 
-    private final ArrayDeque<String> tags = new ArrayDeque<>(); // opened tags
+  private final ArrayDeque<String> tags = new ArrayDeque<>(); // opened tags
 
-    public XMLBuffer() {
+  public XMLBuffer() {}
 
+  private void startTag(String t) {
+    sb.append("<");
+    sb.append(t);
+    sb.append(">");
+  }
+
+  private void endTag(String t) {
+    sb.append("</");
+    sb.append(t);
+    sb.append(">");
+    sb.append("\n");
+  }
+
+  private void emptyTag(String t) {
+    sb.append("<");
+    sb.append(t);
+    sb.append("/>");
+    sb.append("\n");
+  }
+
+  /**
+   * Open a tag; save on stack.
+   *
+   * @param tagName name of the tag
+   * @return this
+   */
+  public XMLBuffer openTag(String tagName) {
+    tags.push(tagName);
+    startTag(tagName);
+    return this;
+  }
+
+  /**
+   * Close top tag from stack.
+   *
+   * @param tagName name of the tag to close
+   *
+   * @return this
+   *
+   * @throws IllegalArgumentException if the tag names do not match
+   */
+  public XMLBuffer closeTag(String tagName) {
+    String tag = tags.pop();
+    if (!tag.equals(tagName)) {
+      throw new IllegalArgumentException("Trying to close tag: " + tagName +
+                                         " ; should be " + tag);
     }
+    endTag(tag);
+    return this;
+  }
 
-    private void startTag(String t) {
-        sb.append("<");
-        sb.append(t);
-        sb.append(">");
+  /**
+   * Add a complete tag with content.
+   *
+   * @param tagName name of the tag
+   * @param content content to put in tag, or empty content, if an empty tag
+   *     should be used
+   * @return this
+   */
+  public XMLBuffer tag(String tagName, CharSequence content) {
+    if (content.length() == 0) {
+      emptyTag(tagName);
+    } else {
+      startTag(tagName);
+      sb.append(content);
+      endTag(tagName);
     }
+    return this;
+  }
 
-    private void endTag(String t) {
-        sb.append("</");
-        sb.append(t);
-        sb.append(">");
-        sb.append("\n");
+  /**
+   * Convert the buffer to a string, closing any open tags
+   */
+  @Override
+  public String toString() {
+    while (!tags.isEmpty()) {
+      endTag(tags.pop());
     }
-
-    private void emptyTag(String t) {
-        sb.append("<");
-        sb.append(t);
-        sb.append("/>");
-        sb.append("\n");
-    }
-
-    /**
-     * Open a tag; save on stack.
-     *
-     * @param tagName name of the tag
-     * @return this
-     */
-    public XMLBuffer openTag(String tagName) {
-        tags.push(tagName);
-        startTag(tagName);
-        return this;
-    }
-
-    /**
-     * Close top tag from stack.
-     *
-     * @param tagName name of the tag to close
-     *
-     * @return this
-     *
-     * @throws IllegalArgumentException if the tag names do not match
-     */
-    public XMLBuffer closeTag(String tagName) {
-        String tag = tags.pop();
-        if (!tag.equals(tagName)) {
-            throw new IllegalArgumentException(
-                    "Trying to close tag: " + tagName + " ; should be " + tag);
-        }
-        endTag(tag);
-        return this;
-    }
-
-    /**
-     * Add a complete tag with content.
-     *
-     * @param tagName name of the tag
-     * @param content content to put in tag, or empty content, if an empty tag should be used
-     * @return this
-     */
-    public XMLBuffer tag(String tagName, CharSequence content) {
-        if (content.length() == 0) {
-            emptyTag(tagName);
-        } else {
-            startTag(tagName);
-            sb.append(content);
-            endTag(tagName);
-        }
-        return this;
-    }
-
-    /**
-     * Convert the buffer to a string, closing any open tags
-     */
-    @Override
-    public String toString() {
-        while (!tags.isEmpty()) {
-            endTag(tags.pop());
-        }
-        return sb.toString();
-    }
+    return sb.toString();
+  }
 }

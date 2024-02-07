@@ -29,19 +29,19 @@ import org.apache.jmeter.samplers.SampleResult;
  *
  */
 public interface Visualizer {
-    /**
-     * This method is called by sampling thread to inform the visualizer about
-     * the arrival of a new sample.
-     *
-     * @param sample
-     *            the newly arrived sample
-     */
-    void add(SampleResult sample);
+  /**
+   * This method is called by sampling thread to inform the visualizer about
+   * the arrival of a new sample.
+   *
+   * @param sample
+   *            the newly arrived sample
+   */
+  void add(SampleResult sample);
 
-    /**
-     * This method is used to indicate a visualizer generates statistics.
-     *
-     * @return true if visualiser generates statistics
-     */
-    boolean isStats();
+  /**
+   * This method is used to indicate a visualizer generates statistics.
+   *
+   * @return true if visualiser generates statistics
+   */
+  boolean isStats();
 }

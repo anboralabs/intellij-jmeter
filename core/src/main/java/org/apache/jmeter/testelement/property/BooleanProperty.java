@@ -22,76 +22,73 @@ import org.apache.jmeter.testelement.TestElement;
 /**
  */
 public class BooleanProperty extends AbstractProperty {
-    private static final long serialVersionUID = 233L;
+  private static final long serialVersionUID = 233L;
 
-    private boolean value;
+  private boolean value;
 
-    private transient boolean savedValue;
+  private transient boolean savedValue;
 
-    public BooleanProperty(String name, boolean v) {
-        super(name);
-        value = v;
+  public BooleanProperty(String name, boolean v) {
+    super(name);
+    value = v;
+  }
+
+  public BooleanProperty() { super(); }
+
+  @Override
+  public void setObjectValue(Object v) {
+    if (v instanceof Boolean) {
+      value = (Boolean)v;
+    } else {
+      value = Boolean.parseBoolean(v.toString());
     }
+  }
 
-    public BooleanProperty() {
-        super();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getStringValue() {
+    return Boolean.toString(value);
+  }
 
-    @Override
-    public void setObjectValue(Object v) {
-        if (v instanceof Boolean) {
-            value = (Boolean) v;
-        } else {
-            value = Boolean.parseBoolean(v.toString());
-        }
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getObjectValue() {
+    return value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getStringValue() {
-        return Boolean.toString(value);
-    }
+  @Override
+  public BooleanProperty clone() {
+    BooleanProperty prop = (BooleanProperty)super.clone();
+    prop.value = value;
+    return prop;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object getObjectValue() {
-        return value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean getBooleanValue() {
+    return value;
+  }
 
-    @Override
-    public BooleanProperty clone() {
-        BooleanProperty prop = (BooleanProperty) super.clone();
-        prop.value = value;
-        return prop;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setRunningVersion(boolean runningVersion) {
+    savedValue = value;
+    super.setRunningVersion(runningVersion);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getBooleanValue() {
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setRunningVersion(boolean runningVersion) {
-        savedValue = value;
-        super.setRunningVersion(runningVersion);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        value = savedValue;
-    }
-
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    value = savedValue;
+  }
 }

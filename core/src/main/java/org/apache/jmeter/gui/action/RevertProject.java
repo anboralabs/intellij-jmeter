@@ -17,17 +17,14 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.swing.JOptionPane;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.util.JMeterUtils;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Handles the Revert Project command.
@@ -35,46 +32,43 @@ import com.google.auto.service.AutoService;
  */
 @AutoService(Command.class)
 public class RevertProject extends AbstractActionWithNoRunningTest {
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.REVERT_PROJECT);
+  static { commands.add(ActionNames.REVERT_PROJECT); }
+
+  public RevertProject() { super(); }
+
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
+
+  @Override
+  public void doActionAfterCheck(ActionEvent e) {
+    // Get the file name of the current project
+    String projectFile = GuiPackage.getInstance().getTestPlanFile();
+    // Check if the user has loaded any file
+    if (projectFile == null) {
+      return;
     }
 
-    public RevertProject() {
-        super();
+    // Check if the user wants to drop any changes
+    ActionRouter.getInstance().doActionNow(
+        new ActionEvent(e.getSource(), e.getID(), ActionNames.CHECK_DIRTY));
+    GuiPackage guiPackage = GuiPackage.getInstance();
+    if (guiPackage.isDirty()) {
+      // Check if the user wants to revert
+      int response = JOptionPane.showConfirmDialog(
+          GuiPackage.getInstance().getMainFrame(),
+          JMeterUtils.getResString("cancel_revert_project"), // $NON-NLS-1$
+          JMeterUtils.getResString("revert_project?"),       // $NON-NLS-1$
+          JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+      if (response == JOptionPane.YES_OPTION) {
+        // Close the current project
+        Close.closeProject(e);
+        // Reload the project
+        Load.loadProjectFile(e, new File(projectFile), false);
+      }
     }
-
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
-
-    @Override
-    public void doActionAfterCheck(ActionEvent e) {
-        // Get the file name of the current project
-        String projectFile = GuiPackage.getInstance().getTestPlanFile();
-        // Check if the user has loaded any file
-        if (projectFile == null) {
-            return;
-        }
-
-        // Check if the user wants to drop any changes
-        ActionRouter.getInstance().doActionNow(new ActionEvent(e.getSource(), e.getID(), ActionNames.CHECK_DIRTY));
-        GuiPackage guiPackage = GuiPackage.getInstance();
-        if (guiPackage.isDirty()) {
-            // Check if the user wants to revert
-            int response = JOptionPane.showConfirmDialog(GuiPackage.getInstance().getMainFrame(),
-                    JMeterUtils.getResString("cancel_revert_project"), // $NON-NLS-1$
-                    JMeterUtils.getResString("revert_project?"),  // $NON-NLS-1$
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
-            if (response == JOptionPane.YES_OPTION) {
-                // Close the current project
-                Close.closeProject(e);
-                // Reload the project
-                Load.loadProjectFile(e, new File(projectFile), false);
-            }
-        }
-    }
+  }
 }

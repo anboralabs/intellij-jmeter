@@ -21,10 +21,10 @@ package org.apache.jmeter.engine.event;
  * Allows a class to receive loop iteration start events.
  */
 public interface LoopIterationListener {
-    /**
-     * Called when a loop iteration is about to start.
-     *
-     * @param iterEvent the event
-     */
-    void iterationStart(LoopIterationEvent iterEvent);
+  /**
+   * Called when a loop iteration is about to start.
+   *
+   * @param iterEvent the event
+   */
+  void iterationStart(LoopIterationEvent iterEvent);
 }

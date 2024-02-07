@@ -24,36 +24,31 @@ package org.apache.jmeter.report.dashboard;
  */
 public class ExportException extends Exception {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 89868452883024813L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = 89868452883024813L;
 
-    /**
-     * Instantiates a new export exception.
-     */
-    public ExportException() {
-        super();
-    }
+  /**
+   * Instantiates a new export exception.
+   */
+  public ExportException() { super(); }
 
-    /**
-     * Instantiates a new export exception.
-     *
-     * @param message
-     *            the message
-     */
-    public ExportException(String message) {
-        super(message);
-    }
+  /**
+   * Instantiates a new export exception.
+   *
+   * @param message
+   *            the message
+   */
+  public ExportException(String message) { super(message); }
 
-    /**
-     * Instantiates a new export exception.
-     *
-     * @param message
-     *            the message
-     * @param cause
-     *            the inner cause
-     */
-    public ExportException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+  /**
+   * Instantiates a new export exception.
+   *
+   * @param message
+   *            the message
+   * @param cause
+   *            the inner cause
+   */
+  public ExportException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

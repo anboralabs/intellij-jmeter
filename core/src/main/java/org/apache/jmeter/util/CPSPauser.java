@@ -21,41 +21,43 @@ package org.apache.jmeter.util;
  *
  * Generate appropriate pauses for a given CPS (characters per second)
  */
-public class CPSPauser{
-    private final int charactersPerSecond; // Characters per second to emulate
+public class CPSPauser {
+  private final int charactersPerSecond; // Characters per second to emulate
 
-    // Conversions for milli and nano seconds
-    private static final long MS_PER_SEC = 1000L;
-    private static final long NS_PER_SEC = 1000000000L;
-    private static final long NS_PER_MS  = NS_PER_SEC/MS_PER_SEC;
+  // Conversions for milli and nano seconds
+  private static final long MS_PER_SEC = 1000L;
+  private static final long NS_PER_SEC = 1000000000L;
+  private static final long NS_PER_MS = NS_PER_SEC / MS_PER_SEC;
 
-    /**
-     * Create a pauser with the appropriate speed settings.
-     *
-     * @param cps CPS to emulate
-     */
-    public CPSPauser(int cps){
-        if (cps <=0) {
-            throw new IllegalArgumentException("Speed (cps) <= 0");
-        }
-        charactersPerSecond=cps;
+  /**
+   * Create a pauser with the appropriate speed settings.
+   *
+   * @param cps CPS to emulate
+   */
+  public CPSPauser(int cps) {
+    if (cps <= 0) {
+      throw new IllegalArgumentException("Speed (cps) <= 0");
     }
+    charactersPerSecond = cps;
+  }
 
-    /**
-     * Pause for an appropriate time according to the number of bytes being transferred.
-     *
-     * @param bytes number of bytes being transferred
-     */
-    public void pause(int bytes){
-        long sleepMS = (bytes*MS_PER_SEC)/charactersPerSecond;
-        int sleepNS = Long.valueOf(sleepMS % NS_PER_MS).intValue(); // NOSONAR Where is the boxing to Long
-        try {
-            if(sleepMS>0 || sleepNS>0) {
-                Thread.sleep(sleepMS,sleepNS);
-            }
-        } catch (InterruptedException ignored) {
-            // NOOP
-            Thread.currentThread().interrupt();
-        }
+  /**
+   * Pause for an appropriate time according to the number of bytes being
+   * transferred.
+   *
+   * @param bytes number of bytes being transferred
+   */
+  public void pause(int bytes) {
+    long sleepMS = (bytes * MS_PER_SEC) / charactersPerSecond;
+    int sleepNS = Long.valueOf(sleepMS % NS_PER_MS)
+                      .intValue(); // NOSONAR Where is the boxing to Long
+    try {
+      if (sleepMS > 0 || sleepNS > 0) {
+        Thread.sleep(sleepMS, sleepNS);
+      }
+    } catch (InterruptedException ignored) {
+      // NOOP
+      Thread.currentThread().interrupt();
     }
+  }
 }

@@ -19,7 +19,6 @@ package org.apache.jmeter.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,78 +32,79 @@ import org.slf4j.LoggerFactory;
  */
 public class BeanShellServer implements Runnable {
 
-    private static final Logger log = LoggerFactory.getLogger(BeanShellServer.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(BeanShellServer.class);
 
-    private final int serverport;
+  private final int serverport;
 
-    private final String serverfile;
+  private final String serverfile;
 
-    /**
-     * Constructor which sets the port for this server and the path to an
-     * optional init file
-     *
-     * @param port
-     *            the port for the server to use
-     * @param file
-     *            the path to an init file, or an empty string, if no init file
-     *            should be used
-     */
-    public BeanShellServer(int port, String file) {
-        super();
-        serverfile = file;// can be the empty string
-        serverport = port;
-    }
+  /**
+   * Constructor which sets the port for this server and the path to an
+   * optional init file
+   *
+   * @param port
+   *            the port for the server to use
+   * @param file
+   *            the path to an init file, or an empty string, if no init file
+   *            should be used
+   */
+  public BeanShellServer(int port, String file) {
+    super();
+    serverfile = file; // can be the empty string
+    serverport = port;
+  }
 
-    // For use by the server script
-    static String getprop(String s) {
-        return JMeterUtils.getPropDefault(s, s);
-    }
+  // For use by the server script
+  static String getprop(String s) { return JMeterUtils.getPropDefault(s, s); }
 
-    // For use by the server script
-    static void setprop(String s, String v) {
-        JMeterUtils.getJMeterProperties().setProperty(s, v);
-    }
+  // For use by the server script
+  static void setprop(String s, String v) {
+    JMeterUtils.getJMeterProperties().setProperty(s, v);
+  }
 
-    @Override
-    public void run() {
+  @Override
+  public void run() {
 
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+    ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
+    try {
+      Class<?> interpreter = loader.loadClass("bsh.Interpreter"); //$NON-NLS-1$
+      Object instance = interpreter.getDeclaredConstructor().newInstance();
+      Class<String> string = String.class;
+      Class<Object> object = Object.class;
+
+      Method eval = interpreter.getMethod("eval", string); //$NON-NLS-1$
+      Method setObj =
+          interpreter.getMethod("set", string, object); //$NON-NLS-1$
+      Method setInt =
+          interpreter.getMethod("set", string, int.class);     //$NON-NLS-1$
+      Method source = interpreter.getMethod("source", string); //$NON-NLS-1$
+
+      setObj.invoke(instance, "t", this);             //$NON-NLS-1$
+      setInt.invoke(instance, "portnum", serverport); //$NON-NLS-1$
+
+      if (serverfile.length() > 0) {
         try {
-            Class<?> interpreter = loader.loadClass("bsh.Interpreter");//$NON-NLS-1$
-            Object instance = interpreter.getDeclaredConstructor().newInstance();
-            Class<String> string = String.class;
-            Class<Object> object = Object.class;
-
-            Method eval = interpreter.getMethod("eval", string);//$NON-NLS-1$
-            Method setObj = interpreter.getMethod("set", string, object);//$NON-NLS-1$
-            Method setInt = interpreter.getMethod("set", string, int.class);//$NON-NLS-1$
-            Method source = interpreter.getMethod("source", string);//$NON-NLS-1$
-
-            setObj.invoke(instance, "t", this );//$NON-NLS-1$
-            setInt.invoke(instance, "portnum", serverport);//$NON-NLS-1$
-
-            if (serverfile.length() > 0) {
-                try {
-                    source.invoke(instance, serverfile);
-                } catch (InvocationTargetException ite) {
-                    Throwable cause = ite.getCause();
-                    if (log.isWarnEnabled()) {
-                        log.warn("Could not source, {}. {}", serverfile,
-                                (cause != null) ? cause.toString() : ite.toString());
-                    }
-                    if (cause instanceof Error) {
-                        throw (Error) cause;
-                    }
-                }
-            }
-            eval.invoke(instance, "setAccessibility(true);");//$NON-NLS-1$
-            eval.invoke(instance, "server(portnum);");//$NON-NLS-1$
-
-        } catch (ClassNotFoundException e) {
-            log.error("Beanshell Interpreter not found");
-        } catch (Exception e) {
-            log.error("Problem starting BeanShell server", e);
+          source.invoke(instance, serverfile);
+        } catch (InvocationTargetException ite) {
+          Throwable cause = ite.getCause();
+          if (log.isWarnEnabled()) {
+            log.warn("Could not source, {}. {}", serverfile,
+                     (cause != null) ? cause.toString() : ite.toString());
+          }
+          if (cause instanceof Error) {
+            throw (Error)cause;
+          }
         }
+      }
+      eval.invoke(instance, "setAccessibility(true);"); //$NON-NLS-1$
+      eval.invoke(instance, "server(portnum);");        //$NON-NLS-1$
+
+    } catch (ClassNotFoundException e) {
+      log.error("Beanshell Interpreter not found");
+    } catch (Exception e) {
+      log.error("Problem starting BeanShell server", e);
     }
+  }
 }

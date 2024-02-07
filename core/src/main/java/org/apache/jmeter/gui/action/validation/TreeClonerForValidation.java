@@ -29,71 +29,86 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Clones the test tree,  skipping test elements that implement {@link Timer} by default.
+ * Clones the test tree,  skipping test elements that implement {@link Timer} by
+ * default.
  * @since 3.0
  */
 public class TreeClonerForValidation extends TreeCloner {
 
-    private static final Logger log = LoggerFactory.getLogger(TreeClonerForValidation.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(TreeClonerForValidation.class);
 
-    /**
-     * Number of Threads to configure when running a Thread Group during a validation
-     */
-    protected static final int VALIDATION_NUMBER_OF_THREADS = JMeterUtils.getPropDefault("testplan_validation.nb_threads_per_thread_group", 1); //$NON-NLS-1$
+  /**
+   * Number of Threads to configure when running a Thread Group during a
+   * validation
+   */
+  protected static final int VALIDATION_NUMBER_OF_THREADS =
+      JMeterUtils.getPropDefault(
+          "testplan_validation.nb_threads_per_thread_group", 1); //$NON-NLS-1$
 
-    /**
-     * Ignore or not timers during a Thread Group validation
-     */
-    protected static final boolean VALIDATION_IGNORE_TIMERS = JMeterUtils.getPropDefault("testplan_validation.ignore_timers", true); //$NON-NLS-1$
+  /**
+   * Ignore or not timers during a Thread Group validation
+   */
+  protected static final boolean VALIDATION_IGNORE_TIMERS =
+      JMeterUtils.getPropDefault("testplan_validation.ignore_timers",
+                                 true); //$NON-NLS-1$
 
-    /**
-     * Ignore or not Backend during a Thread Group validation
-     */
-    protected static final boolean VALIDATION_IGNORE_BACKENDS = JMeterUtils.getPropDefault("testplan_validation.ignore_backends", true); //$NON-NLS-1$
+  /**
+   * Ignore or not Backend during a Thread Group validation
+   */
+  protected static final boolean VALIDATION_IGNORE_BACKENDS =
+      JMeterUtils.getPropDefault("testplan_validation.ignore_backends",
+                                 true); //$NON-NLS-1$
 
-    /**
-     * Number of iterations to run during a Thread Group validation
-     */
-    protected static final int VALIDATION_ITERATIONS = JMeterUtils.getPropDefault("testplan_validation.number_iterations", 1); //$NON-NLS-1$
+  /**
+   * Number of iterations to run during a Thread Group validation
+   */
+  protected static final int VALIDATION_ITERATIONS = JMeterUtils.getPropDefault(
+      "testplan_validation.number_iterations", 1); //$NON-NLS-1$
 
-    static {
-        log.info("Running validation with number of threads:{}, ignoreTimers:{}, number of iterations:{}",
-                VALIDATION_NUMBER_OF_THREADS, VALIDATION_IGNORE_TIMERS, VALIDATION_ITERATIONS);
-    }
+  static {
+    log.info(
+        "Running validation with number of threads:{}, ignoreTimers:{}, number of iterations:{}",
+        VALIDATION_NUMBER_OF_THREADS, VALIDATION_IGNORE_TIMERS,
+        VALIDATION_ITERATIONS);
+  }
 
-    public TreeClonerForValidation() {
-        this(false);
-    }
+  public TreeClonerForValidation() { this(false); }
 
-    public TreeClonerForValidation(boolean honourNoThreadClone) {
-        super(honourNoThreadClone);
-    }
+  public TreeClonerForValidation(boolean honourNoThreadClone) {
+    super(honourNoThreadClone);
+  }
 
-    /**
-     * @see org.apache.jmeter.engine.TreeCloner#addNodeToTree(java.lang.Object)
-     */
-    @Override
-    protected Object addNodeToTree(Object node) {
-        if((VALIDATION_IGNORE_TIMERS && node instanceof Timer) ||
-                (VALIDATION_IGNORE_BACKENDS && node instanceof Backend)) {
-            return node; // don't add timer or backend
-        } else {
-            Object clonedNode = super.addNodeToTree(node);
-            if(clonedNode instanceof org.apache.jmeter.threads.ThreadGroup) {
-                ThreadGroup tg = (ThreadGroup)clonedNode;
-                tg.setNumThreads(VALIDATION_NUMBER_OF_THREADS);
-                tg.setScheduler(false);
-                tg.setProperty(ThreadGroup.DELAY, 0);
-                if(((AbstractThreadGroup)clonedNode).getSamplerController() instanceof LoopController) {
-                    ((LoopController)((AbstractThreadGroup)clonedNode).getSamplerController()).setLoops(VALIDATION_ITERATIONS);
-                }
-            } else if (clonedNode instanceof OpenModelThreadGroup) {
-                OpenModelThreadGroup tg = (OpenModelThreadGroup) clonedNode;
-                tg.setRandomSeedString("0");
-                // Launch all the iterations during the first second, and leave one hour for the threads to complete
-                tg.setScheduleString("rate(" + VALIDATION_ITERATIONS + " / sec) even_arrivals(1 sec) pause(1 hour)");
-            }
-            return clonedNode;
+  /**
+   * @see org.apache.jmeter.engine.TreeCloner#addNodeToTree(java.lang.Object)
+   */
+  @Override
+  protected Object addNodeToTree(Object node) {
+    if ((VALIDATION_IGNORE_TIMERS && node instanceof Timer) ||
+        (VALIDATION_IGNORE_BACKENDS && node instanceof Backend)) {
+      return node; // don't add timer or backend
+    } else {
+      Object clonedNode = super.addNodeToTree(node);
+      if (clonedNode instanceof org.apache.jmeter.threads.ThreadGroup) {
+        ThreadGroup tg = (ThreadGroup)clonedNode;
+        tg.setNumThreads(VALIDATION_NUMBER_OF_THREADS);
+        tg.setScheduler(false);
+        tg.setProperty(ThreadGroup.DELAY, 0);
+        if (((AbstractThreadGroup)clonedNode).getSamplerController() instanceof
+            LoopController) {
+          ((LoopController)((AbstractThreadGroup)clonedNode)
+               .getSamplerController())
+              .setLoops(VALIDATION_ITERATIONS);
         }
+      } else if (clonedNode instanceof OpenModelThreadGroup) {
+        OpenModelThreadGroup tg = (OpenModelThreadGroup)clonedNode;
+        tg.setRandomSeedString("0");
+        // Launch all the iterations during the first second, and leave one hour
+        // for the threads to complete
+        tg.setScheduleString("rate(" + VALIDATION_ITERATIONS +
+                             " / sec) even_arrivals(1 sec) pause(1 hour)");
+      }
+      return clonedNode;
     }
+  }
 }

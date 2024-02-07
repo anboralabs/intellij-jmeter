@@ -32,48 +32,50 @@ import java.time.format.DateTimeFormatter;
  */
 public class ThreadDumper {
 
-    // Only invoked by IODH class
-    private ThreadDumper() {
-        super();
-    }
+  // Only invoked by IODH class
+  private ThreadDumper() { super(); }
 
-    /**
-     * Returns name of file containing thread dump.
-     * @return Name of file containing thread dump
-     * @throws Exception if file cannot be written
-     */
-    public static String threadDump() throws Exception {
-        return threadDump(new File(".")); //$NON-NLS-1$
-    }
+  /**
+   * Returns name of file containing thread dump.
+   * @return Name of file containing thread dump
+   * @throws Exception if file cannot be written
+   */
+  public static String threadDump() throws Exception {
+    return threadDump(new File(".")); //$NON-NLS-1$
+  }
 
-    /**
-     * Returns name of file containing thread dump.
-     * @param basedir {@link File} Base directory
-     * @return Name of file containing thread dump
-     * @throws Exception  if file cannot we written
-     */
-    public static String threadDump(File basedir) throws Exception {
-        DateTimeFormatter timestampFormat = DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss_SSS").withZone(ZoneId.systemDefault());
-        String stamp = timestampFormat.format(Instant.now());
-        File temp = new File(basedir,"thread_dump_"+stamp+".log");
-        final String path = temp.getPath();
-        try (FileOutputStream fos = new FileOutputStream(temp);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
-                BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
-            writeThreadDump(bufferedWriter);
-        }
-        return path;
+  /**
+   * Returns name of file containing thread dump.
+   * @param basedir {@link File} Base directory
+   * @return Name of file containing thread dump
+   * @throws Exception  if file cannot we written
+   */
+  public static String threadDump(File basedir) throws Exception {
+    DateTimeFormatter timestampFormat =
+        DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss_SSS")
+            .withZone(ZoneId.systemDefault());
+    String stamp = timestampFormat.format(Instant.now());
+    File temp = new File(basedir, "thread_dump_" + stamp + ".log");
+    final String path = temp.getPath();
+    try (FileOutputStream fos = new FileOutputStream(temp);
+         OutputStreamWriter outputStreamWriter =
+             new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+         BufferedWriter bufferedWriter =
+             new BufferedWriter(outputStreamWriter)) {
+      writeThreadDump(bufferedWriter);
     }
+    return path;
+  }
 
-    /**
-     * Write Thread Dump
-     * @param writer {@link Writer}
-     * @throws IOException if file cannot be written
-     */
-    public static void writeThreadDump(Writer writer) throws IOException {
-        ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
-        for (ThreadInfo ti : threadMxBean.dumpAllThreads(true, true)) {
-            writer.write(ti.toString());
-        }
+  /**
+   * Write Thread Dump
+   * @param writer {@link Writer}
+   * @throws IOException if file cannot be written
+   */
+  public static void writeThreadDump(Writer writer) throws IOException {
+    ThreadMXBean threadMxBean = ManagementFactory.getThreadMXBean();
+    for (ThreadInfo ti : threadMxBean.dumpAllThreads(true, true)) {
+      writer.write(ti.toString());
     }
+  }
 }

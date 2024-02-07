@@ -26,37 +26,34 @@ import org.apache.jmeter.report.core.Sample;
  */
 public class StaticSeriesSelector extends AbstractSeriesSelector {
 
-    private String seriesName;
+  private String seriesName;
 
-    /**
-     * Gets the name of the series.
-     *
-     * @return the name of the series
-     */
-    public final String getSeriesName() {
-        return seriesName;
-    }
+  /**
+   * Gets the name of the series.
+   *
+   * @return the name of the series
+   */
+  public final String getSeriesName() { return seriesName; }
 
-    /**
-     * Sets the name of the series.
-     *
-     * @param seriesName
-     *            the name of the series to set
-     */
-    public final void setSeriesName(String seriesName) {
-        this.seriesName = seriesName;
-    }
+  /**
+   * Sets the name of the series.
+   *
+   * @param seriesName
+   *            the name of the series to set
+   */
+  public final void setSeriesName(String seriesName) {
+    this.seriesName = seriesName;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.SampleSelector#select(org.apache
-     * .jmeter.report.csv.core.Sample)
-     */
-    @Override
-    public Iterable<String> select(Sample sample) {
-        return withDefaultIfEmpty(seriesName, "EMPTY_SERIE_NAME"); //$NON-NLS-1$
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.SampleSelector#select(org.apache
+   * .jmeter.report.csv.core.Sample)
+   */
+  @Override
+  public Iterable<String> select(Sample sample) {
+    return withDefaultIfEmpty(seriesName, "EMPTY_SERIE_NAME"); //$NON-NLS-1$
+  }
 }

@@ -22,32 +22,36 @@ import org.apache.jmeter.gui.tree.JMeterTreeNode;
 /**
  * Naming policy applied to JMeter Tree nodes :
  * <ul>
- * <li>on creation through {@link TreeNodeNamingPolicy#nameOnCreation(JMeterTreeNode)}</li>
- * <li>By applying naming policy on Controller child nodes through {@link TreeNodeNamingPolicy#resetState(JMeterTreeNode)}
-    and {@link TreeNodeNamingPolicy#rename(JMeterTreeNode, JMeterTreeNode, int)}</li>
+ * <li>on creation through {@link
+ TreeNodeNamingPolicy#nameOnCreation(JMeterTreeNode)}</li>
+ * <li>By applying naming policy on Controller child nodes through {@link
+ TreeNodeNamingPolicy#resetState(JMeterTreeNode)} and {@link
+ TreeNodeNamingPolicy#rename(JMeterTreeNode, JMeterTreeNode, int)}</li>
  * </ul>
  * @since 3.2
  */
 public interface TreeNodeNamingPolicy {
 
-    /**
-     * Called by Apply Naming Policy popup menu on TransactionController nodes
-     * Rename childNode based on custom policy
-     * @param parentNode Parent node
-     * @param childNode Child node
-     * @param index index of child node
-     */
-    void rename(JMeterTreeNode parentNode, JMeterTreeNode childNode, int index);
+  /**
+   * Called by Apply Naming Policy popup menu on TransactionController nodes
+   * Rename childNode based on custom policy
+   * @param parentNode Parent node
+   * @param childNode Child node
+   * @param index index of child node
+   */
+  void rename(JMeterTreeNode parentNode, JMeterTreeNode childNode, int index);
 
-    /**
-     * Called within Apply Naming Policy popup menu on TransactionController nodes to
-     * init the naming process.
-     * @param parentNode {@link JMeterTreeNode} Parent of nodes that will be renamed
-     */
-    void resetState(JMeterTreeNode parentNode);
+  /**
+   * Called within Apply Naming Policy popup menu on TransactionController nodes
+   * to init the naming process.
+   * @param parentNode {@link JMeterTreeNode} Parent of nodes that will be
+   *     renamed
+   */
+  void resetState(JMeterTreeNode parentNode);
 
-    /**
-     * @param node {@link JMeterTreeNode} node that has been added to JMeter Tree node
-     */
-    void nameOnCreation(JMeterTreeNode node);
+  /**
+   * @param node {@link JMeterTreeNode} node that has been added to JMeter Tree
+   *     node
+   */
+  void nameOnCreation(JMeterTreeNode node);
 }

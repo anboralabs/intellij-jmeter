@@ -28,57 +28,48 @@ import java.util.Map;
  */
 public class Top5ErrorsSummaryData {
 
-    private static final Long ONE = 1L;
-    private final Map<String, Long> countPerError;
-    private long total;
-    private long errors;
+  private static final Long ONE = 1L;
+  private final Map<String, Long> countPerError;
+  private long total;
+  private long errors;
 
-    public Top5ErrorsSummaryData() {
-        countPerError = new HashMap<>();
-    }
+  public Top5ErrorsSummaryData() { countPerError = new HashMap<>(); }
 
-    /**
-     * Stores the provided error message and counts the number of times it is
-     * registered.
-     *
-     * @param errorMessage String error message to register
-     */
-    public void registerError(String errorMessage) {
-        Long value = countPerError.get(errorMessage);
-        if (value == null) {
-            countPerError.put(errorMessage, ONE);
-        } else {
-            countPerError.put(errorMessage, value + 1);
-        }
+  /**
+   * Stores the provided error message and counts the number of times it is
+   * registered.
+   *
+   * @param errorMessage String error message to register
+   */
+  public void registerError(String errorMessage) {
+    Long value = countPerError.get(errorMessage);
+    if (value == null) {
+      countPerError.put(errorMessage, ONE);
+    } else {
+      countPerError.put(errorMessage, value + 1);
     }
+  }
 
-    public void incErrors() {
-        errors++;
-    }
+  public void incErrors() { errors++; }
 
-    public void incTotal() {
-        total++;
-    }
+  public void incTotal() { total++; }
 
-    public long getTotal() {
-        return total;
-    }
+  public long getTotal() { return total; }
 
-    public long getErrors() {
-        return errors;
-    }
+  public long getErrors() { return errors; }
 
-    /**
-     * Return Top 5 errors and associated frequency.
-     *
-     * @return array of [String, Long]
-     */
-    public Object[][] getTop5ErrorsMetrics() {
-        int maxSize = Top5ErrorsBySamplerConsumer.MAX_NUMBER_OF_ERRORS_IN_TOP;
-        return countPerError.entrySet().stream()
-                .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                .limit(maxSize)
-                .map(e -> new Object[]{e.getKey(), e.getValue()})
-                .toArray(Object[][]::new);
-    }
+  /**
+   * Return Top 5 errors and associated frequency.
+   *
+   * @return array of [String, Long]
+   */
+  public Object[][] getTop5ErrorsMetrics() {
+    int maxSize = Top5ErrorsBySamplerConsumer.MAX_NUMBER_OF_ERRORS_IN_TOP;
+    return countPerError.entrySet()
+        .stream()
+        .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+        .limit(maxSize)
+        .map(e -> new Object[] {e.getKey(), e.getValue()})
+        .toArray(Object[][] ::new);
+  }
 }

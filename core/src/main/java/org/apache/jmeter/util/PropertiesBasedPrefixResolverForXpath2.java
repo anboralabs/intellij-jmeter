@@ -19,7 +19,6 @@ package org.apache.jmeter.util;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.xml.utils.PrefixResolver;
 import org.apache.xml.utils.PrefixResolverDefault;
 import org.w3c.dom.Node;
@@ -28,38 +27,40 @@ import org.w3c.dom.Node;
  * {@link PrefixResolver} implementation that loads prefix configuration from
  * jmeter property xpath.namespace.config
  */
-public class PropertiesBasedPrefixResolverForXpath2 extends PrefixResolverDefault {
-    private final Map<String, String> namespaceMap = new HashMap<>();
+public class PropertiesBasedPrefixResolverForXpath2
+    extends PrefixResolverDefault {
+  private final Map<String, String> namespaceMap = new HashMap<>();
 
-    /**
-     * @param xpathExpressionContext Node
-     * @param ns Namespaces declaration
-     */
-    public PropertiesBasedPrefixResolverForXpath2(Node xpathExpressionContext, String ns) {
-        super(xpathExpressionContext);
-        String namespace = ns.trim();
-        if (!namespace.isEmpty()) {
-            for (String prefixValue : namespace.split("\\s+")) {
-                String[] keyandvalue = prefixValue.trim().split("=");
-                namespaceMap.put(keyandvalue[0], keyandvalue[1]);
-            }
-        }
+  /**
+   * @param xpathExpressionContext Node
+   * @param ns Namespaces declaration
+   */
+  public PropertiesBasedPrefixResolverForXpath2(Node xpathExpressionContext,
+                                                String ns) {
+    super(xpathExpressionContext);
+    String namespace = ns.trim();
+    if (!namespace.isEmpty()) {
+      for (String prefixValue : namespace.split("\\s+")) {
+        String[] keyandvalue = prefixValue.trim().split("=");
+        namespaceMap.put(keyandvalue[0], keyandvalue[1]);
+      }
     }
+  }
 
-    /**
-     * Searches prefix in NAMESPACE_MAP, if it fails to find it defaults to parent
-     * implementation
-     *
-     * @param prefix           Prefix
-     * @param namespaceContext Node
-     */
-    @Override
-    public String getNamespaceForPrefix(String prefix, Node namespaceContext) {
-        String namespace = namespaceMap.get(prefix);
-        if (namespace == null) {
-            return super.getNamespaceForPrefix(prefix, namespaceContext);
-        } else {
-            return namespace;
-        }
+  /**
+   * Searches prefix in NAMESPACE_MAP, if it fails to find it defaults to parent
+   * implementation
+   *
+   * @param prefix           Prefix
+   * @param namespaceContext Node
+   */
+  @Override
+  public String getNamespaceForPrefix(String prefix, Node namespaceContext) {
+    String namespace = namespaceMap.get(prefix);
+    if (namespace == null) {
+      return super.getNamespaceForPrefix(prefix, namespaceContext);
+    } else {
+      return namespace;
     }
+  }
 }

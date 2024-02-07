@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.xml.utils.PrefixResolver;
@@ -35,61 +34,71 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 /**
- * {@link PrefixResolver} implementation that loads prefix configuration from jmeter property xpath.namespace.config
+ * {@link PrefixResolver} implementation that loads prefix configuration from
+ * jmeter property xpath.namespace.config
  */
 public class PropertiesBasedPrefixResolver extends PrefixResolverDefault {
-    private static final Logger log = LoggerFactory.getLogger(PropertiesBasedPrefixResolver.class);
-    private static final String XPATH_NAMESPACE_CONFIG = "xpath.namespace.config";
-    private static final Map<String, String> NAMESPACE_MAP = new HashMap<>();
-    static {
-        String pathToNamespaceConfig = JMeterUtils.getPropDefault(XPATH_NAMESPACE_CONFIG, "");
-        if(!StringUtils.isEmpty(pathToNamespaceConfig)) {
-            Properties properties = new Properties();
-            InputStream inputStream = null;
-            try {
-                File pathToNamespaceConfigFile = JMeterUtils.findFile(pathToNamespaceConfig);
-                if(!pathToNamespaceConfigFile.exists()) {
-                    log.error("Cannot find configured file:'{}' in property:'{}', file does not exist",
-                            pathToNamespaceConfig, XPATH_NAMESPACE_CONFIG);
-                } else {
-                    if(!pathToNamespaceConfigFile.canRead()) {
-                        log.error("Cannot read configured file:'{}' in property:'{}'", pathToNamespaceConfig,
-                                XPATH_NAMESPACE_CONFIG);
-                    } else {
-                        inputStream = new BufferedInputStream(new FileInputStream(pathToNamespaceConfigFile));
-                        properties.load(inputStream);
-                        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-                            NAMESPACE_MAP.put((String) entry.getKey(), (String) entry.getValue());
-                        }
-                        log.info("Read following XPath namespace configuration {}", NAMESPACE_MAP);
-                    }
-                }
-            } catch(IOException e) {
-                log.error("Error loading namespaces from file:'{}', message: {}", pathToNamespaceConfig, e.getMessage(), e);
-            } finally {
-                JOrphanUtils.closeQuietly(inputStream);
-            }
-        }
-    }
-    /**
-     * @param xpathExpressionContext Node
-     */
-    public PropertiesBasedPrefixResolver(Node xpathExpressionContext) {
-        super(xpathExpressionContext);
-    }
-
-    /**
-     * Searches prefix in NAMESPACE_MAP, if it fails to find it defaults to parent implementation
-     * @param prefix Prefix
-     * @param namespaceContext Node
-     */
-    @Override
-    public String getNamespaceForPrefix(String prefix, Node namespaceContext) {
-        String namespace = NAMESPACE_MAP.get(prefix);
-        if(namespace==null) {
-            return super.getNamespaceForPrefix(prefix, namespaceContext);
+  private static final Logger log =
+      LoggerFactory.getLogger(PropertiesBasedPrefixResolver.class);
+  private static final String XPATH_NAMESPACE_CONFIG = "xpath.namespace.config";
+  private static final Map<String, String> NAMESPACE_MAP = new HashMap<>();
+  static {
+    String pathToNamespaceConfig =
+        JMeterUtils.getPropDefault(XPATH_NAMESPACE_CONFIG, "");
+    if (!StringUtils.isEmpty(pathToNamespaceConfig)) {
+      Properties properties = new Properties();
+      InputStream inputStream = null;
+      try {
+        File pathToNamespaceConfigFile =
+            JMeterUtils.findFile(pathToNamespaceConfig);
+        if (!pathToNamespaceConfigFile.exists()) {
+          log.error(
+              "Cannot find configured file:'{}' in property:'{}', file does not exist",
+              pathToNamespaceConfig, XPATH_NAMESPACE_CONFIG);
         } else {
-            return namespace;
+          if (!pathToNamespaceConfigFile.canRead()) {
+            log.error("Cannot read configured file:'{}' in property:'{}'",
+                      pathToNamespaceConfig, XPATH_NAMESPACE_CONFIG);
+          } else {
+            inputStream = new BufferedInputStream(
+                new FileInputStream(pathToNamespaceConfigFile));
+            properties.load(inputStream);
+            for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+              NAMESPACE_MAP.put((String)entry.getKey(),
+                                (String)entry.getValue());
+            }
+            log.info("Read following XPath namespace configuration {}",
+                     NAMESPACE_MAP);
+          }
         }
+      } catch (IOException e) {
+        log.error("Error loading namespaces from file:'{}', message: {}",
+                  pathToNamespaceConfig, e.getMessage(), e);
+      } finally {
+        JOrphanUtils.closeQuietly(inputStream);
+      }
     }
+  }
+  /**
+   * @param xpathExpressionContext Node
+   */
+  public PropertiesBasedPrefixResolver(Node xpathExpressionContext) {
+    super(xpathExpressionContext);
+  }
+
+  /**
+   * Searches prefix in NAMESPACE_MAP, if it fails to find it defaults to parent
+   * implementation
+   * @param prefix Prefix
+   * @param namespaceContext Node
+   */
+  @Override
+  public String getNamespaceForPrefix(String prefix, Node namespaceContext) {
+    String namespace = NAMESPACE_MAP.get(prefix);
+    if (namespace == null) {
+      return super.getNamespaceForPrefix(prefix, namespaceContext);
+    } else {
+      return namespace;
+    }
+  }
 }

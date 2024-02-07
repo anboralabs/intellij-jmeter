@@ -24,18 +24,16 @@ import java.io.Serializable;
  * plugins.
  */
 public interface Timer extends Serializable {
-    /**
-     * This method is called after a sampling process is done to know how much
-     * time the sampling thread has to wait until sampling again.
-     *
-     * @return the computed delay value.
-     */
-    long delay();
+  /**
+   * This method is called after a sampling process is done to know how much
+   * time the sampling thread has to wait until sampling again.
+   *
+   * @return the computed delay value.
+   */
+  long delay();
 
-    /**
-     * @return true if factor can be applied to it
-     */
-    default boolean isModifiable() {
-        return false;
-    }
+  /**
+   * @return true if factor can be applied to it
+   */
+  default boolean isModifiable() { return false; }
 }

@@ -17,67 +17,73 @@
 
 package org.apache.jmeter.save.converters;
 
-import org.apache.jmeter.testelement.property.CollectionProperty;
-import org.apache.jmeter.testelement.property.JMeterProperty;
-import org.apache.jmeter.testelement.property.MapProperty;
-import org.apache.jmeter.testelement.property.MultiProperty;
-
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.collections.AbstractCollectionConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
+import org.apache.jmeter.testelement.property.CollectionProperty;
+import org.apache.jmeter.testelement.property.JMeterProperty;
+import org.apache.jmeter.testelement.property.MapProperty;
+import org.apache.jmeter.testelement.property.MultiProperty;
 
 public class MultiPropertyConverter extends AbstractCollectionConverter {
 
-    /**
-     * Returns the converter version; used to check for possible
-     * incompatibilities
-     *
-     * @return the version of this converter
-     */
-    public static String getVersion() {
-        return "$Revision$";  //$NON-NLS-1$
-    }
+  /**
+   * Returns the converter version; used to check for possible
+   * incompatibilities
+   *
+   * @return the version of this converter
+   */
+  public static String getVersion() {
+    return "$Revision$"; //$NON-NLS-1$
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean canConvert(@SuppressWarnings("rawtypes") Class arg0) { // superclass does not use types
-        return CollectionProperty.class.equals(arg0) || MapProperty.class.equals(arg0);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public boolean canConvert(@SuppressWarnings("rawtypes")
+                            Class arg0) { // superclass does not use types
+    return CollectionProperty.class.equals(arg0) ||
+        MapProperty.class.equals(arg0);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void marshal(Object arg0, HierarchicalStreamWriter writer, MarshallingContext context) {
-        MultiProperty prop = (MultiProperty) arg0;
+  /** {@inheritDoc} */
+  @Override
+  public void marshal(Object arg0, HierarchicalStreamWriter writer,
+                      MarshallingContext context) {
+    MultiProperty prop = (MultiProperty)arg0;
 
-        writer.addAttribute(ConversionHelp.ATT_NAME, ConversionHelp.encode(prop.getName()));
-        for (JMeterProperty jMeterProperty : prop) {
-            writeCompleteItem(jMeterProperty, context, writer);
-        }
+    writer.addAttribute(ConversionHelp.ATT_NAME,
+                        ConversionHelp.encode(prop.getName()));
+    for (JMeterProperty jMeterProperty : prop) {
+      writeCompleteItem(jMeterProperty, context, writer);
     }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        MultiProperty prop = (MultiProperty) createCollection(context.getRequiredType());
-        prop.setName(ConversionHelp.decode(reader.getAttribute(ConversionHelp.ATT_NAME)));
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            JMeterProperty subProp = (JMeterProperty) readBareItem(reader, context, prop);
-            if (subProp != null) { // could be null if it has been deleted via NameUpdater
-                prop.addProperty(subProp);
-            }
-            reader.moveUp();
-        }
-        return prop;
+  /** {@inheritDoc} */
+  @Override
+  public Object unmarshal(HierarchicalStreamReader reader,
+                          UnmarshallingContext context) {
+    MultiProperty prop =
+        (MultiProperty)createCollection(context.getRequiredType());
+    prop.setName(
+        ConversionHelp.decode(reader.getAttribute(ConversionHelp.ATT_NAME)));
+    while (reader.hasMoreChildren()) {
+      reader.moveDown();
+      JMeterProperty subProp =
+          (JMeterProperty)readBareItem(reader, context, prop);
+      if (subProp !=
+          null) { // could be null if it has been deleted via NameUpdater
+        prop.addProperty(subProp);
+      }
+      reader.moveUp();
     }
+    return prop;
+  }
 
-    /**
-     * @param arg0 the mapper
-     */
-    public MultiPropertyConverter(Mapper arg0) {
-        super(arg0);
-    }
+  /**
+   * @param arg0 the mapper
+   */
+  public MultiPropertyConverter(Mapper arg0) { super(arg0); }
 }

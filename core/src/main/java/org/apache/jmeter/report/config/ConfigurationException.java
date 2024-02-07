@@ -25,36 +25,31 @@ package org.apache.jmeter.report.config;
  */
 public class ConfigurationException extends Exception {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -8686808406435011845L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = -8686808406435011845L;
 
-    /**
-     * Instantiates a new configuration exception.
-     */
-    public ConfigurationException() {
-        super();
-    }
+  /**
+   * Instantiates a new configuration exception.
+   */
+  public ConfigurationException() { super(); }
 
-    /**
-     * Instantiates a new configuration exception.
-     *
-     * @param message
-     *            the message
-     */
-    public ConfigurationException(String message) {
-        super(message);
-    }
+  /**
+   * Instantiates a new configuration exception.
+   *
+   * @param message
+   *            the message
+   */
+  public ConfigurationException(String message) { super(message); }
 
-    /**
-     * Instantiates a new configuration exception.
-     *
-     * @param message
-     *            the message
-     * @param cause
-     *            the cause
-     */
-    public ConfigurationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+  /**
+   * Instantiates a new configuration exception.
+   *
+   * @param message
+   *            the message
+   * @param cause
+   *            the cause
+   */
+  public ConfigurationException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

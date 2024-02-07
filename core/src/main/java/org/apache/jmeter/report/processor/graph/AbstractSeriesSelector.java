@@ -18,7 +18,6 @@
 package org.apache.jmeter.report.processor.graph;
 
 import java.util.Arrays;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -29,43 +28,42 @@ import org.apache.commons.lang3.StringUtils;
  */
 public abstract class AbstractSeriesSelector implements GraphSeriesSelector {
 
-    private final boolean allowsControllerDiscrimination;
+  private final boolean allowsControllerDiscrimination;
 
-    /**
-     * Instantiates a new abstract series selector.
-     */
-    protected AbstractSeriesSelector() {
-        this(false);
-    }
+  /**
+   * Instantiates a new abstract series selector.
+   */
+  protected AbstractSeriesSelector() { this(false); }
 
-    /**
-     * Instantiates a new abstract series selector.
-     *
-     * @param allowsControllerDiscrimination
-     *            indicates whether this selector allows to discriminate
-     *            controllers
-     */
-    protected AbstractSeriesSelector(boolean allowsControllerDiscrimination) {
-        this.allowsControllerDiscrimination = allowsControllerDiscrimination;
-    }
+  /**
+   * Instantiates a new abstract series selector.
+   *
+   * @param allowsControllerDiscrimination
+   *            indicates whether this selector allows to discriminate
+   *            controllers
+   */
+  protected AbstractSeriesSelector(boolean allowsControllerDiscrimination) {
+    this.allowsControllerDiscrimination = allowsControllerDiscrimination;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.graph.GraphSeriesSelector#
-     * supportsControllersDiscrimination()
-     */
-    @Override
-    public final boolean allowsControllersDiscrimination() {
-        return allowsControllerDiscrimination;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.graph.GraphSeriesSelector#
+   * supportsControllersDiscrimination()
+   */
+  @Override
+  public final boolean allowsControllersDiscrimination() {
+    return allowsControllerDiscrimination;
+  }
 
-    /**
-     * @param value String value
-     * @param defaultValue Default value to use if value is empty or null
-     * @return input or default value wrapped in a list
-     */
-    protected Iterable<String> withDefaultIfEmpty(String value, String defaultValue) {
-        return Arrays.asList(StringUtils.defaultIfBlank(value, defaultValue));
-    }
+  /**
+   * @param value String value
+   * @param defaultValue Default value to use if value is empty or null
+   * @return input or default value wrapped in a list
+   */
+  protected Iterable<String> withDefaultIfEmpty(String value,
+                                                String defaultValue) {
+    return Arrays.asList(StringUtils.defaultIfBlank(value, defaultValue));
+  }
 }

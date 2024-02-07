@@ -28,74 +28,66 @@ import java.util.List;
  */
 public class ListResultData implements ResultData, Iterable<ResultData> {
 
-    private final List<ResultData> items = new ArrayList<>();
+  private final List<ResultData> items = new ArrayList<>();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.ResultData#accept(org.apache.jmeter
-     * .report.processor.ResultDataVisitor)
-     */
-    @Override
-    public <T> T accept(ResultDataVisitor<T> visitor) {
-        return visitor.visitListResult(this);
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.ResultData#accept(org.apache.jmeter
+   * .report.processor.ResultDataVisitor)
+   */
+  @Override
+  public <T> T accept(ResultDataVisitor<T> visitor) {
+    return visitor.visitListResult(this);
+  }
 
-    /**
-     * Adds the result at the end of the list.
-     *
-     * @param result the result
-     * @return true, if the result is added
-     */
-    public boolean addResult(ResultData result) {
-        return items.add(result);
-    }
+  /**
+   * Adds the result at the end of the list.
+   *
+   * @param result the result
+   * @return true, if the result is added
+   */
+  public boolean addResult(ResultData result) { return items.add(result); }
 
-    /**
-     * Removes the result at the specified index.
-     *
-     * @param index the index of the result in the list
-     * @return the removed result data
-     */
-    public ResultData removeResult(int index) {
-        return items.remove(index);
-    }
+  /**
+   * Removes the result at the specified index.
+   *
+   * @param index the index of the result in the list
+   * @return the removed result data
+   */
+  public ResultData removeResult(int index) { return items.remove(index); }
 
-    /**
-     * Gets the stored item at the specified index.
-     *
-     * @param index the index
-     * @return the result data
-     */
-    public ResultData get(int index) {
-        return items.get(index);
-    }
+  /**
+   * Gets the stored item at the specified index.
+   *
+   * @param index the index
+   * @return the result data
+   */
+  public ResultData get(int index) { return items.get(index); }
 
-    /**
-     * Gets the size of the list.
-     *
-     * @return the size of the list
-     */
-    public int getSize() {
-        return items.size();
-    }
+  /**
+   * Gets the size of the list.
+   *
+   * @return the size of the list
+   */
+  public int getSize() { return items.size(); }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Iterable#iterator()
-     */
-    @Override
-    public Iterator<ResultData> iterator() {
-        return items.iterator();
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see java.lang.Iterable#iterator()
+   */
+  @Override
+  public Iterator<ResultData> iterator() {
+    return items.iterator();
+  }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "ListResultData [items=" + items + "]";
-    }
+  /* (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "ListResultData [items=" + items + "]";
+  }
 }

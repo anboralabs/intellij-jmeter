@@ -18,35 +18,35 @@
 package org.apache.jmeter.gui;
 
 import java.util.function.Consumer;
-
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 
 public final class GlobalUndoableEdit extends AbstractUndoableEdit {
 
-    private static final long serialVersionUID = -4964577622742131354L;
-    private final UndoHistoryItem item;
-    private final UndoHistoryItem previous;
-    private final Consumer<? super UndoHistoryItem> loader;
+  private static final long serialVersionUID = -4964577622742131354L;
+  private final UndoHistoryItem item;
+  private final UndoHistoryItem previous;
+  private final Consumer<? super UndoHistoryItem> loader;
 
-    public GlobalUndoableEdit(UndoHistoryItem item, UndoHistoryItem previous, Consumer<? super UndoHistoryItem> loader) {
-        this.item = item;
-        this.previous = previous;
-        this.loader = loader;
-    }
+  public GlobalUndoableEdit(UndoHistoryItem item, UndoHistoryItem previous,
+                            Consumer<? super UndoHistoryItem> loader) {
+    this.item = item;
+    this.previous = previous;
+    this.loader = loader;
+  }
 
-    @Override
-    public void undo() throws CannotUndoException {
-        super.undo();
+  @Override
+  public void undo() throws CannotUndoException {
+    super.undo();
 
-        loader.accept(previous);
-    }
+    loader.accept(previous);
+  }
 
-    @Override
-    public void redo() throws CannotRedoException {
-        super.redo();
+  @Override
+  public void redo() throws CannotRedoException {
+    super.redo();
 
-        loader.accept(item);
-    }
+    loader.accept(item);
+  }
 }

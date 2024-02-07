@@ -18,7 +18,6 @@
 package org.apache.jmeter.gui.util;
 
 import java.awt.Component;
-
 import javax.swing.SwingUtilities;
 
 /*
@@ -28,7 +27,7 @@ import javax.swing.SwingUtilities;
  */
 public class FocusRequester {
 
-    public static void requestFocus(final Component comp) {
-        SwingUtilities.invokeLater(comp::requestFocusInWindow);
-    }
+  public static void requestFocus(final Component comp) {
+    SwingUtilities.invokeLater(comp::requestFocusInWindow);
+  }
 }

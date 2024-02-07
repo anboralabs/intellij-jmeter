@@ -24,20 +24,16 @@ import java.util.Locale;
  */
 public class LocaleChangeEvent extends EventObject {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    private Locale locale;
+  private Locale locale;
 
-    public LocaleChangeEvent(Object source) {
-        super(source);
-    }
+  public LocaleChangeEvent(Object source) { super(source); }
 
-    public LocaleChangeEvent(Object source, Locale locale) {
-        super(source);
-        this.locale = locale;
-    }
+  public LocaleChangeEvent(Object source, Locale locale) {
+    super(source);
+    this.locale = locale;
+  }
 
-    public Locale getLocale() {
-        return locale;
-    }
+  public Locale getLocale() { return locale; }
 }

@@ -22,85 +22,81 @@ import org.apache.jmeter.testelement.TestElement;
 /**
  */
 public class StringProperty extends AbstractProperty {
-    private static final long serialVersionUID = 233L;
+  private static final long serialVersionUID = 233L;
 
-    private String value;
+  private String value;
 
-    private transient String savedValue;
+  private transient String savedValue;
 
-    public StringProperty(String name, String value) {
-        super(name);
-        this.value = value;
+  public StringProperty(String name, String value) {
+    super(name);
+    this.value = value;
+  }
+
+  public StringProperty() { super(); }
+
+  /**
+   * @see JMeterProperty#setRunningVersion(boolean)
+   */
+  @Override
+  public void setRunningVersion(boolean runningVersion) {
+    super.setRunningVersion(runningVersion);
+    if (runningVersion) {
+      savedValue = value;
+    } else {
+      savedValue = null;
     }
+  }
 
-    public StringProperty() {
-        super();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setObjectValue(Object v) {
+    value = v.toString();
+  }
 
-    /**
-     * @see JMeterProperty#setRunningVersion(boolean)
-     */
-    @Override
-    public void setRunningVersion(boolean runningVersion) {
-        super.setRunningVersion(runningVersion);
-        if (runningVersion) {
-            savedValue = value;
-        } else {
-            savedValue = null;
-        }
-    }
+  /**
+   * @see JMeterProperty#getStringValue()
+   */
+  @Override
+  public String getStringValue() {
+    return value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setObjectValue(Object v) {
-        value = v.toString();
-    }
+  /**
+   * @see JMeterProperty#getObjectValue()
+   */
+  @Override
+  public Object getObjectValue() {
+    return value;
+  }
 
-    /**
-     * @see JMeterProperty#getStringValue()
-     */
-    @Override
-    public String getStringValue() {
-        return value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public StringProperty clone() {
+    StringProperty prop = (StringProperty)super.clone();
+    prop.value = value;
+    return prop;
+  }
 
-    /**
-     * @see JMeterProperty#getObjectValue()
-     */
-    @Override
-    public Object getObjectValue() {
-        return value;
-    }
+  /**
+   * Sets the value.
+   *
+   * @param value
+   *            The value to set
+   */
+  public void setValue(String value) { this.value = value; }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public StringProperty clone() {
-        StringProperty prop = (StringProperty) super.clone();
-        prop.value = value;
-        return prop;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    if (savedValue != null) {
+      value = savedValue;
     }
-
-    /**
-     * Sets the value.
-     *
-     * @param value
-     *            The value to set
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        if (savedValue != null) {
-            value = savedValue;
-        }
-    }
+  }
 }

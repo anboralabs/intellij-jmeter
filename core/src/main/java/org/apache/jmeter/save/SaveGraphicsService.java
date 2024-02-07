@@ -26,9 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
 import javax.swing.JComponent;
-
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.util.JOrphanUtils;
 import org.apache.xmlgraphics.image.codec.tiff.TIFFEncodeParam;
@@ -42,119 +40,125 @@ import org.apache.xmlgraphics.image.writer.ImageWriterUtil;
  */
 public class SaveGraphicsService {
 
-    public static final int PNG = 0;
+  public static final int PNG = 0;
 
-    public static final int TIFF = 1;
+  public static final int TIFF = 1;
 
-    public static final String PNG_EXTENSION = ".png"; //$NON-NLS-1$
+  public static final String PNG_EXTENSION = ".png"; //$NON-NLS-1$
 
-    public static final String TIFF_EXTENSION = ".tif"; //$NON-NLS-1$
+  public static final String TIFF_EXTENSION = ".tif"; //$NON-NLS-1$
 
-    public static final String JPEG_EXTENSION = ".jpg"; //$NON-NLS-1$
+  public static final String JPEG_EXTENSION = ".jpg"; //$NON-NLS-1$
 
-    /**
-     *
-     */
-    public SaveGraphicsService() {
-        super();
+  /**
+   *
+   */
+  public SaveGraphicsService() { super(); }
+
+  /**
+   * Method will save the JComponent as an image. The formats are PNG, and
+   * TIFF.
+   *
+   * @param filename
+   *            name of the file to store the image into
+   * @param type
+   *            of the image to be stored. Can be one of {@value #PNG} for PNG
+   *            or {@value #TIFF} for TIFF
+   * @param component
+   *            to draw the image on
+   */
+  public void saveJComponent(String filename, int type, JComponent component) {
+    Dimension size = component.getSize();
+    int scale = 2;
+    BufferedImage image = new BufferedImage(
+        size.width * scale, size.height * scale, BufferedImage.TYPE_INT_RGB);
+    Graphics2D grp = image.createGraphics();
+    try {
+      AffineTransform transform = new AffineTransform();
+      transform.setToScale(scale, scale);
+      grp.setTransform(transform);
+      component.paint(grp);
+    } finally {
+      grp.dispose();
     }
 
-    /**
-     * Method will save the JComponent as an image. The formats are PNG, and
-     * TIFF.
-     *
-     * @param filename
-     *            name of the file to store the image into
-     * @param type
-     *            of the image to be stored. Can be one of {@value #PNG} for PNG
-     *            or {@value #TIFF} for TIFF
-     * @param component
-     *            to draw the image on
-     */
-    public void saveJComponent(String filename, int type, JComponent component) {
-        Dimension size = component.getSize();
-        int scale = 2;
-        BufferedImage image = new BufferedImage(size.width * scale, size.height * scale, BufferedImage.TYPE_INT_RGB);
-        Graphics2D grp = image.createGraphics();
-        try {
-            AffineTransform transform = new AffineTransform();
-            transform.setToScale(scale, scale);
-            grp.setTransform(transform);
-            component.paint(grp);
-        } finally {
-            grp.dispose();
-        }
-
-        if (type == PNG) {
-            filename += PNG_EXTENSION;
-            this.savePNGWithBatik(filename, image);
-        } else if (type == TIFF) {
-            filename = filename + TIFF_EXTENSION;
-            this.saveTIFFWithBatik(filename, image);
-        }
+    if (type == PNG) {
+      filename += PNG_EXTENSION;
+      this.savePNGWithBatik(filename, image);
+    } else if (type == TIFF) {
+      filename = filename + TIFF_EXTENSION;
+      this.saveTIFFWithBatik(filename, image);
     }
+  }
 
-    /**
-     * Use Batik to save a PNG of the graph
-     *
-     * @param filename
-     *            name of the file to store the image into
-     * @param image
-     *            to be stored
-     */
-    public void savePNGWithBatik(String filename, BufferedImage image) {
-        File outfile = new File(filename);
-        try {
-            ImageWriterUtil.saveAsPNG(image, 144, outfile);
-        } catch (IOException e) {
-            JMeterUtils.reportErrorToUser("PNGImageEncoder reported: "+e.getMessage(), "Problem creating image file");
-        }
+  /**
+   * Use Batik to save a PNG of the graph
+   *
+   * @param filename
+   *            name of the file to store the image into
+   * @param image
+   *            to be stored
+   */
+  public void savePNGWithBatik(String filename, BufferedImage image) {
+    File outfile = new File(filename);
+    try {
+      ImageWriterUtil.saveAsPNG(image, 144, outfile);
+    } catch (IOException e) {
+      JMeterUtils.reportErrorToUser("PNGImageEncoder reported: " +
+                                        e.getMessage(),
+                                    "Problem creating image file");
     }
+  }
 
-    /**
-     * Use Batik to save a TIFF file of the graph
-     *
-     * @param filename
-     *            name of the file to store the image into
-     * @param image
-     *            to be stored
-     */
-    public void saveTIFFWithBatik(String filename, BufferedImage image) {
-        File outfile = new File(filename);
-        OutputStream fos = createFile(outfile);
-        if (fos == null) {
-            return;
-        }
-        TIFFEncodeParam param = new TIFFEncodeParam();
-        TIFFImageEncoder encoder = new TIFFImageEncoder(fos, param);
-        try {
-            encoder.encode(image);
-        } catch (IOException e) {
-            JMeterUtils.reportErrorToUser("TIFFImageEncoder reported: "+e.getMessage(), "Problem creating image file");
-        } catch (Error e) { // NOSONAR TIFFImageEncoder uses Error to report runtime problems
-            JMeterUtils.reportErrorToUser("TIFFImageEncoder reported: "+e.getMessage(), "Problem creating image file");
-            if (e.getClass() != Error.class){// NOSONAR rethrow other errors
-                throw e;
-            }
-        } finally {
-            JOrphanUtils.closeQuietly(fos);
-        }
+  /**
+   * Use Batik to save a TIFF file of the graph
+   *
+   * @param filename
+   *            name of the file to store the image into
+   * @param image
+   *            to be stored
+   */
+  public void saveTIFFWithBatik(String filename, BufferedImage image) {
+    File outfile = new File(filename);
+    OutputStream fos = createFile(outfile);
+    if (fos == null) {
+      return;
     }
-
-    /**
-     * Create a new file for the graphics. Since the method creates a new file,
-     * we shouldn't get a FNFE.
-     *
-     * @param filename
-     * @return output stream created from the filename
-     */
-    private static FileOutputStream createFile(File filename) {
-        try {
-            return new FileOutputStream(filename);
-        } catch (FileNotFoundException e) {
-            JMeterUtils.reportErrorToUser("Could not create file: "+e.getMessage(), "Problem creating image file");
-            return null;
-        }
+    TIFFEncodeParam param = new TIFFEncodeParam();
+    TIFFImageEncoder encoder = new TIFFImageEncoder(fos, param);
+    try {
+      encoder.encode(image);
+    } catch (IOException e) {
+      JMeterUtils.reportErrorToUser("TIFFImageEncoder reported: " +
+                                        e.getMessage(),
+                                    "Problem creating image file");
+    } catch (Error e) { // NOSONAR TIFFImageEncoder uses Error to report runtime
+                        // problems
+      JMeterUtils.reportErrorToUser("TIFFImageEncoder reported: " +
+                                        e.getMessage(),
+                                    "Problem creating image file");
+      if (e.getClass() != Error.class) { // NOSONAR rethrow other errors
+        throw e;
+      }
+    } finally {
+      JOrphanUtils.closeQuietly(fos);
     }
+  }
 
+  /**
+   * Create a new file for the graphics. Since the method creates a new file,
+   * we shouldn't get a FNFE.
+   *
+   * @param filename
+   * @return output stream created from the filename
+   */
+  private static FileOutputStream createFile(File filename) {
+    try {
+      return new FileOutputStream(filename);
+    } catch (FileNotFoundException e) {
+      JMeterUtils.reportErrorToUser("Could not create file: " + e.getMessage(),
+                                    "Problem creating image file");
+      return null;
+    }
+  }
 }

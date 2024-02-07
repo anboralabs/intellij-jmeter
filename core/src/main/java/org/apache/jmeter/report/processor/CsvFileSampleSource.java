@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import org.apache.commons.lang3.Validate;
 import org.apache.jmeter.report.core.CsvSampleReader;
 import org.apache.jmeter.report.core.Sample;
@@ -64,282 +63,279 @@ import org.slf4j.LoggerFactory;
  */
 public class CsvFileSampleSource extends AbstractSampleSource {
 
-    /** File name whose sample are being produced on the channel */
-    public static final String SOURCE_FILE_ATTRIBUTE = "samplesource.file";
+  /** File name whose sample are being produced on the channel */
+  public static final String SOURCE_FILE_ATTRIBUTE = "samplesource.file";
 
-    private static final Logger LOG = LoggerFactory.getLogger(CsvFileSampleSource.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(CsvFileSampleSource.class);
 
-    /** input csv files to be produced */
-    private final File[] inputFiles;
+  /** input csv files to be produced */
+  private final File[] inputFiles;
 
-    /** csv readers corresponding to the input files */
-    private final CsvSampleReader[] csvReaders;
+  /** csv readers corresponding to the input files */
+  private final CsvSampleReader[] csvReaders;
 
-    /** mock producer to produce samples to its consumers */
-    private final PrivateProducer producer;
+  /** mock producer to produce samples to its consumers */
+  private final PrivateProducer producer;
+
+  /**
+   * Build a sample source from the specified input file and character
+   * separator.
+   *
+   * @param inputFile The input sample file (CSV file) (must not be {@code
+   *     null})
+   * @param separator The character separator to be used for delimiting samples
+   *                  columns
+   */
+  public CsvFileSampleSource(final File inputFile, final char separator) {
+    final String inputRootName = getFileRootName(inputFile.getName());
+    final String inputExtension = getFileExtension(inputFile.getName());
+
+    // Find secondary inputs by regex match
+    File[] secondaryInputs = null;
+    try {
+      final Pattern pattern =
+          Pattern.compile(inputRootName + "-[0-9]+\\." + inputExtension);
+      secondaryInputs = inputFile.getAbsoluteFile().getParentFile().listFiles(
+          pathname
+          -> pathname.isFile() &&
+                 pattern.matcher(pathname.getName()).matches());
+    } catch (PatternSyntaxException e) {
+      throw new SampleException("Could not locate input sample files !", e);
+    }
+    if (secondaryInputs == null) {
+      secondaryInputs = new File[0];
+    }
+    inputFiles = new File[secondaryInputs.length + 1];
+    csvReaders = new CsvSampleReader[secondaryInputs.length + 1];
+    int k = 0;
+    // primary input file (ex. input.csv)
+    csvReaders[k] = new CsvSampleReader(inputFile, separator, true);
+    inputFiles[k] = inputFile;
+    // secondary input files (ex. input-1.csv, input-2.csv, input-3.csv)
+    for (File input : secondaryInputs) {
+      k++;
+      csvReaders[k] = new CsvSampleReader(input, separator, true);
+      inputFiles[k] = secondaryInputs[k - 1];
+    }
+    producer = new PrivateProducer();
+  }
+
+  private static String getFileRootName(String fName) {
+    int idx = fName.lastIndexOf('.');
+    if (idx < 0) {
+      return fName;
+    }
+    return fName.substring(0, idx);
+  }
+
+  private static String getFileExtension(String fName) {
+    int idx = fName.lastIndexOf('.');
+    if (idx < 0) {
+      return "";
+    }
+    if (idx < fName.length() - 1) {
+      return fName.substring(idx + 1);
+    }
+    return "";
+  }
+
+  /**
+   * Get the current time in milliseconds
+   */
+  private static long now() { return System.currentTimeMillis(); }
+
+  /**
+   * Get a readable time as hours, minutes and seconds from the specified time
+   * in milliseconds
+   *
+   * @return A readable string that displays the time provided as milliseconds
+   */
+  private static String time(long t) { return TimeHelper.time(t); }
+
+  /**
+   * Read all input CSV files and produce their samples on registered sample
+   * consumers
+   */
+  private void produce() {
+    SampleContext context = getSampleContext();
+    Validate.validState(context != null,
+                        "Set a sample context before producing samples.");
+
+    for (int i = 0; i < csvReaders.length; i++) {
+      long sampleCount = 0;
+      long start = now();
+      CsvSampleReader csvReader = csvReaders[i];
+      producer.setSampleContext(context);
+      producer.setProducedMetadata(csvReader.getMetadata(), i);
+      producer.setChannelAttribute(i, SOURCE_FILE_ATTRIBUTE, inputFiles[i]);
+      producer.startProducing();
+      try {
+        Sample s = null;
+        while ((s = csvReader.readSample()) != null) {
+          producer.produce(s, i);
+          sampleCount++;
+        }
+      } finally {
+        producer.stopProducing();
+        csvReader.close();
+      }
+      if (LOG.isInfoEnabled()) {
+        LOG.info("produce(): {} samples produced in {} on channel {}",
+                 sampleCount, time(now() - start), i);
+      }
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.AbstractSampleSource#addSampleConsumers
+   * (java.util.List)
+   */
+  @Override
+  public void setSampleConsumers(List<SampleConsumer> consumers) {
+    producer.setSampleConsumers(consumers);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.AbstractSampleSource#addSampleConsumer
+   * (org.apache.jmeter.report.processor.SampleConsumer)
+   */
+  @Override
+  public void addSampleConsumer(SampleConsumer consumer) {
+    producer.addSampleConsumer(consumer);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.processor.AbstractSampleSource#removeSampleConsumer
+   * (org.apache.jmeter.report.processor.SampleConsumer)
+   */
+  @Override
+  public void removeSampleConsumer(SampleConsumer consumer) {
+    producer.removeSampleConsumer(consumer);
+  }
+
+  /**
+   * Run this sample source.<br>
+   * This sample source will start reading all inputs CSV files and produce
+   * their samples to this sample source registered sample consumers.
+   */
+  @Override
+  public void run() {
+    produce();
+  }
+
+  private static class PrivateProducer
+      extends AbstractSampleProcessor implements SampleProducer {
+
+    private List<SampleConsumer> sampleConsumers = new ArrayList<>();
 
     /**
-     * Build a sample source from the specified input file and character
-     * separator.
+     * Set the consumers for the samples that are to be consumed
      *
-     * @param inputFile The input sample file (CSV file) (must not be {@code null})
-     * @param separator The character separator to be used for delimiting samples
-     *                  columns
+     * @param consumers list of consumers for the samples (must not be
+     *                  {@code null})
      */
-    public CsvFileSampleSource(final File inputFile, final char separator) {
-        final String inputRootName = getFileRootName(inputFile.getName());
-        final String inputExtension = getFileExtension(inputFile.getName());
-
-        // Find secondary inputs by regex match
-        File[] secondaryInputs = null;
-        try {
-            final Pattern pattern = Pattern.compile(inputRootName
-                    + "-[0-9]+\\." + inputExtension);
-            secondaryInputs = inputFile.getAbsoluteFile().getParentFile()
-                    .listFiles(pathname -> pathname.isFile()
-                            && pattern.matcher(pathname.getName()).matches());
-        } catch (PatternSyntaxException e) {
-            throw new SampleException("Could not locate input sample files !",
-                    e);
-        }
-        if (secondaryInputs == null) {
-            secondaryInputs = new File[0];
-        }
-        inputFiles = new File[secondaryInputs.length + 1];
-        csvReaders = new CsvSampleReader[secondaryInputs.length + 1];
-        int k = 0;
-        // primary input file (ex. input.csv)
-        csvReaders[k] = new CsvSampleReader(inputFile, separator, true);
-        inputFiles[k] = inputFile;
-        // secondary input files (ex. input-1.csv, input-2.csv, input-3.csv)
-        for (File input : secondaryInputs) {
-            k++;
-            csvReaders[k] = new CsvSampleReader(input, separator, true);
-            inputFiles[k] = secondaryInputs[k - 1];
-        }
-        producer = new PrivateProducer();
-    }
-
-    private static String getFileRootName(String fName) {
-        int idx = fName.lastIndexOf('.');
-        if (idx < 0) {
-            return fName;
-        }
-        return fName.substring(0, idx);
-    }
-
-    private static String getFileExtension(String fName) {
-        int idx = fName.lastIndexOf('.');
-        if (idx < 0) {
-            return "";
-        }
-        if (idx < fName.length() - 1) {
-            return fName.substring(idx + 1);
-        }
-        return "";
-    }
-
-    /**
-     * Get the current time in milliseconds
-     */
-    private static long now() {
-        return System.currentTimeMillis();
-    }
-
-    /**
-     * Get a readable time as hours, minutes and seconds from the specified time
-     * in milliseconds
-     *
-     * @return A readable string that displays the time provided as milliseconds
-     */
-    private static String time(long t) {
-        return TimeHelper.time(t);
-    }
-
-    /**
-     * Read all input CSV files and produce their samples on registered sample
-     * consumers
-     */
-    private void produce() {
-        SampleContext context = getSampleContext();
-        Validate.validState(context != null, "Set a sample context before producing samples.");
-
-        for (int i = 0; i < csvReaders.length; i++) {
-            long sampleCount = 0;
-            long start = now();
-            CsvSampleReader csvReader = csvReaders[i];
-            producer.setSampleContext(context);
-            producer.setProducedMetadata(csvReader.getMetadata(), i);
-            producer.setChannelAttribute(i, SOURCE_FILE_ATTRIBUTE,
-                    inputFiles[i]);
-            producer.startProducing();
-            try {
-                Sample s = null;
-                while ((s = csvReader.readSample()) != null) {
-                    producer.produce(s, i);
-                    sampleCount++;
-                }
-            } finally {
-                producer.stopProducing();
-                csvReader.close();
-            }
-            if (LOG.isInfoEnabled()) {
-                LOG.info("produce(): {} samples produced in {} on channel {}",
-                        sampleCount, time(now() - start), i);
-            }
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.AbstractSampleSource#addSampleConsumers
-     * (java.util.List)
-     */
-    @Override
     public void setSampleConsumers(List<SampleConsumer> consumers) {
-        producer.setSampleConsumers(consumers);
+      Objects.requireNonNull(consumers, "consumers must not be null");
+
+      this.sampleConsumers = consumers;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.AbstractSampleSource#addSampleConsumer
-     * (org.apache.jmeter.report.processor.SampleConsumer)
-     */
-    @Override
     public void addSampleConsumer(SampleConsumer consumer) {
-        producer.addSampleConsumer(consumer);
+      if (consumer == null) {
+        return;
+      }
+      this.sampleConsumers.add(consumer);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.processor.AbstractSampleSource#removeSampleConsumer
-     * (org.apache.jmeter.report.processor.SampleConsumer)
-     */
-    @Override
     public void removeSampleConsumer(SampleConsumer consumer) {
-        producer.removeSampleConsumer(consumer);
+      if (consumer == null) {
+        return;
+      }
+      this.sampleConsumers.remove(consumer);
     }
 
-    /**
-     * Run this sample source.<br>
-     * This sample source will start reading all inputs CSV files and produce
-     * their samples to this sample source registered sample consumers.
-     */
     @Override
-    public void run() {
-        produce();
+    public void setSampleContext(SampleContext context) {
+      for (SampleConsumer consumer : this.sampleConsumers) {
+        try {
+          consumer.setSampleContext(context);
+        } catch (Exception e) {
+          throw new SampleException(
+              "Consumer failed with message :" + e.getMessage(), e);
+        }
+      }
     }
 
-    private static class PrivateProducer extends AbstractSampleProcessor implements
-            SampleProducer {
-
-        private List<SampleConsumer> sampleConsumers = new ArrayList<>();
-
-        /**
-         * Set the consumers for the samples that are to be consumed
-         *
-         * @param consumers list of consumers for the samples (must not be
-         *                  {@code null})
-         */
-        public void setSampleConsumers(List<SampleConsumer> consumers) {
-            Objects.requireNonNull(consumers, "consumers must not be null");
-
-            this.sampleConsumers = consumers;
+    @Override
+    public void setProducedMetadata(SampleMetadata metadata, int channel) {
+      for (SampleConsumer consumer : this.sampleConsumers) {
+        try {
+          consumer.setConsumedMetadata(metadata, channel);
+        } catch (Exception e) {
+          throw new SampleException(
+              "Consumer failed with message :" + e.getMessage(), e);
         }
-
-        public void addSampleConsumer(SampleConsumer consumer) {
-            if (consumer == null) {
-                return;
-            }
-            this.sampleConsumers.add(consumer);
-        }
-
-        public void removeSampleConsumer(SampleConsumer consumer) {
-            if (consumer == null) {
-                return;
-            }
-            this.sampleConsumers.remove(consumer);
-        }
-
-        @Override
-        public void setSampleContext(SampleContext context) {
-            for (SampleConsumer consumer : this.sampleConsumers) {
-                try {
-                    consumer.setSampleContext(context);
-                } catch (Exception e) {
-                    throw new SampleException("Consumer failed with message :"
-                            + e.getMessage(), e);
-                }
-            }
-        }
-
-        @Override
-        public void setProducedMetadata(SampleMetadata metadata, int channel) {
-            for (SampleConsumer consumer : this.sampleConsumers) {
-                try {
-                    consumer.setConsumedMetadata(metadata, channel);
-                } catch (Exception e) {
-                    throw new SampleException("Consumer failed with message :"
-                            + e.getMessage(), e);
-                }
-            }
-        }
-
-        @Override
-        public void setChannelAttribute(int channel, String key, Object value) {
-            super.setChannelAttribute(channel, key, value);
-            // propagate to this mock producer's consumers
-            for (SampleConsumer consumer : this.sampleConsumers) {
-                try {
-                    consumer.setChannelAttribute(channel, key, value);
-                } catch (Exception e) {
-                    throw new SampleException("Consumer failed with message :"
-                            + e.getMessage(), e);
-                }
-            }
-        }
-
-        @Override
-        public void startProducing() {
-            for (SampleConsumer consumer : this.sampleConsumers) {
-                try {
-                    consumer.startConsuming();
-                } catch (Exception e) {
-                    throw new SampleException("Consumer failed with message :"
-                            + e.getMessage(), e);
-                }
-            }
-        }
-
-        @Override
-        public void produce(Sample s, int channel) {
-            for (SampleConsumer consumer : this.sampleConsumers) {
-                try {
-                    consumer.consume(s, channel);
-                } catch (Exception e) {
-                    throw new SampleException("Consumer failed with message :"
-                            + e.getMessage(), e);
-                }
-            }
-        }
-
-        @Override
-        public void stopProducing() {
-            for (SampleConsumer consumer : this.sampleConsumers) {
-                try {
-                    consumer.stopConsuming();
-                } catch (Exception e) {
-                    throw new SampleException("Consumer failed with message :"
-                            + e.getMessage(), e);
-                }
-            }
-        }
+      }
     }
 
+    @Override
+    public void setChannelAttribute(int channel, String key, Object value) {
+      super.setChannelAttribute(channel, key, value);
+      // propagate to this mock producer's consumers
+      for (SampleConsumer consumer : this.sampleConsumers) {
+        try {
+          consumer.setChannelAttribute(channel, key, value);
+        } catch (Exception e) {
+          throw new SampleException(
+              "Consumer failed with message :" + e.getMessage(), e);
+        }
+      }
+    }
+
+    @Override
+    public void startProducing() {
+      for (SampleConsumer consumer : this.sampleConsumers) {
+        try {
+          consumer.startConsuming();
+        } catch (Exception e) {
+          throw new SampleException(
+              "Consumer failed with message :" + e.getMessage(), e);
+        }
+      }
+    }
+
+    @Override
+    public void produce(Sample s, int channel) {
+      for (SampleConsumer consumer : this.sampleConsumers) {
+        try {
+          consumer.consume(s, channel);
+        } catch (Exception e) {
+          throw new SampleException(
+              "Consumer failed with message :" + e.getMessage(), e);
+        }
+      }
+    }
+
+    @Override
+    public void stopProducing() {
+      for (SampleConsumer consumer : this.sampleConsumers) {
+        try {
+          consumer.stopConsuming();
+        } catch (Exception e) {
+          throw new SampleException(
+              "Consumer failed with message :" + e.getMessage(), e);
+        }
+      }
+    }
+  }
 }

@@ -19,7 +19,7 @@ package org.apache.jmeter.gui.tree;
 
 public interface NamedTreeNode {
 
-    void setName(String name);
-    String getName();
-    void nameChanged();
+  void setName(String name);
+  String getName();
+  void nameChanged();
 }

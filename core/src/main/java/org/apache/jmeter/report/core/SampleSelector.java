@@ -27,12 +27,12 @@ package org.apache.jmeter.report.core;
  */
 public interface SampleSelector<TSelection> {
 
-    /**
-     * Do the projection from the specified sample
-     *
-     * @param sample
-     *            the sample
-     * @return the projection result
-     */
-    TSelection select(Sample sample);
+  /**
+   * Do the projection from the specified sample
+   *
+   * @param sample
+   *            the sample
+   * @return the projection result
+   */
+  TSelection select(Sample sample);
 }

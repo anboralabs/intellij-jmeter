@@ -25,12 +25,12 @@ package org.apache.jmeter.report.core;
  */
 public interface SamplePredicate {
 
-    /**
-     * Defines if the specified sample matches the current predicate.
-     *
-     * @param sample
-     *            the sample to test (must not be {@code null})
-     * @return {@code true}, if successful; otherwise {@code false}
-     */
-    boolean matches(Sample sample);
+  /**
+   * Defines if the specified sample matches the current predicate.
+   *
+   * @param sample
+   *            the sample to test (must not be {@code null})
+   * @return {@code true}, if successful; otherwise {@code false}
+   */
+  boolean matches(Sample sample);
 }

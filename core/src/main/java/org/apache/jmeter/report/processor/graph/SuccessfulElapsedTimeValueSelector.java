@@ -21,28 +21,28 @@ import org.apache.jmeter.report.core.Sample;
 
 /**
  * The class ElapsedTimeValueSelector provides a projection from a sample to its
- * elapsed time only if sample is not an empty transaction Controller and sample is successful
+ * elapsed time only if sample is not an empty transaction Controller and sample
+ * is successful
  *
  * @since 3.1
  */
-public class SuccessfulElapsedTimeValueSelector extends ElapsedTimeValueSelector {
+public class SuccessfulElapsedTimeValueSelector
+    extends ElapsedTimeValueSelector {
 
-    /**
-     *
-     */
-    public SuccessfulElapsedTimeValueSelector() {
-        super(true);
-    }
+  /**
+   *
+   */
+  public SuccessfulElapsedTimeValueSelector() { super(true); }
 
-    /**
-     * @see GraphValueSelector#select(String, Sample)
-     */
-    @Override
-    public Double select(String series, Sample sample) {
-        if(!sample.isController() && sample.getSuccess()) {
-            return (double) sample.getElapsedTime();
-        } else {
-            return null;
-        }
+  /**
+   * @see GraphValueSelector#select(String, Sample)
+   */
+  @Override
+  public Double select(String series, Sample sample) {
+    if (!sample.isController() && sample.getSuccess()) {
+      return (double)sample.getElapsedTime();
+    } else {
+      return null;
     }
+  }
 }

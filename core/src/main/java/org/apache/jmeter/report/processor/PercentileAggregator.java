@@ -27,71 +27,72 @@ import org.apache.jmeter.util.JMeterUtils;
  * @since 3.0
  */
 public class PercentileAggregator implements Aggregator {
-    private static final int SLIDING_WINDOW_SIZE = JMeterUtils.getPropDefault(
-            ReportGeneratorConfiguration.REPORT_GENERATOR_KEY_PREFIX
-                    + ReportGeneratorConfiguration.KEY_DELIMITER
-                    + "statistic_window", 20000);
+  private static final int SLIDING_WINDOW_SIZE = JMeterUtils.getPropDefault(
+      ReportGeneratorConfiguration.REPORT_GENERATOR_KEY_PREFIX +
+          ReportGeneratorConfiguration.KEY_DELIMITER + "statistic_window",
+      20000);
 
-    private final DescriptiveStatistics statistics;
-    private final double percentileIndex;
+  private final DescriptiveStatistics statistics;
+  private final double percentileIndex;
 
-    /**
-     * Instantiates a new percentile aggregator.
-     *
-     * @param index
-     *            the index of the percentile
-     */
-    public PercentileAggregator(double index) {
-        statistics = DescriptiveStatisticsFactory.createDescriptiveStatistics(SLIDING_WINDOW_SIZE);
-        percentileIndex = index;
-    }
+  /**
+   * Instantiates a new percentile aggregator.
+   *
+   * @param index
+   *            the index of the percentile
+   */
+  public PercentileAggregator(double index) {
+    statistics = DescriptiveStatisticsFactory.createDescriptiveStatistics(
+        SLIDING_WINDOW_SIZE);
+    percentileIndex = index;
+  }
 
-    /**
-     * @param lastAggregator {@link PercentileAggregator}
-     */
-    public PercentileAggregator(PercentileAggregator lastAggregator) {
-        statistics = DescriptiveStatisticsFactory.createDescriptiveStatistics(SLIDING_WINDOW_SIZE);
-        this.percentileIndex = lastAggregator.percentileIndex;
-    }
+  /**
+   * @param lastAggregator {@link PercentileAggregator}
+   */
+  public PercentileAggregator(PercentileAggregator lastAggregator) {
+    statistics = DescriptiveStatisticsFactory.createDescriptiveStatistics(
+        SLIDING_WINDOW_SIZE);
+    this.percentileIndex = lastAggregator.percentileIndex;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#getCount()
-     */
-    @Override
-    public long getCount() {
-        return statistics.getN();
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#getCount()
+   */
+  @Override
+  public long getCount() {
+    return statistics.getN();
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#getResult()
-     */
-    @Override
-    public double getResult() {
-        return statistics.getPercentile(percentileIndex);
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#getResult()
+   */
+  @Override
+  public double getResult() {
+    return statistics.getPercentile(percentileIndex);
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#addValue(double)
-     */
-    @Override
-    public void addValue(double value) {
-        statistics.addValue(value);
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#addValue(double)
+   */
+  @Override
+  public void addValue(double value) {
+    statistics.addValue(value);
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#reset()
-     */
-    @Override
-    public void reset() {
-        statistics.clear();
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#reset()
+   */
+  @Override
+  public void reset() {
+    statistics.clear();
+  }
 }

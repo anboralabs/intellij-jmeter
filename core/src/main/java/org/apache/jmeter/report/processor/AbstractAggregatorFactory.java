@@ -31,46 +31,44 @@ package org.apache.jmeter.report.processor;
  */
 public abstract class AbstractAggregatorFactory implements AggregatorFactory {
 
-    /**
-     * Instantiates a new abstract aggregator factory.
-     */
-    protected AbstractAggregatorFactory() {
-    }
+  /**
+   * Instantiates a new abstract aggregator factory.
+   */
+  protected AbstractAggregatorFactory() {}
 
-    protected abstract Aggregator createAggregator();
+  protected abstract Aggregator createAggregator();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregatorFactory#
-     * createValueAggregator(double)
-     */
-    @Override
-    public final Aggregator createValueAggregator() {
-        return createAggregator();
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregatorFactory#
+   * createValueAggregator(double)
+   */
+  @Override
+  public final Aggregator createValueAggregator() {
+    return createAggregator();
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.core.GraphAggregatorFactory#createKeyAggregator
-     * ()
-     */
-    @Override
-    public final Aggregator createKeyAggregator() {
-        return createAggregator();
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.core.GraphAggregatorFactory#createKeyAggregator
+   * ()
+   */
+  @Override
+  public final Aggregator createKeyAggregator() {
+    return createAggregator();
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregatorFactory#
-     * createAggregatedKeyValueAggregator()
-     */
-    @Override
-    public final Aggregator createAggregatedKeyValueAggregator() {
-        return createAggregator();
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregatorFactory#
+   * createAggregatedKeyValueAggregator()
+   */
+  @Override
+  public final Aggregator createAggregatedKeyValueAggregator() {
+    return createAggregator();
+  }
 }

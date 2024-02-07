@@ -26,66 +26,63 @@ import org.apache.jmeter.gui.action.ActionNames;
  */
 public class MenuInfo {
 
-    public static final int SORT_ORDER_DEFAULT = 100;
-    private final String label;
-    private final String className;
-    private final JMeterGUIComponent guiComp;
-    private final int sortOrder;
+  public static final int SORT_ORDER_DEFAULT = 100;
+  private final String label;
+  private final String className;
+  private final JMeterGUIComponent guiComp;
+  private final int sortOrder;
 
-    public MenuInfo(String displayLabel, String classFullName) {
-        this(displayLabel, null, classFullName);
-    }
+  public MenuInfo(String displayLabel, String classFullName) {
+    this(displayLabel, null, classFullName);
+  }
 
-    public MenuInfo(JMeterGUIComponent item, String classFullName) {
-        this(item.getStaticLabel(), item, classFullName);
-    }
+  public MenuInfo(JMeterGUIComponent item, String classFullName) {
+    this(item.getStaticLabel(), item, classFullName);
+  }
 
-    public MenuInfo(String label, JMeterGUIComponent item, String classFullName) {
-        this.label = label;
-        guiComp = item;
-        className = classFullName;
-        sortOrder = getSortOrderFromName(classFullName);
-    }
+  public MenuInfo(String label, JMeterGUIComponent item, String classFullName) {
+    this.label = label;
+    guiComp = item;
+    className = classFullName;
+    sortOrder = getSortOrderFromName(classFullName);
+  }
 
-    private static int getSortOrderFromName(String classFullName) {
-        try {
-            GUIMenuSortOrder menuSortOrder = Class.forName(classFullName, false, MenuInfo.class.getClassLoader())
-                    .getDeclaredAnnotation(GUIMenuSortOrder.class);
-            if (menuSortOrder != null) {
-                return menuSortOrder.value();
-            }
-        } catch (ClassNotFoundException ignored) {
-            // NOOP
-        }
-        return SORT_ORDER_DEFAULT;
+  private static int getSortOrderFromName(String classFullName) {
+    try {
+      GUIMenuSortOrder menuSortOrder =
+          Class.forName(classFullName, false, MenuInfo.class.getClassLoader())
+              .getDeclaredAnnotation(GUIMenuSortOrder.class);
+      if (menuSortOrder != null) {
+        return menuSortOrder.value();
+      }
+    } catch (ClassNotFoundException ignored) {
+      // NOOP
     }
+    return SORT_ORDER_DEFAULT;
+  }
 
-    public String getLabel() {
-        if (guiComp != null) {
-            return guiComp.getStaticLabel();
-        }
-        return label;
+  public String getLabel() {
+    if (guiComp != null) {
+      return guiComp.getStaticLabel();
     }
+    return label;
+  }
 
-    public String getClassName(){
-        return className;
-    }
+  public String getClassName() { return className; }
 
-    public int getSortOrder() {
-        return sortOrder;
-    }
+  public int getSortOrder() { return sortOrder; }
 
-    /**
-     * Returns whether the menu item represented by this MenuInfo object should be enabled
-     * @param actionCommand    the action command name for the menu item
-     * @return true when menu item should be enabled, false otherwise.
-     */
-    public boolean getEnabled(String actionCommand) {
-        if (ActionNames.ADD.equals(actionCommand)) {
-            return guiComp.canBeAdded();
-        }
-        else {
-            return true;
-        }
+  /**
+   * Returns whether the menu item represented by this MenuInfo object should be
+   * enabled
+   * @param actionCommand    the action command name for the menu item
+   * @return true when menu item should be enabled, false otherwise.
+   */
+  public boolean getEnabled(String actionCommand) {
+    if (ActionNames.ADD.equals(actionCommand)) {
+      return guiComp.canBeAdded();
+    } else {
+      return true;
     }
+  }
 }

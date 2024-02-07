@@ -18,34 +18,36 @@
 package org.apache.jmeter.engine.util;
 
 import java.util.Map;
-
 import org.apache.jmeter.functions.InvalidVariableException;
 import org.apache.jmeter.testelement.property.FunctionProperty;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 
 /**
- * Replaces a String containing functions with their Function properties equivalent, example:
- * ${__time()}_${__threadNum()}_${__machineName()} will become a FunctionProperty of
- * a CompoundVariable containing  3 functions
+ * Replaces a String containing functions with their Function properties
+ * equivalent, example:
+ * ${__time()}_${__threadNum()}_${__machineName()} will become a
+ * FunctionProperty of a CompoundVariable containing  3 functions
  * @see TransformStringsIntoFunctions
  * @see TestElementPropertyTransformer#USE_FUNCTIONS
  */
 public class ReplaceStringWithFunctions extends AbstractTransformer {
-    public ReplaceStringWithFunctions(CompoundVariable masterFunction, Map<String, String> variables) {
-        super();
-        setMasterFunction(masterFunction);
-        setVariables(variables);
-    }
+  public ReplaceStringWithFunctions(CompoundVariable masterFunction,
+                                    Map<String, String> variables) {
+    super();
+    setMasterFunction(masterFunction);
+    setVariables(variables);
+  }
 
-    @Override
-    public JMeterProperty transformValue(JMeterProperty prop) throws InvalidVariableException {
-        JMeterProperty newValue = prop;
-        getMasterFunction().clear();
-        getMasterFunction().setParameters(prop.getStringValue());
-        if (getMasterFunction().hasFunction()) {
-            newValue = new FunctionProperty(prop.getName(), getMasterFunction().getFunction());
-        }
-        return newValue;
+  @Override
+  public JMeterProperty transformValue(JMeterProperty prop)
+      throws InvalidVariableException {
+    JMeterProperty newValue = prop;
+    getMasterFunction().clear();
+    getMasterFunction().setParameters(prop.getStringValue());
+    if (getMasterFunction().hasFunction()) {
+      newValue = new FunctionProperty(prop.getName(),
+                                      getMasterFunction().getFunction());
     }
-
+    return newValue;
+  }
 }

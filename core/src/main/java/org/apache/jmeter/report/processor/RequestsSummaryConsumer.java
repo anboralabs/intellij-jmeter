@@ -29,53 +29,56 @@ import org.apache.jmeter.report.core.Sample;
  */
 public class RequestsSummaryConsumer extends AbstractSampleConsumer {
 
-    private long count;
-    private long errorCount;
+  private long count;
+  private long errorCount;
 
-    /* (non-Javadoc)
-     * @see org.apache.jmeter.report.processor.SampleConsumer#startConsuming()
-     */
-    @Override
-    public void startConsuming() {
-        count = 0L;
-        errorCount = 0L;
+  /* (non-Javadoc)
+   * @see org.apache.jmeter.report.processor.SampleConsumer#startConsuming()
+   */
+  @Override
+  public void startConsuming() {
+    count = 0L;
+    errorCount = 0L;
 
-        // Broadcast metadata to consumes for each channel
-        int channelCount = getConsumedChannelCount();
-        for (int i = 0; i < channelCount; i++) {
-            super.setProducedMetadata(getConsumedMetadata(i), i);
-        }
-
-        super.startProducing();
+    // Broadcast metadata to consumes for each channel
+    int channelCount = getConsumedChannelCount();
+    for (int i = 0; i < channelCount; i++) {
+      super.setProducedMetadata(getConsumedMetadata(i), i);
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.jmeter.report.processor.SampleConsumer#consume(org.apache.jmeter.report.core.Sample, int)
-     */
-    @Override
-    public void consume(Sample sample, int channel) {
-        if(!sample.isController()) {
-            count++;
-            if (!sample.getSuccess()) {
-                errorCount++;
-            }
-        }
-        super.produce(sample, channel);
-    }
+    super.startProducing();
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.SampleConsumer#stopConsuming()
-     */
-    @Override
-    public void stopConsuming() {
-        MapResultData result = new MapResultData();
-        result.setResult("KoPercent", new ValueResultData((double) errorCount
-                * 100 / count));
-        result.setResult("OkPercent", new ValueResultData(
-                (double) (count - errorCount) * 100 / count));
-        setDataToContext(getName(), result);
-        super.stopProducing();
+  /* (non-Javadoc)
+   * @see
+   *     org.apache.jmeter.report.processor.SampleConsumer#consume(org.apache.jmeter.report.core.Sample,
+   *     int)
+   */
+  @Override
+  public void consume(Sample sample, int channel) {
+    if (!sample.isController()) {
+      count++;
+      if (!sample.getSuccess()) {
+        errorCount++;
+      }
     }
+    super.produce(sample, channel);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.SampleConsumer#stopConsuming()
+   */
+  @Override
+  public void stopConsuming() {
+    MapResultData result = new MapResultData();
+    result.setResult("KoPercent",
+                     new ValueResultData((double)errorCount * 100 / count));
+    result.setResult(
+        "OkPercent",
+        new ValueResultData((double)(count - errorCount) * 100 / count));
+    setDataToContext(getName(), result);
+    super.stopProducing();
+  }
 }

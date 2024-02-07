@@ -18,7 +18,6 @@
 package org.apache.jmeter.engine.util;
 
 import java.util.Map;
-
 import org.apache.jmeter.functions.InvalidVariableException;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apache.jmeter.testelement.property.StringProperty;
@@ -29,20 +28,22 @@ import org.apache.jmeter.util.StringUtilities;
  * {@link org.apache.jmeter.threads.JMeterVariables JMeterVariables} if any
  */
 public class UndoVariableReplacement extends AbstractTransformer {
-    public UndoVariableReplacement(CompoundVariable masterFunction, Map<String, String> variables) {
-        super();
-        setMasterFunction(masterFunction);
-        setVariables(variables);
-    }
+  public UndoVariableReplacement(CompoundVariable masterFunction,
+                                 Map<String, String> variables) {
+    super();
+    setMasterFunction(masterFunction);
+    setVariables(variables);
+  }
 
-    @Override
-    public JMeterProperty transformValue(JMeterProperty prop) throws InvalidVariableException {
-        String input = prop.getStringValue();
-        for (Map.Entry<String, String> entry : getVariables().entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            input = StringUtilities.substitute(input, "${" + key + "}", value);
-        }
-        return new StringProperty(prop.getName(), input);
+  @Override
+  public JMeterProperty transformValue(JMeterProperty prop)
+      throws InvalidVariableException {
+    String input = prop.getStringValue();
+    for (Map.Entry<String, String> entry : getVariables().entrySet()) {
+      String key = entry.getKey();
+      String value = entry.getValue();
+      input = StringUtilities.substitute(input, "${" + key + "}", value);
     }
+    return new StringProperty(prop.getName(), input);
+  }
 }

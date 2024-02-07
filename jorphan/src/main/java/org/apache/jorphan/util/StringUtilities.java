@@ -26,26 +26,26 @@ import org.apiguardian.api.API;
  */
 @API(status = API.Status.EXPERIMENTAL, since = "5.6")
 public class StringUtilities {
-    private StringUtilities() {
-    }
+  private StringUtilities() {}
 
-    /**
-     * Counts the number of times a given char is present in the string.
-     *
-     * @param input input string
-     * @param ch    char to search
-     * @return number of times the character is present in the string, or 0 if no char found
-     */
-    public static int count(String input, char ch) {
-        if (input.isEmpty()) {
-            return 0;
-        }
-        int count = 0;
-        int idx = 0;
-        while ((idx = input.indexOf(ch, idx)) != -1) {
-            count++;
-            idx++;
-        }
-        return count;
+  /**
+   * Counts the number of times a given char is present in the string.
+   *
+   * @param input input string
+   * @param ch    char to search
+   * @return number of times the character is present in the string, or 0 if no
+   *     char found
+   */
+  public static int count(String input, char ch) {
+    if (input.isEmpty()) {
+      return 0;
     }
+    int count = 0;
+    int idx = 0;
+    while ((idx = input.indexOf(ch, idx)) != -1) {
+      count++;
+      idx++;
+    }
+    return count;
+  }
 }

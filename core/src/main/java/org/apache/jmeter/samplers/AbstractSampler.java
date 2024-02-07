@@ -21,14 +21,15 @@ import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.util.ConfigMergabilityIndicator;
 import org.apache.jmeter.testelement.AbstractTestElement;
 
-public abstract class AbstractSampler extends AbstractTestElement implements Sampler, ConfigMergabilityIndicator {
-    private static final long serialVersionUID = 240L;
+public abstract class AbstractSampler
+    extends AbstractTestElement implements Sampler, ConfigMergabilityIndicator {
+  private static final long serialVersionUID = 240L;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean applies(ConfigTestElement configElement) {
-        return true;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean applies(ConfigTestElement configElement) {
+    return true;
+  }
 }

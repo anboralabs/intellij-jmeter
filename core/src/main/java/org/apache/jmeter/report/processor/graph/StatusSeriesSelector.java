@@ -18,7 +18,6 @@
 package org.apache.jmeter.report.processor.graph;
 
 import java.util.Arrays;
-
 import org.apache.jmeter.report.core.Sample;
 
 /**
@@ -29,58 +28,53 @@ import org.apache.jmeter.report.core.Sample;
  */
 public class StatusSeriesSelector extends AbstractSeriesSelector {
 
-    private String failureLabel = "Failures";
-    private String successLabel = "Successes";
+  private String failureLabel = "Failures";
+  private String successLabel = "Successes";
 
-    /**
-     * Gets the failure label.
-     *
-     * @return the failureLabel
-     */
-    public final String getFailureLabel() {
-        return failureLabel;
-    }
+  /**
+   * Gets the failure label.
+   *
+   * @return the failureLabel
+   */
+  public final String getFailureLabel() { return failureLabel; }
 
-    /**
-     * Sets the failure label.
-     *
-     * @param failureLabel
-     *            the failureLabel to set
-     */
-    public final void setFailureLabel(String failureLabel) {
-        this.failureLabel = failureLabel;
-    }
+  /**
+   * Sets the failure label.
+   *
+   * @param failureLabel
+   *            the failureLabel to set
+   */
+  public final void setFailureLabel(String failureLabel) {
+    this.failureLabel = failureLabel;
+  }
 
-    /**
-     * Gets the success label.
-     *
-     * @return the successLabel
-     */
-    public final String getSuccessLabel() {
-        return successLabel;
-    }
+  /**
+   * Gets the success label.
+   *
+   * @return the successLabel
+   */
+  public final String getSuccessLabel() { return successLabel; }
 
-    /**
-     * Sets the success label.
-     *
-     * @param successLabel
-     *            the successLabel to set
-     */
-    public final void setSuccessLabel(String successLabel) {
-        this.successLabel = successLabel;
-    }
+  /**
+   * Sets the success label.
+   *
+   * @param successLabel
+   *            the successLabel to set
+   */
+  public final void setSuccessLabel(String successLabel) {
+    this.successLabel = successLabel;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.SampleSelector#select(org.apache
-     * .jmeter.report.csv.core.Sample)
-     */
-    @Override
-    public Iterable<String> select(Sample sample) {
-        String label = sample.getSuccess() ? successLabel : failureLabel;
-        return Arrays.asList(new String[] { label });
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.SampleSelector#select(org.apache
+   * .jmeter.report.csv.core.Sample)
+   */
+  @Override
+  public Iterable<String> select(Sample sample) {
+    String label = sample.getSuccess() ? successLabel : failureLabel;
+    return Arrays.asList(new String[] {label});
+  }
 }

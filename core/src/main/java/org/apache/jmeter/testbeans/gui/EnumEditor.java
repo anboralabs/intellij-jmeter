@@ -21,15 +21,13 @@ import java.awt.Component;
 import java.beans.PropertyDescriptor;
 import java.beans.PropertyEditorSupport;
 import java.util.ResourceBundle;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-
 import org.apache.jmeter.gui.ClearGui;
 
 /**
- * This class implements a property editor for String properties based on an enum
- * that supports custom editing (i.e.: provides a GUI component) based on a
+ * This class implements a property editor for String properties based on an
+ * enum that supports custom editing (i.e.: provides a GUI component) based on a
  * combo box.
  * <p>
  * The provided GUI is a combo box with an option for each value in the enum.
@@ -37,68 +35,69 @@ import org.apache.jmeter.gui.ClearGui;
  */
 class EnumEditor extends PropertyEditorSupport implements ClearGui {
 
-    private final JComboBox<String> combo;
+  private final JComboBox<String> combo;
 
-    private final DefaultComboBoxModel<String> model;
+  private final DefaultComboBoxModel<String> model;
 
-    private final int defaultIndex;
+  private final int defaultIndex;
 
-    public EnumEditor(final PropertyDescriptor descriptor, final Class<? extends Enum<?>> enumClazz, final ResourceBundle rb) {
-        model = new DefaultComboBoxModel<>();
-        combo = new JComboBox<>(model);
-        combo.setEditable(false);
-        for(Enum<?> e : enumClazz.getEnumConstants()) {
-            model.addElement((String) rb.getObject(e.toString()));
-        }
-        Object def = descriptor.getValue(GenericTestBeanCustomizer.DEFAULT);
-        if (def instanceof Integer) {
-            defaultIndex = (Integer) def;
-        } else {
-            defaultIndex = 0;
-        }
-        combo.setSelectedIndex(defaultIndex);
+  public EnumEditor(final PropertyDescriptor descriptor,
+                    final Class<? extends Enum<?>> enumClazz,
+                    final ResourceBundle rb) {
+    model = new DefaultComboBoxModel<>();
+    combo = new JComboBox<>(model);
+    combo.setEditable(false);
+    for (Enum<?> e : enumClazz.getEnumConstants()) {
+      model.addElement((String)rb.getObject(e.toString()));
     }
-
-    @Override
-    public boolean supportsCustomEditor() {
-        return true;
+    Object def = descriptor.getValue(GenericTestBeanCustomizer.DEFAULT);
+    if (def instanceof Integer) {
+      defaultIndex = (Integer)def;
+    } else {
+      defaultIndex = 0;
     }
+    combo.setSelectedIndex(defaultIndex);
+  }
 
-    @Override
-    public Component getCustomEditor() {
-        return combo;
+  @Override
+  public boolean supportsCustomEditor() {
+    return true;
+  }
+
+  @Override
+  public Component getCustomEditor() {
+    return combo;
+  }
+
+  @Override
+  public Object getValue() {
+    return combo.getSelectedIndex();
+  }
+
+  @Override
+  public String getAsText() {
+    Object value = combo.getSelectedItem();
+    return (String)value;
+  }
+
+  @Override
+  public void setValue(Object value) {
+    if (value instanceof Enum<?>) {
+      combo.setSelectedIndex(((Enum<?>)value).ordinal());
+    } else if (value instanceof Integer) {
+      combo.setSelectedIndex((Integer)value);
+    } else {
+      combo.setSelectedItem(value);
     }
+  }
 
-    @Override
-    public Object getValue() {
-        return combo.getSelectedIndex();
-    }
+  @Override
+  public void setAsText(String value) {
+    combo.setSelectedItem(value);
+  }
 
-    @Override
-    public String getAsText() {
-        Object value = combo.getSelectedItem();
-        return (String) value;
-    }
-
-    @Override
-    public void setValue(Object value) {
-        if (value instanceof Enum<?>){
-            combo.setSelectedIndex(((Enum<?>) value).ordinal());
-        } else if (value instanceof Integer) {
-            combo.setSelectedIndex((Integer) value);
-        } else {
-            combo.setSelectedItem(value);
-        }
-    }
-
-    @Override
-    public void setAsText(String value) {
-        combo.setSelectedItem(value);
-    }
-
-    @Override
-    public void clearGui() {
-        combo.setSelectedIndex(defaultIndex);
-    }
-
+  @Override
+  public void clearGui() {
+    combo.setSelectedIndex(defaultIndex);
+  }
 }

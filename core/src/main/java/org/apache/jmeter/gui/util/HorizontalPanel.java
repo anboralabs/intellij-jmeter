@@ -20,51 +20,48 @@ package org.apache.jmeter.gui.util;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 public class HorizontalPanel extends JPanel {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    private final Box subPanel = Box.createHorizontalBox();
+  private final Box subPanel = Box.createHorizontalBox();
 
-    private final float verticalAlign;
+  private final float verticalAlign;
 
-    private final int hgap;
+  private final int hgap;
 
-    public HorizontalPanel() {
-        this(5, CENTER_ALIGNMENT);
+  public HorizontalPanel() { this(5, CENTER_ALIGNMENT); }
+
+  public HorizontalPanel(Color bk) {
+    this();
+    subPanel.setBackground(bk);
+    this.setBackground(bk);
+  }
+
+  public HorizontalPanel(int hgap, float verticalAlign) {
+    super(new BorderLayout());
+    add(subPanel, BorderLayout.CENTER);
+    this.hgap = hgap;
+    this.verticalAlign = verticalAlign;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Component add(Component c) {
+    // This won't work right if we remove components. But we don't, so I'm
+    // not going to worry about it right now.
+    if (hgap > 0 && subPanel.getComponentCount() > 0) {
+      subPanel.add(Box.createHorizontalStrut(hgap));
     }
 
-    public HorizontalPanel(Color bk) {
-        this();
-        subPanel.setBackground(bk);
-        this.setBackground(bk);
+    if (c instanceof JComponent) {
+      ((JComponent)c).setAlignmentY(verticalAlign);
     }
-
-    public HorizontalPanel(int hgap, float verticalAlign) {
-        super(new BorderLayout());
-        add(subPanel, BorderLayout.CENTER);
-        this.hgap = hgap;
-        this.verticalAlign = verticalAlign;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Component add(Component c) {
-        // This won't work right if we remove components. But we don't, so I'm
-        // not going to worry about it right now.
-        if (hgap > 0 && subPanel.getComponentCount() > 0) {
-            subPanel.add(Box.createHorizontalStrut(hgap));
-        }
-
-        if (c instanceof JComponent) {
-            ((JComponent) c).setAlignmentY(verticalAlign);
-        }
-        return subPanel.add(c);
-    }
+    return subPanel.add(c);
+  }
 }

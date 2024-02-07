@@ -18,7 +18,6 @@
 package org.apache.jmeter.report.dashboard;
 
 import java.io.File;
-
 import org.apache.jmeter.report.config.ReportGeneratorConfiguration;
 import org.apache.jmeter.report.processor.SampleContext;
 
@@ -30,33 +29,34 @@ import org.apache.jmeter.report.processor.SampleContext;
  */
 public interface DataExporter {
 
-    /**
-     * Gets the name of the exporter.
-     *
-     * @return the name of the exporter
-     */
-    String getName();
+  /**
+   * Gets the name of the exporter.
+   *
+   * @return the name of the exporter
+   */
+  String getName();
 
-    /**
-     * Sets the name of the exporter.
-     *
-     * @param name
-     *            the new name of the exporter
-     */
-    void setName(String name);
+  /**
+   * Sets the name of the exporter.
+   *
+   * @param name
+   *            the new name of the exporter
+   */
+  void setName(String name);
 
-    /**
-     * Export data from the specified context using the given configuration.
-     *
-     * @param context
-     *            the context (must not be {@code null})
-     * @param file
-     *            the file which from samples come (must not be {@code null})
-     * @param configuration
-     *            the configuration (must not be {@code null})
-     * @throws ExportException
-     *             the export exception
-     */
-    void export(SampleContext context, File file,
-            ReportGeneratorConfiguration configuration) throws ExportException;
+  /**
+   * Export data from the specified context using the given configuration.
+   *
+   * @param context
+   *            the context (must not be {@code null})
+   * @param file
+   *            the file which from samples come (must not be {@code null})
+   * @param configuration
+   *            the configuration (must not be {@code null})
+   * @throws ExportException
+   *             the export exception
+   */
+  void export(SampleContext context, File file,
+              ReportGeneratorConfiguration configuration)
+      throws ExportException;
 }

@@ -23,25 +23,21 @@ package org.apache.jorphan.util;
  * Thread will shutdown after end of current running sampler.
  */
 public class JMeterStopThreadException extends RuntimeException {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public JMeterStopThreadException() {
-        super();
-    }
+  public JMeterStopThreadException() { super(); }
 
-    public JMeterStopThreadException(String s) {
-        super(s);
-    }
+  public JMeterStopThreadException(String s) { super(s); }
 
-    public JMeterStopThreadException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public JMeterStopThreadException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public JMeterStopThreadException(Throwable cause) {
-        super(cause);
-    }
+  public JMeterStopThreadException(Throwable cause) { super(cause); }
 
-    public JMeterStopThreadException(String s, Throwable ex, boolean enableSuppression, boolean writableStackTrace) {
-        super(s, ex, enableSuppression, writableStackTrace);
-    }
+  public JMeterStopThreadException(String s, Throwable ex,
+                                   boolean enableSuppression,
+                                   boolean writableStackTrace) {
+    super(s, ex, enableSuppression, writableStackTrace);
+  }
 }

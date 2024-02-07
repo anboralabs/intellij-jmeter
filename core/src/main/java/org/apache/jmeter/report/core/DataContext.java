@@ -26,6 +26,6 @@ import java.util.TreeMap;
  */
 public class DataContext extends TreeMap<String, Object> {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -3433238675809262160L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = -3433238675809262160L;
 }

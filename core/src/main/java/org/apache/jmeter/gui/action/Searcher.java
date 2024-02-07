@@ -24,10 +24,10 @@ import java.util.List;
  */
 public interface Searcher {
 
-    /**
-     * Implements the search
-     * @param textTokens List of content to be searched
-     * @return true if search on textTokens is successful
-     */
-    boolean search(List<String> textTokens);
+  /**
+   * Implements the search
+   * @param textTokens List of content to be searched
+   * @return true if search on textTokens is successful
+   */
+  boolean search(List<String> textTokens);
 }

@@ -27,49 +27,49 @@ import java.util.List;
  *
  */
 public interface RemoteSampleListener extends java.rmi.Remote {
-    void testStarted() throws RemoteException;
+  void testStarted() throws RemoteException;
 
-    void testStarted(String host) throws RemoteException;
+  void testStarted(String host) throws RemoteException;
 
-    void testEnded() throws RemoteException;
+  void testEnded() throws RemoteException;
 
-    void testEnded(String host) throws RemoteException;
+  void testEnded(String host) throws RemoteException;
 
-    /**
-     * This method is called remotely and fires a list of samples events
-     * received locally. The function is to reduce network load when using
-     * remote testing.
-     *
-     * @param samples
-     *            the list of sample events to be fired locally.
-     * @throws RemoteException when calling the remote method fails
-     */
-    void processBatch(List<SampleEvent> samples) throws RemoteException;
+  /**
+   * This method is called remotely and fires a list of samples events
+   * received locally. The function is to reduce network load when using
+   * remote testing.
+   *
+   * @param samples
+   *            the list of sample events to be fired locally.
+   * @throws RemoteException when calling the remote method fails
+   */
+  void processBatch(List<SampleEvent> samples) throws RemoteException;
 
-    /**
-     * A sample has started and stopped.
-     *
-     * @param e
-     *            the event with data about the completed sample
-     * @throws RemoteException when calling the remote method fails
-     */
-    void sampleOccurred(SampleEvent e) throws RemoteException;
+  /**
+   * A sample has started and stopped.
+   *
+   * @param e
+   *            the event with data about the completed sample
+   * @throws RemoteException when calling the remote method fails
+   */
+  void sampleOccurred(SampleEvent e) throws RemoteException;
 
-    /**
-     * A sample has started.
-     *
-     * @param e
-     *            the event with data about the started sample
-     * @throws RemoteException when calling the remote method fails
-     */
-    void sampleStarted(SampleEvent e) throws RemoteException;
+  /**
+   * A sample has started.
+   *
+   * @param e
+   *            the event with data about the started sample
+   * @throws RemoteException when calling the remote method fails
+   */
+  void sampleStarted(SampleEvent e) throws RemoteException;
 
-    /**
-     * A sample has stopped.
-     *
-     * @param e
-     *            the event with data about the stopped sample
-     * @throws RemoteException when calling the remote method fails
-     */
-    void sampleStopped(SampleEvent e) throws RemoteException;
+  /**
+   * A sample has stopped.
+   *
+   * @param e
+   *            the event with data about the stopped sample
+   * @throws RemoteException when calling the remote method fails
+   */
+  void sampleStopped(SampleEvent e) throws RemoteException;
 }

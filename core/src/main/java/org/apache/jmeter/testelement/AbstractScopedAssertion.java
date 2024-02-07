@@ -19,30 +19,29 @@ package org.apache.jmeter.testelement;
 
 /**
  * <p>
- * Super-class for all Assertions that can be applied to main sample, sub-samples or both.
- * Test elements merely need to extend this class to support scoping.
+ * Super-class for all Assertions that can be applied to main sample,
+ * sub-samples or both. Test elements merely need to extend this class to
+ * support scoping.
  * </p>
  *
  * <p>
- * Their corresponding GUI classes need to add the AssertionScopePanel to the GUI
- * using the AbstractAssertionGui methods:
- * <ul>
- * <li>createScopePanel()</li>
+ * Their corresponding GUI classes need to add the AssertionScopePanel to the
+ * GUI using the AbstractAssertionGui methods: <ul> <li>createScopePanel()</li>
  * <li>saveScopeSettings()</li>
  * <li>showScopeSettings()</li>
  * </ul>
  */
-public abstract class AbstractScopedAssertion extends AbstractScopedTestElement {
+public abstract class AbstractScopedAssertion
+    extends AbstractScopedTestElement {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    //+ JMX attributes - do not change
-    private static final String SCOPE = "Assertion.scope";
-    //- JMX
+  //+ JMX attributes - do not change
+  private static final String SCOPE = "Assertion.scope";
+  //- JMX
 
-    @Override
-    protected String getScopeName() {
-        return SCOPE;
-    }
-
+  @Override
+  protected String getScopeName() {
+    return SCOPE;
+  }
 }

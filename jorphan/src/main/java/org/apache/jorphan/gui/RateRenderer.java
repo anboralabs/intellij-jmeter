@@ -29,36 +29,35 @@ package org.apache.jorphan.gui;
  * <p>
  * Examples: "34.2/sec" "0.1/sec" "43.0/hour" "15.9/min"
  */
-public class RateRenderer extends NumberRenderer{ // NOSONAR 7 parents is OK in this case
+public class RateRenderer
+    extends NumberRenderer { // NOSONAR 7 parents is OK in this case
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public RateRenderer(String format) {
-        super(format);
+  public RateRenderer(String format) { super(format); }
+
+  @Override
+  public void setValue(Object value) {
+    if (!(value instanceof Double)) {
+      setText("#N/A");
+      return;
+    }
+    double rate = (Double)value;
+    if (Double.compare(rate, Double.MAX_VALUE) == 0) {
+      setText("#N/A");
+      return;
     }
 
-    @Override
-    public void setValue(Object value) {
-        if (!(value instanceof Double)) {
-            setText("#N/A");
-            return;
-        }
-        double rate = (Double) value;
-        if (Double.compare(rate,Double.MAX_VALUE)==0){
-            setText("#N/A");
-            return;
-        }
+    String unit = "sec";
 
-        String unit = "sec";
-
-        if (rate < 1.0) {
-            rate *= 60.0;
-            unit = "min";
-        }
-        if (rate < 1.0) {
-            rate *= 60.0;
-            unit = "hour";
-        }
-        setText(formatter.format(rate) + "/" + unit);
+    if (rate < 1.0) {
+      rate *= 60.0;
+      unit = "min";
     }
+    if (rate < 1.0) {
+      rate *= 60.0;
+      unit = "hour";
+    }
+    setText(formatter.format(rate) + "/" + unit);
+  }
 }

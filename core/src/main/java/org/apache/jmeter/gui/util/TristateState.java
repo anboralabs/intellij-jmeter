@@ -17,7 +17,7 @@
 
 package org.apache.jmeter.gui.util;
 
-//derived from: http://www.javaspecialists.eu/archive/Issue145.html
+// derived from: http://www.javaspecialists.eu/archive/Issue145.html
 
 public enum TristateState {
   SELECTED {

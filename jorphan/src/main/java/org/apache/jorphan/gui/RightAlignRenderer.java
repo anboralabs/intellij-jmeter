@@ -24,10 +24,10 @@ import javax.swing.table.DefaultTableCellRenderer;
  * Renders items in a JTable right-aligned
  */
 public class RightAlignRenderer extends DefaultTableCellRenderer {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public RightAlignRenderer() {
-        super();
-        setHorizontalAlignment(SwingConstants.RIGHT);
-    }
+  public RightAlignRenderer() {
+    super();
+    setHorizontalAlignment(SwingConstants.RIGHT);
+  }
 }

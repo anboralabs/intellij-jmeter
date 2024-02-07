@@ -17,30 +17,29 @@
 
 package org.apache.jorphan.gui.ui;
 
-import javax.swing.text.Document;
-import javax.swing.undo.UndoManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.text.Document;
+import javax.swing.undo.UndoManager;
 
-class AddUndoableEditListenerPropertyChangeListener implements PropertyChangeListener {
-    private final UndoManager manager;
+class AddUndoableEditListenerPropertyChangeListener
+    implements PropertyChangeListener {
+  private final UndoManager manager;
 
-    public AddUndoableEditListenerPropertyChangeListener(UndoManager manager) {
-        this.manager = manager;
+  public AddUndoableEditListenerPropertyChangeListener(UndoManager manager) {
+    this.manager = manager;
+  }
+
+  public final UndoManager getUndoManager() { return manager; }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    manager.discardAllEdits();
+    if (evt.getOldValue() != null) {
+      ((Document)evt.getOldValue()).removeUndoableEditListener(manager);
     }
-
-    public final UndoManager getUndoManager() {
-        return manager;
+    if (evt.getNewValue() != null) {
+      ((Document)evt.getNewValue()).addUndoableEditListener(manager);
     }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        manager.discardAllEdits();
-        if (evt.getOldValue() != null) {
-            ((Document) evt.getOldValue()).removeUndoableEditListener(manager);
-        }
-        if (evt.getNewValue() != null) {
-            ((Document) evt.getNewValue()).addUndoableEditListener(manager);
-        }
-    }
+  }
 }

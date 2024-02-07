@@ -20,7 +20,6 @@ package org.apache.jmeter.gui.plugin;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.MenuElement;
-
 import org.apache.jorphan.reflect.JMeterService;
 
 /**
@@ -28,36 +27,28 @@ import org.apache.jorphan.reflect.JMeterService;
  */
 @JMeterService
 public interface MenuCreator {
-    enum MENU_LOCATION {
-        FILE,
-        EDIT,
-        RUN,
-        OPTIONS,
-        HELP,
-        SEARCH,
-        TOOLS
-    }
+  enum MENU_LOCATION { FILE, EDIT, RUN, OPTIONS, HELP, SEARCH, TOOLS }
 
-    /**
-     * MenuItems to be added in location menu
-     * @param location in top menu
-     * @return array of {@link JMenuItem}
-     */
-    JMenuItem[] getMenuItemsAtLocation(MENU_LOCATION location);
+  /**
+   * MenuItems to be added in location menu
+   * @param location in top menu
+   * @return array of {@link JMenuItem}
+   */
+  JMenuItem[] getMenuItemsAtLocation(MENU_LOCATION location);
 
-    /**
-     * @return array of JMenu to be put as top level menu between Options and Help
-     */
-    JMenu[] getTopLevelMenus();
+  /**
+   * @return array of JMenu to be put as top level menu between Options and Help
+   */
+  JMenu[] getTopLevelMenus();
 
-    /**
-     * @param menu MenuElement
-     * @return true if menu was concerned by Locale change
-     */
-    boolean localeChanged(MenuElement menu);
+  /**
+   * @param menu MenuElement
+   * @return true if menu was concerned by Locale change
+   */
+  boolean localeChanged(MenuElement menu);
 
-    /**
-     * Update Top Level menu on Locale Change
-     */
-    void localeChanged();
+  /**
+   * Update Top Level menu on Locale Change
+   */
+  void localeChanged();
 }

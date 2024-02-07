@@ -21,21 +21,21 @@ import javax.swing.undo.CompoundEdit;
 
 public class SimpleCompoundEdit extends CompoundEdit {
 
-    private static final long serialVersionUID = 7125085226441904495L;
+  private static final long serialVersionUID = 7125085226441904495L;
 
-    /**
-     * @return boolean true if edits is empty
-     */
-    @SuppressWarnings("JdkObsolete")
-    public boolean isEmpty() {
-        return edits.isEmpty();
-    }
+  /**
+   * @return boolean true if edits is empty
+   */
+  @SuppressWarnings("JdkObsolete")
+  public boolean isEmpty() {
+    return edits.isEmpty();
+  }
 
-    /**
-     * @return size of edits
-     */
-    @SuppressWarnings("JdkObsolete")
-    public int size() {
-        return edits.size();
-    }
+  /**
+   * @return size of edits
+   */
+  @SuppressWarnings("JdkObsolete")
+  public int size() {
+    return edits.size();
+  }
 }

@@ -26,22 +26,20 @@ import org.apache.jmeter.report.core.SampleMetadata;
  */
 public class FieldSampleComparator implements SampleComparator {
 
-    private int index;
+  private int index;
 
-    private final String fieldName;
+  private final String fieldName;
 
-    public FieldSampleComparator(String fieldName) {
-        this.fieldName = fieldName;
-    }
+  public FieldSampleComparator(String fieldName) { this.fieldName = fieldName; }
 
-    @Override
-    public final void initialize(SampleMetadata metadata) {
-        index = metadata.ensureIndexOf(fieldName);
-    }
+  @Override
+  public final void initialize(SampleMetadata metadata) {
+    index = metadata.ensureIndexOf(fieldName);
+  }
 
-    @Override
-    public long compare(Sample s1, Sample s2) {
-        return s1.getData(long.class, index, fieldName)
-                .compareTo(s2.getData(long.class, index, fieldName));
-    }
+  @Override
+  public long compare(Sample s1, Sample s2) {
+    return s1.getData(long.class, index, fieldName)
+        .compareTo(s2.getData(long.class, index, fieldName));
+  }
 }

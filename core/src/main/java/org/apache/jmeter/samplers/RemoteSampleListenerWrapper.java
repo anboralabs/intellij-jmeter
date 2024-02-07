@@ -19,7 +19,6 @@ package org.apache.jmeter.samplers;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-
 import org.apache.jmeter.engine.util.NoThreadClone;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.slf4j.Logger;
@@ -28,45 +27,46 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class RemoteSampleListenerWrapper extends AbstractTestElement implements SampleListener, Serializable,
-        NoThreadClone {
-    private static final Logger log = LoggerFactory.getLogger(RemoteSampleListenerWrapper.class);
+public class RemoteSampleListenerWrapper extends AbstractTestElement
+    implements SampleListener, Serializable, NoThreadClone {
+  private static final Logger log =
+      LoggerFactory.getLogger(RemoteSampleListenerWrapper.class);
 
-    private static final long serialVersionUID = 241L;
+  private static final long serialVersionUID = 241L;
 
-    private RemoteSampleListener listener;
+  private RemoteSampleListener listener;
 
-    public RemoteSampleListenerWrapper(RemoteSampleListener l) {
-        listener = l;
+  public RemoteSampleListenerWrapper(RemoteSampleListener l) { listener = l; }
+
+  public RemoteSampleListenerWrapper() {}
+
+  @Override
+  public void sampleOccurred(SampleEvent e) {
+    try {
+      listener.sampleOccurred(e);
+    } catch (RemoteException err) {
+      log.error("RemoteException while handling sample occurred event.",
+                err); // $NON-NLS-1$
     }
+  }
 
-    public RemoteSampleListenerWrapper() {
+  @Override
+  public void sampleStarted(SampleEvent e) {
+    try {
+      listener.sampleStarted(e);
+    } catch (RemoteException err) {
+      log.error("RemoteException while handling sample started event.",
+                err); // $NON-NLS-1$
     }
+  }
 
-    @Override
-    public void sampleOccurred(SampleEvent e) {
-        try {
-            listener.sampleOccurred(e);
-        } catch (RemoteException err) {
-            log.error("RemoteException while handling sample occurred event.", err); // $NON-NLS-1$
-        }
+  @Override
+  public void sampleStopped(SampleEvent e) {
+    try {
+      listener.sampleStopped(e);
+    } catch (RemoteException err) {
+      log.error("RemoteException while handling sample stopped event.",
+                err); // $NON-NLS-1$
     }
-
-    @Override
-    public void sampleStarted(SampleEvent e) {
-        try {
-            listener.sampleStarted(e);
-        } catch (RemoteException err) {
-            log.error("RemoteException while handling sample started event.", err); // $NON-NLS-1$
-        }
-    }
-
-    @Override
-    public void sampleStopped(SampleEvent e) {
-        try {
-            listener.sampleStopped(e);
-        } catch (RemoteException err) {
-            log.error("RemoteException while handling sample stopped event.", err); // $NON-NLS-1$
-        }
-    }
+  }
 }

@@ -22,22 +22,22 @@ package org.apache.jmeter.testelement;
  *
  */
 public interface ThreadListener {
-    /**
-     * Called for each thread before starting sampling.
-     * WARNING: this is called before any Config test elements are processed,
-     * so any properties they define will not have been merged in yet.
-     *
-     * See org.apache.jmeter.threads.JMeterThread#threadStarted()
-     *
-     */
-    void threadStarted();
+  /**
+   * Called for each thread before starting sampling.
+   * WARNING: this is called before any Config test elements are processed,
+   * so any properties they define will not have been merged in yet.
+   *
+   * See org.apache.jmeter.threads.JMeterThread#threadStarted()
+   *
+   */
+  void threadStarted();
 
-    /**
-     * Called for each thread after all samples have been processed.
-     *
-     * See org.apache.jmeter.threads.JMeterThread#threadFinished(org.apache.jmeter.engine.event.LoopIterationListener)
-     *
-     */
-    void threadFinished();
-
+  /**
+   * Called for each thread after all samples have been processed.
+   *
+   * See
+   * org.apache.jmeter.threads.JMeterThread#threadFinished(org.apache.jmeter.engine.event.LoopIterationListener)
+   *
+   */
+  void threadFinished();
 }

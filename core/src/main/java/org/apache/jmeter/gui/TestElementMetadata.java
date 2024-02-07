@@ -21,15 +21,15 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import org.apiguardian.api.API;
 
 /**
- * Enables to get component information (e.g. title, group in menu) at the startup.
- * <p>Historically JMeter was creating component classes which initializes GUI elements.
- * The idea here is to enable access to the metadata without instantiating GUI classes.</p>
- * <p>This annotation is not meant to be used by the third-party plugins,
- * and it might be removed as better alternatives are implemented.</p>
+ * Enables to get component information (e.g. title, group in menu) at the
+ * startup. <p>Historically JMeter was creating component classes which
+ * initializes GUI elements. The idea here is to enable access to the metadata
+ * without instantiating GUI classes.</p> <p>This annotation is not meant to be
+ * used by the third-party plugins, and it might be removed as better
+ * alternatives are implemented.</p>
  * @since 5.3
  * @see org.apache.jmeter.gui.util.MenuFactory
  */
@@ -37,7 +37,7 @@ import org.apiguardian.api.API;
 @Target(ElementType.TYPE)
 @API(since = "5.3", status = API.Status.INTERNAL)
 public @interface TestElementMetadata {
-    String labelResource();
-    String resourceBundle() default "";
-    String[] actionGroups() default {};
+  String labelResource();
+  String resourceBundle() default "";
+  String[] actionGroups() default {};
 }

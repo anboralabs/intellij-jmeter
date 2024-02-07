@@ -17,16 +17,13 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
-
 import org.apache.jmeter.gui.GuiPackage;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Hide / unhide LoggerPanel.
@@ -35,48 +32,46 @@ import com.google.auto.service.AutoService;
 @AutoService(Command.class)
 public class LoggerPanelEnableDisable extends AbstractAction {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.LOGGER_PANEL_ENABLE_DISABLE);
-    }
+  static { commands.add(ActionNames.LOGGER_PANEL_ENABLE_DISABLE); }
 
-    /**
-     * Constructor for object.
-     */
-    public LoggerPanelEnableDisable() {
-    }
+  /**
+   * Constructor for object.
+   */
+  public LoggerPanelEnableDisable() {}
 
-    /**
-     * Gets the ActionNames attribute of the action
-     *
-     * @return the ActionNames value
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * Gets the ActionNames attribute of the action
+   *
+   * @return the ActionNames value
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    /**
-     * This method performs the actual command processing.
-     *
-     * @param e the generic UI action event
-     */
-    @Override
-    public void doAction(ActionEvent e) {
-        if (ActionNames.LOGGER_PANEL_ENABLE_DISABLE.equals(e.getActionCommand())) {
-            GuiPackage guiInstance = GuiPackage.getInstance();
-            JSplitPane splitPane = (JSplitPane) guiInstance.getLoggerPanel().getParent();
-            if (!guiInstance.getLoggerPanel().isVisible()) {
-                splitPane.setDividerSize(UIManager.getInt("SplitPane.dividerSize"));
-                guiInstance.getLoggerPanel().setVisible(true);
-                splitPane.setDividerLocation(0.8);
-                guiInstance.getMenuItemLoggerPanel().getModel().setSelected(true);
-            } else {
-                guiInstance.getLoggerPanel().setVisible(false);
-                splitPane.setDividerSize(0);
-                guiInstance.getMenuItemLoggerPanel().getModel().setSelected(false);
-            }
-        }
+  /**
+   * This method performs the actual command processing.
+   *
+   * @param e the generic UI action event
+   */
+  @Override
+  public void doAction(ActionEvent e) {
+    if (ActionNames.LOGGER_PANEL_ENABLE_DISABLE.equals(e.getActionCommand())) {
+      GuiPackage guiInstance = GuiPackage.getInstance();
+      JSplitPane splitPane =
+          (JSplitPane)guiInstance.getLoggerPanel().getParent();
+      if (!guiInstance.getLoggerPanel().isVisible()) {
+        splitPane.setDividerSize(UIManager.getInt("SplitPane.dividerSize"));
+        guiInstance.getLoggerPanel().setVisible(true);
+        splitPane.setDividerLocation(0.8);
+        guiInstance.getMenuItemLoggerPanel().getModel().setSelected(true);
+      } else {
+        guiInstance.getLoggerPanel().setVisible(false);
+        splitPane.setDividerSize(0);
+        guiInstance.getMenuItemLoggerPanel().getModel().setSelected(false);
+      }
     }
+  }
 }

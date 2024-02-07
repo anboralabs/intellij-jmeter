@@ -26,72 +26,75 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
 
 /**
- * Simple implementation of a transferable for {@link JMeterTreeNode} arrays based on serialization.
+ * Simple implementation of a transferable for {@link JMeterTreeNode} arrays
+ * based on serialization.
  * @since 2.9
  */
 public class JMeterTreeNodeTransferable implements Transferable {
 
-    public final static DataFlavor JMETER_TREE_NODE_ARRAY_DATA_FLAVOR = new DataFlavor(JMeterTreeNode[].class, JMeterTreeNode[].class.getName());
+  public final static DataFlavor JMETER_TREE_NODE_ARRAY_DATA_FLAVOR =
+      new DataFlavor(JMeterTreeNode[].class, JMeterTreeNode[].class.getName());
 
-    private final static DataFlavor[] DATA_FLAVORS = new DataFlavor[]{JMETER_TREE_NODE_ARRAY_DATA_FLAVOR};
+  private final static DataFlavor[] DATA_FLAVORS =
+      new DataFlavor[] {JMETER_TREE_NODE_ARRAY_DATA_FLAVOR};
 
-    private byte[] data = null;
+  private byte[] data = null;
 
-    @Override
-    public DataFlavor[] getTransferDataFlavors() {
-        return DATA_FLAVORS;
+  @Override
+  public DataFlavor[] getTransferDataFlavors() {
+    return DATA_FLAVORS;
+  }
+
+  @Override
+  public boolean isDataFlavorSupported(DataFlavor flavor) {
+    return flavor.match(JMETER_TREE_NODE_ARRAY_DATA_FLAVOR);
+  }
+
+  @Override
+  public Object getTransferData(DataFlavor flavor)
+      throws UnsupportedFlavorException, IOException {
+    if (!isDataFlavorSupported(flavor)) {
+      throw new UnsupportedFlavorException(flavor);
     }
-
-    @Override
-    public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return flavor.match(JMETER_TREE_NODE_ARRAY_DATA_FLAVOR);
-    }
-
-    @Override
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-        if(!isDataFlavorSupported(flavor)) {
-            throw new UnsupportedFlavorException(flavor);
+    if (data != null) {
+      ObjectInput ois = null;
+      try {
+        ois = new ObjectInputStream(new ByteArrayInputStream(data));
+        JMeterTreeNode[] nodes = (JMeterTreeNode[])ois.readObject();
+        return nodes;
+      } catch (ClassNotFoundException cnfe) {
+        throw new IOException("Failed to read object stream.", cnfe);
+      } finally {
+        if (ois != null) {
+          try {
+            ois.close();
+          } catch (Exception e) {
+            // NOOP
+          }
         }
-        if(data != null) {
-            ObjectInput ois = null;
-            try {
-                ois = new ObjectInputStream(new ByteArrayInputStream(data));
-                JMeterTreeNode[] nodes = (JMeterTreeNode[]) ois.readObject();
-                return nodes;
-            } catch (ClassNotFoundException cnfe) {
-                throw new IOException("Failed to read object stream.", cnfe);
-            } finally {
-                if(ois != null) {
-                    try {
-                        ois.close();
-                    } catch (Exception e) {
-                        // NOOP
-                    }
-                }
-            }
-        }
-        return null;
+      }
     }
+    return null;
+  }
 
-    public void setTransferData(JMeterTreeNode[] nodes) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = null;
+  public void setTransferData(JMeterTreeNode[] nodes) throws IOException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    ObjectOutputStream oos = null;
+    try {
+      oos = new ObjectOutputStream(bos);
+      oos.writeObject(nodes);
+      data = bos.toByteArray();
+    } finally {
+      if (oos != null) {
         try {
-            oos = new ObjectOutputStream(bos);
-            oos.writeObject(nodes);
-            data = bos.toByteArray();
-        } finally {
-            if(oos != null) {
-                try {
-                    oos.close();
-                } catch (Exception e) {
-                    // NOOP
-                }
-            }
+          oos.close();
+        } catch (Exception e) {
+          // NOOP
         }
+      }
     }
+  }
 }

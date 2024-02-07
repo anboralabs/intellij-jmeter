@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph.impl;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.apache.jmeter.report.core.Sample;
 import org.apache.jmeter.report.processor.MeanAggregatorFactory;
 import org.apache.jmeter.report.processor.graph.AbstractGraphConsumer;
@@ -30,62 +29,61 @@ import org.apache.jmeter.report.processor.graph.GroupInfo;
 import org.apache.jmeter.report.processor.graph.TimeStampKeysSelector;
 
 /**
- * The class ActiveThreadsGraphConsumer provides a graph to visualize active threads
- * per time period (defined by granularity)
+ * The class ActiveThreadsGraphConsumer provides a graph to visualize active
+ * threads per time period (defined by granularity)
  *
  * @since 3.0
  */
 public class ActiveThreadsGraphConsumer extends AbstractOverTimeGraphConsumer {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.impl.AbstractOverTimeGraphConsumer
-     * #createTimeStampKeysSelector()
-     */
-    @Override
-    protected TimeStampKeysSelector createTimeStampKeysSelector() {
-        TimeStampKeysSelector keysSelector = new TimeStampKeysSelector();
-        keysSelector.setSelectBeginTime(false);
-        return keysSelector;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.impl.AbstractOverTimeGraphConsumer
+   * #createTimeStampKeysSelector()
+   */
+  @Override
+  protected TimeStampKeysSelector createTimeStampKeysSelector() {
+    TimeStampKeysSelector keysSelector = new TimeStampKeysSelector();
+    keysSelector.setSelectBeginTime(false);
+    return keysSelector;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected Map<String, GroupInfo> createGroupInfos() {
-        AbstractSeriesSelector seriesSelector = new AbstractSeriesSelector() {
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override
+  protected Map<String, GroupInfo> createGroupInfos() {
+    AbstractSeriesSelector seriesSelector = new AbstractSeriesSelector() {
+      @Override
+      public Iterable<String> select(Sample sample) {
+        if (sample.isEmptyController()) {
+          return Collections.emptyList();
+        }
+        String threadName = sample.getThreadName();
+        int index = threadName.lastIndexOf(' ');
+        if (index >= 0) {
+          threadName = threadName.substring(0, index);
+        }
+        return Collections.singletonList(threadName);
+      }
+    };
 
-            @Override
-            public Iterable<String> select(Sample sample) {
-                if (sample.isEmptyController()) {
-                    return Collections.emptyList();
-                }
-                String threadName = sample.getThreadName();
-                int index = threadName.lastIndexOf(' ');
-                if (index >= 0) {
-                    threadName = threadName.substring(0, index);
-                }
-                return Collections.singletonList(threadName);
-            }
-        };
+    GraphValueSelector graphValueSelector = (series, sample) -> {
+      if (!sample.isEmptyController()) {
+        return (double)sample.getGroupThreads();
+      } else {
+        return null;
+      }
+    };
 
-        GraphValueSelector graphValueSelector = (series, sample) -> {
-            if (!sample.isEmptyController()) {
-                return (double) sample.getGroupThreads();
-            } else {
-                return null;
-            }
-        };
-
-        return Collections.singletonMap(
-                AbstractGraphConsumer.DEFAULT_GROUP,
-                new GroupInfo(new MeanAggregatorFactory(), seriesSelector, graphValueSelector, false, false));
-    }
-
+    return Collections.singletonMap(
+        AbstractGraphConsumer.DEFAULT_GROUP,
+        new GroupInfo(new MeanAggregatorFactory(), seriesSelector,
+                      graphValueSelector, false, false));
+  }
 }

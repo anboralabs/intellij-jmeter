@@ -27,12 +27,15 @@ import org.apache.jmeter.gui.tree.JMeterTreeNode;
  */
 public interface ThinkTimeCreator {
 
-    /**
-     * Create think time
-     * @param guiPackage {@link GuiPackage}
-     * @param parentNode {@link JMeterTreeNode}
-     * @return array of 2 nodes
-     * @throws IllegalUserActionException when timer can't be created for this node
-     */
-    JMeterTreeNode[] createThinkTime(GuiPackage guiPackage, JMeterTreeNode parentNode) throws IllegalUserActionException;
+  /**
+   * Create think time
+   * @param guiPackage {@link GuiPackage}
+   * @param parentNode {@link JMeterTreeNode}
+   * @return array of 2 nodes
+   * @throws IllegalUserActionException when timer can't be created for this
+   *     node
+   */
+  JMeterTreeNode[] createThinkTime(GuiPackage guiPackage,
+                                   JMeterTreeNode parentNode)
+      throws IllegalUserActionException;
 }

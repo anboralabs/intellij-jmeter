@@ -20,8 +20,8 @@ package org.apache.jorphan.reflect;
 /**
  * Ignores all failures.
  */
-public class IgnoreServiceLoadExceptionHandler implements ServiceLoadExceptionHandler<Object> {
-    @Override
-    public void handle(Class<?> service, String className, Throwable throwable) {
-    }
+public class IgnoreServiceLoadExceptionHandler
+    implements ServiceLoadExceptionHandler<Object> {
+  @Override
+  public void handle(Class<?> service, String className, Throwable throwable) {}
 }

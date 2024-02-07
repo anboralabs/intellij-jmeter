@@ -25,22 +25,18 @@ package org.apache.jmeter.report.processor;
  */
 public class ApdexThresholdsInfo {
 
-    private long satisfiedThreshold;
-    private long toleratedThreshold;
+  private long satisfiedThreshold;
+  private long toleratedThreshold;
 
-    public final long getSatisfiedThreshold() {
-        return satisfiedThreshold;
-    }
+  public final long getSatisfiedThreshold() { return satisfiedThreshold; }
 
-    public final void setSatisfiedThreshold(long satisfiedThreshold) {
-        this.satisfiedThreshold = satisfiedThreshold;
-    }
+  public final void setSatisfiedThreshold(long satisfiedThreshold) {
+    this.satisfiedThreshold = satisfiedThreshold;
+  }
 
-    public final long getToleratedThreshold() {
-        return toleratedThreshold;
-    }
+  public final long getToleratedThreshold() { return toleratedThreshold; }
 
-    public final void setToleratedThreshold(long toleratedThreshold) {
-        this.toleratedThreshold = toleratedThreshold;
-    }
+  public final void setToleratedThreshold(long toleratedThreshold) {
+    this.toleratedThreshold = toleratedThreshold;
+  }
 }

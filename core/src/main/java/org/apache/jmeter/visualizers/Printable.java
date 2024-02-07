@@ -25,5 +25,5 @@ import javax.swing.JComponent;
  * JComponent to save.
  */
 public interface Printable {
-    JComponent getPrintableComponent();
+  JComponent getPrintableComponent();
 }

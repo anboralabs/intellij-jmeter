@@ -25,42 +25,41 @@ package org.apache.jmeter.report.core;
  */
 public class ConvertException extends Exception {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -8837968211227052980L;
-    private static final String MESSAGE_FORMAT = "Unable to convert \"%s\" to \"%s\"";
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = -8837968211227052980L;
+  private static final String MESSAGE_FORMAT =
+      "Unable to convert \"%s\" to \"%s\"";
 
-    /**
-     * Instantiates a new convert exception.
-     *
-     * @param value
-     *            the value
-     * @param type
-     *            the type
-     */
-    public ConvertException(String value, String type) {
-        super(String.format(MESSAGE_FORMAT, value, type));
-    }
+  /**
+   * Instantiates a new convert exception.
+   *
+   * @param value
+   *            the value
+   * @param type
+   *            the type
+   */
+  public ConvertException(String value, String type) {
+    super(String.format(MESSAGE_FORMAT, value, type));
+  }
 
-    /**
-     * Instantiates a new convert exception.
-     *
-     * @param value
-     *            the value
-     * @param type
-     *            the type
-     * @param cause
-     *            the cause
-     */
-    public ConvertException(String value, String type, Throwable cause) {
-        super(String.format(MESSAGE_FORMAT, value, type), cause);
-    }
+  /**
+   * Instantiates a new convert exception.
+   *
+   * @param value
+   *            the value
+   * @param type
+   *            the type
+   * @param cause
+   *            the cause
+   */
+  public ConvertException(String value, String type, Throwable cause) {
+    super(String.format(MESSAGE_FORMAT, value, type), cause);
+  }
 
-    /**
-     * DO NOT USE - UNIT TEST ONLY
-     * @deprecated UNIT TEST ONLY
-     */
-    @Deprecated // only for use by unit tests
-    public ConvertException() {
-
-    }
+  /**
+   * DO NOT USE - UNIT TEST ONLY
+   * @deprecated UNIT TEST ONLY
+   */
+  @Deprecated // only for use by unit tests
+  public ConvertException() {}
 }

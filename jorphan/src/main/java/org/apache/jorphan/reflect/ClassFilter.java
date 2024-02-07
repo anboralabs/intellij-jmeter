@@ -23,10 +23,10 @@ package org.apache.jorphan.reflect;
  */
 public interface ClassFilter {
 
-    /**
-     * Returns true if class is included.
-     * @param className String class name
-     * @return true if class is included
-     */
-    boolean accept(String className);
+  /**
+   * Returns true if class is included.
+   * @param className String class name
+   * @return true if class is included
+   */
+  boolean accept(String className);
 }

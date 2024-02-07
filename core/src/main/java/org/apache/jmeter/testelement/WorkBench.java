@@ -22,21 +22,20 @@ package org.apache.jmeter.testelement;
 @Deprecated
 public class WorkBench extends AbstractTestElement {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    // JMX property name: do not change
-    private static final String SAVE_WORKBENCH = "WorkBench.save";
+  // JMX property name: do not change
+  private static final String SAVE_WORKBENCH = "WorkBench.save";
 
-    private static final boolean SAVE_WORKBENCH_DEFAULT = false;
+  private static final boolean SAVE_WORKBENCH_DEFAULT = false;
 
-    public WorkBench() {
-    }
+  public WorkBench() {}
 
-    public boolean getSaveWorkBench() {
-        return getPropertyAsBoolean(SAVE_WORKBENCH, SAVE_WORKBENCH_DEFAULT);
-    }
+  public boolean getSaveWorkBench() {
+    return getPropertyAsBoolean(SAVE_WORKBENCH, SAVE_WORKBENCH_DEFAULT);
+  }
 
-    public void setSaveWorkBench(boolean saveWorkBench) {
-        setProperty(SAVE_WORKBENCH, saveWorkBench, SAVE_WORKBENCH_DEFAULT);
-    }
+  public void setSaveWorkBench(boolean saveWorkBench) {
+    setProperty(SAVE_WORKBENCH, saveWorkBench, SAVE_WORKBENCH_DEFAULT);
+  }
 }

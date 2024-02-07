@@ -18,7 +18,6 @@
 package org.apache.jmeter.engine;
 
 import java.util.Map;
-
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.engine.util.ValueReplacer;
 import org.apache.jmeter.functions.InvalidVariableException;
@@ -38,111 +37,113 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class PreCompiler implements HashTreeTraverser {
-    private static final Logger log = LoggerFactory.getLogger(PreCompiler.class);
+  private static final Logger log = LoggerFactory.getLogger(PreCompiler.class);
 
-    private final ValueReplacer replacer;
+  private final ValueReplacer replacer;
 
-//   Used by both StandardJMeterEngine and ClientJMeterEngine.
-//   In the latter case, only ResultCollectors are updated,
-//   as only these are relevant to the client, and updating
-//   other elements causes all sorts of problems.
-    private final boolean isClientSide; // skip certain processing for remote tests
+  //   Used by both StandardJMeterEngine and ClientJMeterEngine.
+  //   In the latter case, only ResultCollectors are updated,
+  //   as only these are relevant to the client, and updating
+  //   other elements causes all sorts of problems.
+  private final boolean
+      isClientSide; // skip certain processing for remote tests
 
-    private JMeterVariables clientSideVariables;
+  private JMeterVariables clientSideVariables;
 
-    public PreCompiler() {
-        replacer = new ValueReplacer();
-        isClientSide = false;
-    }
+  public PreCompiler() {
+    replacer = new ValueReplacer();
+    isClientSide = false;
+  }
 
-    public PreCompiler(boolean remote) {
-        replacer = new ValueReplacer();
-        isClientSide = remote;
-    }
+  public PreCompiler(boolean remote) {
+    replacer = new ValueReplacer();
+    isClientSide = remote;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void addNode(Object node, HashTree subTree) {
-        if(isClientSide) {
-            if(node instanceof ResultCollector || node instanceof Backend) {
-                try {
-                    replacer.replaceValues((TestElement) node);
-                } catch (InvalidVariableException e) {
-                    log.error("invalid variables in node {}", ((TestElement)node).getName(), e);
-                }
-            }
-
-            if (node instanceof TestPlan) {
-                this.clientSideVariables = createVars((TestPlan)node);
-            }
-
-            if (node instanceof Arguments) {
-                // Don't store User Defined Variables in the context for client side
-                Map<String, String> args = createArgumentsMap((Arguments) node);
-                clientSideVariables.putAll(args);
-            }
-
-        } else {
-            if(node instanceof TestElement) {
-                try {
-                    replacer.replaceValues((TestElement) node);
-                } catch (InvalidVariableException e) {
-                    log.error("invalid variables in node {}", ((TestElement)node).getName(), e);
-                }
-            }
-
-            if (node instanceof TestPlan) {
-                JMeterVariables vars = createVars((TestPlan)node);
-                JMeterContextService.getContext().setVariables(vars);
-            }
-
-            if (node instanceof Arguments) {
-                Map<String, String> args = createArgumentsMap((Arguments) node);
-                JMeterContextService.getContext().getVariables().putAll(args);
-            }
+  /** {@inheritDoc} */
+  @Override
+  public void addNode(Object node, HashTree subTree) {
+    if (isClientSide) {
+      if (node instanceof ResultCollector || node instanceof Backend) {
+        try {
+          replacer.replaceValues((TestElement)node);
+        } catch (InvalidVariableException e) {
+          log.error("invalid variables in node {}",
+                    ((TestElement)node).getName(), e);
         }
-    }
+      }
 
-    /**
-     * Create Map of Arguments
-     * @param arguments {@link Arguments}
-     * @return {@link Map}
-     */
-    private Map<String, String> createArgumentsMap(Arguments arguments) {
-        arguments.setRunningVersion(true);
-        Map<String, String> args = arguments.getArgumentsAsMap();
-        replacer.addVariables(args);
-        return args;
-    }
+      if (node instanceof TestPlan) {
+        this.clientSideVariables = createVars((TestPlan)node);
+      }
 
-    /**
-     * Create variables for testPlan
-     * @param testPlan {@link JMeterVariables}
-     * @return {@link JMeterVariables}
-     */
-    private JMeterVariables createVars(TestPlan testPlan) {
-        testPlan.prepareForPreCompile(); //A hack to make user-defined variables in the testplan element more dynamic
-        Map<String, String> args = testPlan.getUserDefinedVariables();
-        replacer.setUserDefinedVariables(args);
-        JMeterVariables vars = new JMeterVariables();
-        vars.putAll(args);
-        return vars;
-    }
+      if (node instanceof Arguments) {
+        // Don't store User Defined Variables in the context for client side
+        Map<String, String> args = createArgumentsMap((Arguments)node);
+        clientSideVariables.putAll(args);
+      }
 
-    /** {@inheritDoc} */
-    @Override
-    public void subtractNode() {
-    }
+    } else {
+      if (node instanceof TestElement) {
+        try {
+          replacer.replaceValues((TestElement)node);
+        } catch (InvalidVariableException e) {
+          log.error("invalid variables in node {}",
+                    ((TestElement)node).getName(), e);
+        }
+      }
 
-    /** {@inheritDoc} */
-    @Override
-    public void processPath() {
-    }
+      if (node instanceof TestPlan) {
+        JMeterVariables vars = createVars((TestPlan)node);
+        JMeterContextService.getContext().setVariables(vars);
+      }
 
-    /**
-     * @return the clientSideVariables
-     */
-    public JMeterVariables getClientSideVariables() {
-        return clientSideVariables;
+      if (node instanceof Arguments) {
+        Map<String, String> args = createArgumentsMap((Arguments)node);
+        JMeterContextService.getContext().getVariables().putAll(args);
+      }
     }
+  }
+
+  /**
+   * Create Map of Arguments
+   * @param arguments {@link Arguments}
+   * @return {@link Map}
+   */
+  private Map<String, String> createArgumentsMap(Arguments arguments) {
+    arguments.setRunningVersion(true);
+    Map<String, String> args = arguments.getArgumentsAsMap();
+    replacer.addVariables(args);
+    return args;
+  }
+
+  /**
+   * Create variables for testPlan
+   * @param testPlan {@link JMeterVariables}
+   * @return {@link JMeterVariables}
+   */
+  private JMeterVariables createVars(TestPlan testPlan) {
+    testPlan.prepareForPreCompile(); // A hack to make user-defined variables in
+                                     // the testplan element more dynamic
+    Map<String, String> args = testPlan.getUserDefinedVariables();
+    replacer.setUserDefinedVariables(args);
+    JMeterVariables vars = new JMeterVariables();
+    vars.putAll(args);
+    return vars;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void subtractNode() {}
+
+  /** {@inheritDoc} */
+  @Override
+  public void processPath() {}
+
+  /**
+   * @return the clientSideVariables
+   */
+  public JMeterVariables getClientSideVariables() {
+    return clientSideVariables;
+  }
 }

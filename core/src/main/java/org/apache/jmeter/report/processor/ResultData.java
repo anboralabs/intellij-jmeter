@@ -24,14 +24,14 @@ package org.apache.jmeter.report.processor;
  */
 public interface ResultData {
 
-    /**
-     * Accepts the specified visitor.
-     *
-     * @param visitor
-     *            the visitor (must not be {@code null})
-     * @param <T>
-     *            type of the results of the {@link ResultDataVisitor}
-     * @return result of the visit
-     */
-    <T> T accept(ResultDataVisitor<T> visitor);
+  /**
+   * Accepts the specified visitor.
+   *
+   * @param visitor
+   *            the visitor (must not be {@code null})
+   * @param <T>
+   *            type of the results of the {@link ResultDataVisitor}
+   * @return result of the visit
+   */
+  <T> T accept(ResultDataVisitor<T> visitor);
 }

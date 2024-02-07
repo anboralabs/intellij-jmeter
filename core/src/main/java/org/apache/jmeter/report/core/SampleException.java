@@ -24,46 +24,41 @@ package org.apache.jmeter.report.core;
  */
 public class SampleException extends RuntimeException {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -6186024584671619389L;
+  /**
+   *
+   */
+  private static final long serialVersionUID = -6186024584671619389L;
 
-    /**
-     * Instantiates a new sample exception.
-     */
-    public SampleException() {
-    }
+  /**
+   * Instantiates a new sample exception.
+   */
+  public SampleException() {}
 
-    /**
-     * Instantiates a new sample exception with the specified message.
-     *
-     * @param message
-     *            the message
-     */
-    public SampleException(String message) {
-        super(message);
-    }
+  /**
+   * Instantiates a new sample exception with the specified message.
+   *
+   * @param message
+   *            the message
+   */
+  public SampleException(String message) { super(message); }
 
-    /**
-     * Instantiates a new sample exception.
-     *
-     * @param cause
-     *            the cause
-     */
-    public SampleException(Throwable cause) {
-        super(cause);
-    }
+  /**
+   * Instantiates a new sample exception.
+   *
+   * @param cause
+   *            the cause
+   */
+  public SampleException(Throwable cause) { super(cause); }
 
-    /**
-     * Instantiates a new sample exception.
-     *
-     * @param message
-     *            the message
-     * @param cause
-     *            the cause
-     */
-    public SampleException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  /**
+   * Instantiates a new sample exception.
+   *
+   * @param message
+   *            the message
+   * @param cause
+   *            the cause
+   */
+  public SampleException(String message, Throwable cause) {
+    super(message, cause);
+  }
 }

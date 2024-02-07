@@ -17,11 +17,10 @@
 
 package org.apache.jmeter.threads;
 
-
 /**
  * PostThreadGroup is a special type of ThreadGroup that can be used for
  * performing actions at the end of a test for cleanup and such.
  */
 public class PostThreadGroup extends ThreadGroup {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 }
