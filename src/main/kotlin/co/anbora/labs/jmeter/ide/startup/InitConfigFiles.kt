@@ -20,7 +20,6 @@ class InitConfigFiles: ProjectActivity {
 
         if (toolchain.isValid()) {
             JMeterLoader.initLoader(toolchain, this.javaClass.classLoader)
-            JMeterUtils.initializeJMeter(toolchain.homePath())
             return
         }
 

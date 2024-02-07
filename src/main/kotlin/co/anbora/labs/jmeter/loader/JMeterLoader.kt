@@ -19,6 +19,7 @@ object JMeterLoader {
     fun initLoader(toolchain: JMeterToolchain, pluginClassLoader: ClassLoader?) {
         if (JMeterUtils.getDynamicLoader() == null) {
             JMeterUtils.setDynamicLoader(loadJMeterLibsToPlugin(toolchain, pluginClassLoader))
+            JMeterUtils.initializeJMeter(toolchain.homePath())
         }
     }
 
