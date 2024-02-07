@@ -2,6 +2,7 @@ package co.anbora.labs.jmeter.ide.settings
 
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchain
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ConfigurationException
@@ -11,7 +12,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Disposer
 import javax.swing.JComponent
 
-class JMeterProjectSettingsConfigurable(private val project: Project) : Configurable {
+class JMeterProjectSettingsConfigurable(private val project: Project) : Configurable, Disposable {
 
     private val mainPanel: DialogPanel
     private val model = JMeterProjectSettingsForm.Model(
@@ -22,8 +23,7 @@ class JMeterProjectSettingsConfigurable(private val project: Project) : Configur
     init {
         mainPanel = settingsForm.createComponent()
 
-        val disposable = Disposer.newDisposable()
-        mainPanel.registerValidators(disposable)
+        mainPanel.registerValidators(this)
     }
 
     override fun createComponent(): JComponent = mainPanel
@@ -71,5 +71,8 @@ class JMeterProjectSettingsConfigurable(private val project: Project) : Configur
         fun show(project: Project) {
             ShowSettingsUtil.getInstance().showSettingsDialog(project, JMeterProjectSettingsConfigurable::class.java)
         }
+    }
+
+    override fun dispose() {
     }
 }
