@@ -18,51 +18,53 @@
 package org.apache.jmeter.config;
 
 import java.io.Serializable;
-
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.schema.PropertiesAccessor;
 
-public class ConfigTestElement extends AbstractTestElement implements Serializable, ConfigElement {
-    private static final long serialVersionUID = 240L;
+public class ConfigTestElement
+    extends AbstractTestElement implements Serializable, ConfigElement {
+  private static final long serialVersionUID = 240L;
 
-    public static final String USERNAME = "ConfigTestElement.username";
+  public static final String USERNAME = "ConfigTestElement.username";
 
-    public static final String PASSWORD = "ConfigTestElement.password"; //NOSONAR this is not a hardcoded password
+  public static final String PASSWORD =
+      "ConfigTestElement.password"; // NOSONAR this is not a hardcoded password
 
-    public ConfigTestElement() {
+  public ConfigTestElement() {}
+
+  @Override
+  public ConfigTestElementSchema getSchema() {
+    return ConfigTestElementSchema.INSTANCE;
+  }
+
+  @Override
+  public PropertiesAccessor<? extends ConfigTestElement, ?
+                                extends ConfigTestElementSchema>
+  getProps() {
+    return new PropertiesAccessor<>(this, getSchema());
+  }
+
+  @Override
+  public void addTestElement(TestElement parm1) {
+    if (parm1 instanceof ConfigTestElement) {
+      mergeIn(parm1);
     }
+  }
 
-    @Override
-    public ConfigTestElementSchema getSchema() {
-        return ConfigTestElementSchema.INSTANCE;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addConfigElement(ConfigElement config) {
+    mergeIn((TestElement)config);
+  }
 
-    @Override
-    public PropertiesAccessor<? extends ConfigTestElement, ? extends ConfigTestElementSchema> getProps() {
-        return new PropertiesAccessor<>(this, getSchema());
-    }
-
-    @Override
-    public void addTestElement(TestElement parm1) {
-        if (parm1 instanceof ConfigTestElement) {
-            mergeIn(parm1);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addConfigElement(ConfigElement config) {
-        mergeIn((TestElement) config);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean expectsModification() {
-        return false;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean expectsModification() {
+    return false;
+  }
 }

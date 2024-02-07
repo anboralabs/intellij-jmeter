@@ -20,23 +20,21 @@ package org.apache.jmeter.testelement;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.jmeter.threads.JMeterVariables;
 
 /**
  */
 public class VariablesCollection implements Serializable {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    private final Map<String, JMeterVariables> varMap = new HashMap<>();
+  private final Map<String, JMeterVariables> varMap = new HashMap<>();
 
-    public void addJMeterVariables(JMeterVariables jmVars) {
-        varMap.put(Thread.currentThread().getName(), jmVars);
-    }
+  public void addJMeterVariables(JMeterVariables jmVars) {
+    varMap.put(Thread.currentThread().getName(), jmVars);
+  }
 
-    public JMeterVariables getVariables() {
-        return varMap.get(Thread.currentThread().getName());
-    }
-
+  public JMeterVariables getVariables() {
+    return varMap.get(Thread.currentThread().getName());
+  }
 }

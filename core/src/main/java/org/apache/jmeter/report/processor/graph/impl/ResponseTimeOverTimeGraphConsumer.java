@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph.impl;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.apache.jmeter.report.processor.MeanAggregatorFactory;
 import org.apache.jmeter.report.processor.graph.AbstractGraphConsumer;
 import org.apache.jmeter.report.processor.graph.AbstractOverTimeGraphConsumer;
@@ -29,41 +28,40 @@ import org.apache.jmeter.report.processor.graph.NameSeriesSelector;
 import org.apache.jmeter.report.processor.graph.TimeStampKeysSelector;
 
 /**
- * The class ResponseTimeOverTimeGraphConsumer provides a graph to visualize mean
- * response time per time period (defined by granularity)
+ * The class ResponseTimeOverTimeGraphConsumer provides a graph to visualize
+ * mean response time per time period (defined by granularity)
  *
  * @since 3.0
  */
-public class ResponseTimeOverTimeGraphConsumer extends
-        AbstractOverTimeGraphConsumer {
+public class ResponseTimeOverTimeGraphConsumer
+    extends AbstractOverTimeGraphConsumer {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.impl.AbstractOverTimeGraphConsumer
-     * #createTimeStampKeysSelector()
-     */
-    @Override
-    protected TimeStampKeysSelector createTimeStampKeysSelector() {
-        TimeStampKeysSelector keysSelector = new TimeStampKeysSelector();
-        keysSelector.setSelectBeginTime(false);
-        return keysSelector;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.impl.AbstractOverTimeGraphConsumer
+   * #createTimeStampKeysSelector()
+   */
+  @Override
+  protected TimeStampKeysSelector createTimeStampKeysSelector() {
+    TimeStampKeysSelector keysSelector = new TimeStampKeysSelector();
+    keysSelector.setSelectBeginTime(false);
+    return keysSelector;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected Map<String, GroupInfo> createGroupInfos() {
-        return Collections.singletonMap(
-                AbstractGraphConsumer.DEFAULT_GROUP,
-                new GroupInfo(
-                        new MeanAggregatorFactory(), new NameSeriesSelector(),
-                        // We include Transaction Controller results
-                        new ElapsedTimeValueSelector(false), false, false));
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override
+  protected Map<String, GroupInfo> createGroupInfos() {
+    return Collections.singletonMap(
+        AbstractGraphConsumer.DEFAULT_GROUP,
+        new GroupInfo(new MeanAggregatorFactory(), new NameSeriesSelector(),
+                      // We include Transaction Controller results
+                      new ElapsedTimeValueSelector(false), false, false));
+  }
 }

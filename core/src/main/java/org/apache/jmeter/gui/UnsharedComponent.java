@@ -23,5 +23,4 @@ package org.apache.jmeter.gui;
  * the GUI component class does not implement this interface.
  *
  */
-public interface UnsharedComponent {
-}
+public interface UnsharedComponent {}

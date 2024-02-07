@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph.impl;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.apache.jmeter.report.processor.MapResultData;
 import org.apache.jmeter.report.processor.SumAggregatorFactory;
 import org.apache.jmeter.report.processor.graph.AbstractGraphConsumer;
@@ -34,55 +33,54 @@ import org.apache.jmeter.report.processor.graph.NameSeriesSelector;
  *
  * @since 3.0
  */
-public class ResponseTimePercentilesGraphConsumer extends AbstractGraphConsumer {
+public class ResponseTimePercentilesGraphConsumer
+    extends AbstractGraphConsumer {
 
-    /**
-     * Instantiates a new response time percentiles graph consumer.
-     */
-    public ResponseTimePercentilesGraphConsumer() {
-    }
+  /**
+   * Instantiates a new response time percentiles graph consumer.
+   */
+  public ResponseTimePercentilesGraphConsumer() {}
 
-    @Override
-    public void initialize() {
-        super.initialize();
-        setRenderPercentiles(true);
-    }
+  @Override
+  public void initialize() {
+    super.initialize();
+    setRenderPercentiles(true);
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createKeysSelector()
-     */
-    @Override
-    protected final GraphKeysSelector createKeysSelector() {
-        return sample -> (double) sample.getElapsedTime();
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createKeysSelector()
+   */
+  @Override
+  protected final GraphKeysSelector createKeysSelector() {
+    return sample -> (double)sample.getElapsedTime();
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected Map<String, GroupInfo> createGroupInfos() {
-        return Collections.singletonMap(
-                AbstractGraphConsumer.DEFAULT_GROUP,
-                new GroupInfo(
-                        new SumAggregatorFactory(), new NameSeriesSelector(),
-                        // We include Transaction Controller results
-                        new CountValueSelector(false), false, false));
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override
+  protected Map<String, GroupInfo> createGroupInfos() {
+    return Collections.singletonMap(
+        AbstractGraphConsumer.DEFAULT_GROUP,
+        new GroupInfo(new SumAggregatorFactory(), new NameSeriesSelector(),
+                      // We include Transaction Controller results
+                      new CountValueSelector(false), false, false));
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
-     * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
-     */
-    @Override
-    protected void initializeExtraResults(MapResultData parentResult) {
-        // do nothing
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
+   * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
+   */
+  @Override
+  protected void initializeExtraResults(MapResultData parentResult) {
+    // do nothing
+  }
 }

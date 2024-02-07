@@ -22,120 +22,117 @@ import org.apache.jmeter.testelement.TestElement;
 /**
  */
 public class FloatProperty extends NumberProperty {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    private float value;
+  private float value;
 
-    private float savedValue;
+  private float savedValue;
 
-    public FloatProperty(String name, float value) {
-        super(name);
-        this.value = value;
-    }
+  public FloatProperty(String name, float value) {
+    super(name);
+    this.value = value;
+  }
 
-    public FloatProperty() {
-    }
+  public FloatProperty() {}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setRunningVersion(boolean runningVersion) {
-        savedValue = value;
-        super.setRunningVersion(runningVersion);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setRunningVersion(boolean runningVersion) {
+    savedValue = value;
+    super.setRunningVersion(runningVersion);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        value = savedValue;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    value = savedValue;
+  }
 
-    public void setValue(float value) {
-        this.value = value;
-    }
+  public void setValue(float value) { this.value = value; }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setNumberValue(Number n) {
-        value = n.floatValue();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void setNumberValue(Number n) {
+    value = n.floatValue();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setNumberValue(String n) throws NumberFormatException {
-        value = Float.parseFloat(n);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void setNumberValue(String n) throws NumberFormatException {
+    value = Float.parseFloat(n);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getStringValue() {
-        return Float.toString(value);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getStringValue() {
+    return Float.toString(value);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object getObjectValue() {
-        return value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getObjectValue() {
+    return value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public FloatProperty clone() {
-        FloatProperty prop = (FloatProperty) super.clone();
-        prop.value = value;
-        return prop;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public FloatProperty clone() {
+    FloatProperty prop = (FloatProperty)super.clone();
+    prop.value = value;
+    return prop;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getBooleanValue() {
-        return value > 0;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean getBooleanValue() {
+    return value > 0;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public double getDoubleValue() {
-        return value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public double getDoubleValue() {
+    return value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public float getFloatValue() {
-        return value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public float getFloatValue() {
+    return value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getIntValue() {
-        return (int) value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getIntValue() {
+    return (int)value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public long getLongValue() {
-        return (long) value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public long getLongValue() {
+    return (long)value;
+  }
 }

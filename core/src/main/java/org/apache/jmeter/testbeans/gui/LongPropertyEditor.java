@@ -25,19 +25,21 @@ import java.beans.PropertyEditorSupport;
  */
 public class LongPropertyEditor extends PropertyEditorSupport {
 
-    @Override
-    public void setAsText(String text) {
-        this.setValue(text);
-    }
+  @Override
+  public void setAsText(String text) {
+    this.setValue(text);
+  }
 
-    @Override
-    public void setValue(Object value){
-        if (value instanceof String) {
-            super.setValue(Long.decode((String) value)); // handles hex as well
-        } else if (value == null || value instanceof Long) {
-            super.setValue(value); // not sure if null is passed in but no harm in setting it
-        } else {
-            throw new java.lang.IllegalArgumentException("Unexpected type: "+value.getClass().getName());
-        }
+  @Override
+  public void setValue(Object value) {
+    if (value instanceof String) {
+      super.setValue(Long.decode((String)value)); // handles hex as well
+    } else if (value == null || value instanceof Long) {
+      super.setValue(
+          value); // not sure if null is passed in but no harm in setting it
+    } else {
+      throw new java.lang.IllegalArgumentException("Unexpected type: " +
+                                                   value.getClass().getName());
     }
+  }
 }

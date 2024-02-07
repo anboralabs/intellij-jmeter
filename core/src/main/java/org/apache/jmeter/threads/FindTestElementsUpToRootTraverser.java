@@ -21,7 +21,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-
 import org.apache.jmeter.control.Controller;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jorphan.collections.HashTree;
@@ -34,70 +33,72 @@ import org.slf4j.LoggerFactory;
  * the Test Elements on the path to a particular node.
  */
 public class FindTestElementsUpToRootTraverser implements HashTreeTraverser {
-    private static final Logger log = LoggerFactory.getLogger(FindTestElementsUpToRootTraverser.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(FindTestElementsUpToRootTraverser.class);
 
-    private final Deque<TestElement> stack = new ArrayDeque<>();
+  private final Deque<TestElement> stack = new ArrayDeque<>();
 
-    /**
-     * Node to find in TestTree
-     */
-    private final Object nodeToFind;
-    /**
-     * Once we find the node in the Tree we stop recording nodes
-     */
-    private boolean stopRecording = false;
+  /**
+   * Node to find in TestTree
+   */
+  private final Object nodeToFind;
+  /**
+   * Once we find the node in the Tree we stop recording nodes
+   */
+  private boolean stopRecording = false;
 
-    /**
-     * @param nodeToFind Node to find
-     */
-    public FindTestElementsUpToRootTraverser(Object nodeToFind) {
-        this.nodeToFind = nodeToFind;
+  /**
+   * @param nodeToFind Node to find
+   */
+  public FindTestElementsUpToRootTraverser(Object nodeToFind) {
+    this.nodeToFind = nodeToFind;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void addNode(Object node, HashTree subTree) {
+    if (stopRecording) {
+      return;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public void addNode(Object node, HashTree subTree) {
-        if(stopRecording) {
-            return;
-        }
-        if(node == nodeToFind) {
-            this.stopRecording = true;
-        }
-        stack.addLast((TestElement) node);
+    if (node == nodeToFind) {
+      this.stopRecording = true;
     }
+    stack.addLast((TestElement)node);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void subtractNode() {
-        if(stopRecording) {
-            return;
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("Subtracting node, stack size = {}", stack.size());
-        }
-        stack.removeLast();
+  /** {@inheritDoc} */
+  @Override
+  public void subtractNode() {
+    if (stopRecording) {
+      return;
     }
+    if (log.isDebugEnabled()) {
+      log.debug("Subtracting node, stack size = {}", stack.size());
+    }
+    stack.removeLast();
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void processPath() {
-        //NOOP
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void processPath() {
+    // NOOP
+  }
 
-    /**
-     * Returns all controllers that where in Tree down to nodeToFind in reverse order (from leaf to root)
-     * @return List of {@link Controller}
-     */
-    public List<Controller> getControllersToRoot() {
-        List<Controller> result = new ArrayList<>(stack.size());
-        Deque<TestElement> stackLocalCopy = new ArrayDeque<>(stack);
-        while(!stackLocalCopy.isEmpty()) {
-            TestElement te = stackLocalCopy.getLast();
-            if(te instanceof Controller) {
-                result.add((Controller)te);
-            }
-            stackLocalCopy.removeLast();
-        }
-        return result;
+  /**
+   * Returns all controllers that where in Tree down to nodeToFind in reverse
+   * order (from leaf to root)
+   * @return List of {@link Controller}
+   */
+  public List<Controller> getControllersToRoot() {
+    List<Controller> result = new ArrayList<>(stack.size());
+    Deque<TestElement> stackLocalCopy = new ArrayDeque<>(stack);
+    while (!stackLocalCopy.isEmpty()) {
+      TestElement te = stackLocalCopy.getLast();
+      if (te instanceof Controller) {
+        result.add((Controller)te);
+      }
+      stackLocalCopy.removeLast();
     }
+    return result;
+  }
 }

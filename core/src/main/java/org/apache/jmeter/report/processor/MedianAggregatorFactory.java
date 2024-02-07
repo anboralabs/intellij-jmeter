@@ -25,16 +25,15 @@ package org.apache.jmeter.report.processor;
  */
 public class MedianAggregatorFactory extends AbstractAggregatorFactory {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.core.AbstractAggregatorFactory#createAggregator
-     * ()
-     */
-    @Override
-    protected Aggregator createAggregator() {
-        return new PercentileAggregator(50);
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.core.AbstractAggregatorFactory#createAggregator
+   * ()
+   */
+  @Override
+  protected Aggregator createAggregator() {
+    return new PercentileAggregator(50);
+  }
 }

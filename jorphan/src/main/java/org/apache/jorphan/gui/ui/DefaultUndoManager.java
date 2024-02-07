@@ -17,41 +17,41 @@
 
 package org.apache.jorphan.gui.ui;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoManager;
-import java.util.concurrent.atomic.AtomicInteger;
 
 class DefaultUndoManager extends UndoManager {
-    private final AtomicInteger undoEpoch;
-    private int ourUndoEpoch;
+  private final AtomicInteger undoEpoch;
+  private int ourUndoEpoch;
 
-    DefaultUndoManager(AtomicInteger undoEpoch) {
-        this.undoEpoch = undoEpoch;
-        this.ourUndoEpoch = undoEpoch.get();
-    }
+  DefaultUndoManager(AtomicInteger undoEpoch) {
+    this.undoEpoch = undoEpoch;
+    this.ourUndoEpoch = undoEpoch.get();
+  }
 
-    @Override
-    public synchronized void discardAllEdits() {
-        super.discardAllEdits();
-        ourUndoEpoch = undoEpoch.get();
-    }
+  @Override
+  public synchronized void discardAllEdits() {
+    super.discardAllEdits();
+    ourUndoEpoch = undoEpoch.get();
+  }
 
-    @Override
-    public void undoableEditHappened(UndoableEditEvent e) {
-        int epoch = undoEpoch.get();
-        if (ourUndoEpoch != epoch) {
-            discardAllEdits();
-        }
-        super.undoableEditHappened(e);
+  @Override
+  public void undoableEditHappened(UndoableEditEvent e) {
+    int epoch = undoEpoch.get();
+    if (ourUndoEpoch != epoch) {
+      discardAllEdits();
     }
+    super.undoableEditHappened(e);
+  }
 
-    @Override
-    public synchronized boolean canUndo() {
-        return ourUndoEpoch == undoEpoch.get() && super.canUndo();
-    }
+  @Override
+  public synchronized boolean canUndo() {
+    return ourUndoEpoch == undoEpoch.get() && super.canUndo();
+  }
 
-    @Override
-    public synchronized boolean canRedo() {
-        return ourUndoEpoch == undoEpoch.get() && super.canRedo();
-    }
+  @Override
+  public synchronized boolean canRedo() {
+    return ourUndoEpoch == undoEpoch.get() && super.canRedo();
+  }
 }

@@ -27,44 +27,45 @@ import org.apache.jmeter.testelement.TestElement;
  * <code>while (running &amp;&amp; (sampler = controller.next()) != null)</code>
  */
 public interface Controller extends TestElement {
-    /**
-     * Delivers the next Sampler or null
-     *
-     * @return org.apache.jmeter.samplers.Sampler or null
-     */
-    Sampler next();
+  /**
+   * Delivers the next Sampler or null
+   *
+   * @return org.apache.jmeter.samplers.Sampler or null
+   */
+  Sampler next();
 
-    /**
-     * Indicates whether the Controller is done delivering Samplers for the rest
-     * of the test.
-     *
-     * When the top-level controller returns true to JMeterThread,
-     * the thread is complete.
-     *
-     * @return boolean
-     */
-    boolean isDone();
+  /**
+   * Indicates whether the Controller is done delivering Samplers for the rest
+   * of the test.
+   *
+   * When the top-level controller returns true to JMeterThread,
+   * the thread is complete.
+   *
+   * @return boolean
+   */
+  boolean isDone();
 
-    /**
-     * Controllers have to notify listeners of when they begin an iteration
-     * through their sub-elements.
-     * @param listener The {@link LoopIterationListener} to add
-     */
-    void addIterationListener(LoopIterationListener listener);
+  /**
+   * Controllers have to notify listeners of when they begin an iteration
+   * through their sub-elements.
+   * @param listener The {@link LoopIterationListener} to add
+   */
+  void addIterationListener(LoopIterationListener listener);
 
-    /**
-     * Called to initialize a controller at the beginning of a test iteration.
-     */
-    void initialize();
+  /**
+   * Called to initialize a controller at the beginning of a test iteration.
+   */
+  void initialize();
 
-    /**
-     * Unregister IterationListener
-     * @param iterationListener {@link LoopIterationListener}
-     */
-    void removeIterationListener(LoopIterationListener iterationListener);
+  /**
+   * Unregister IterationListener
+   * @param iterationListener {@link LoopIterationListener}
+   */
+  void removeIterationListener(LoopIterationListener iterationListener);
 
-    /**
-     * Trigger end of loop condition on controller (used by Start Next Loop feature)
-     */
-    void triggerEndOfLoop();
+  /**
+   * Trigger end of loop condition on controller (used by Start Next Loop
+   * feature)
+   */
+  void triggerEndOfLoop();
 }

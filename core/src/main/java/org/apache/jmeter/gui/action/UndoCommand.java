@@ -17,16 +17,14 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.engine.TreeCloner;
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jorphan.collections.HashTree;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Menu command to serve Undo/Redo
@@ -35,49 +33,49 @@ import com.google.auto.service.AutoService;
 @AutoService(Command.class)
 public class UndoCommand extends AbstractAction {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.UNDO);
-        commands.add(ActionNames.REDO);
+  static {
+    commands.add(ActionNames.UNDO);
+    commands.add(ActionNames.REDO);
+  }
+
+  @Override
+  public void doAction(ActionEvent e) throws IllegalUserActionException {
+    GuiPackage guiPackage = GuiPackage.getInstance();
+    final String command = e.getActionCommand();
+
+    if (command.equals(ActionNames.UNDO)) {
+      guiPackage.undo();
+    } else if (command.equals(ActionNames.REDO)) {
+      guiPackage.redo();
+    } else {
+      throw new IllegalArgumentException("Wrong action called: " + command);
     }
+  }
 
-    @Override
-    public void doAction(ActionEvent e) throws IllegalUserActionException {
-        GuiPackage guiPackage = GuiPackage.getInstance();
-        final String command = e.getActionCommand();
+  /**
+   * @return Set of all action names
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-        if (command.equals(ActionNames.UNDO)) {
-            guiPackage.undo();
-        } else if (command.equals(ActionNames.REDO)) {
-            guiPackage.redo();
-        } else {
-            throw new IllegalArgumentException("Wrong action called: " + command);
-        }
-    }
+  /**
+   * wrapper to use package-visible method
+   * and clone tree for saving
+   *
+   * @param tree to be converted and cloned
+   * @return converted and cloned tree
+   */
+  public static HashTree convertAndCloneSubTree(HashTree tree) {
+    Save executor = new Save();
+    executor.convertSubTree(tree);
 
-    /**
-     * @return Set of all action names
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
-
-    /**
-     * wrapper to use package-visible method
-     * and clone tree for saving
-     *
-     * @param tree to be converted and cloned
-     * @return converted and cloned tree
-     */
-    public static HashTree convertAndCloneSubTree(HashTree tree) {
-        Save executor = new Save();
-        executor.convertSubTree(tree);
-
-        // convert before clone
-        TreeCloner cloner = new TreeCloner(false);
-        tree.traverse(cloner);
-        return cloner.getClonedTree();
-    }
+    // convert before clone
+    TreeCloner cloner = new TreeCloner(false);
+    tree.traverse(cloner);
+    return cloner.getClonedTree();
+  }
 }

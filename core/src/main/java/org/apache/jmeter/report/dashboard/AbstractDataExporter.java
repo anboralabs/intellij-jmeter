@@ -29,102 +29,104 @@ import org.apache.jmeter.report.processor.ValueResultData;
  */
 public abstract class AbstractDataExporter implements DataExporter {
 
-    private String name;
+  private String name;
 
-    /** Instantiates a new abstract data exporter. */
-    protected AbstractDataExporter() {
+  /** Instantiates a new abstract data exporter. */
+  protected AbstractDataExporter() {}
+
+  /**
+   * Finds a value matching the specified data name in a ResultData tree.
+   * Supports only MapResultData walking.
+   *
+   * @param clazz
+   *            the type of the value
+   * @param data
+   *            the name of the data containing the value
+   * @param root
+   *            the root of the tree
+   * @param <T>
+   *            type of value to be found
+   * @return the value matching the data name
+   */
+  protected static <T> T findValue(Class<T> clazz, String data,
+                                   ResultData root) {
+    T value = null;
+    ResultData result = findData(data, root);
+    if (result instanceof ValueResultData) {
+      ValueResultData valueResult = (ValueResultData)result;
+      Object object = valueResult.getValue();
+      if (object != null && clazz.isAssignableFrom(object.getClass())) {
+        value = clazz.cast(object);
+      }
+    }
+    return value;
+  }
+
+  /**
+   * Finds a inner ResultData matching the specified data name in a ResultData
+   * tree. Supports only MapResultData walking.
+   *
+   * @param data
+   *            the name of the data containing the value
+   * @param root
+   *            the root of the tree
+   * @return the ResultData matching the data name
+   */
+  protected static ResultData findData(String data, ResultData root) {
+    String[] pathItems = StringUtils.split(data, '.');
+    if (pathItems == null || !(root instanceof MapResultData)) {
+      return null;
     }
 
-    /**
-     * Finds a value matching the specified data name in a ResultData tree.
-     * Supports only MapResultData walking.
-     *
-     * @param clazz
-     *            the type of the value
-     * @param data
-     *            the name of the data containing the value
-     * @param root
-     *            the root of the tree
-     * @param <T>
-     *            type of value to be found
-     * @return the value matching the data name
-     */
-    protected static <T> T findValue(Class<T> clazz, String data, ResultData root) {
-        T value = null;
-        ResultData result = findData(data, root);
-        if (result instanceof ValueResultData) {
-            ValueResultData valueResult = (ValueResultData) result;
-            Object object = valueResult.getValue();
-            if (object != null && clazz.isAssignableFrom(object.getClass())) {
-                value = clazz.cast(object);
-            }
+    ResultData result = null;
+    int count = pathItems.length;
+    int index = 0;
+    MapResultData map = (MapResultData)root;
+    while (index < count && result == null) {
+      ResultData current = map.getResult(pathItems[index]);
+      if (index == count - 1) {
+        result = current;
+      } else {
+        if (current instanceof MapResultData) {
+          map = (MapResultData)current;
+          index++;
         }
-        return value;
+      }
     }
+    return result;
+  }
 
-    /**
-     * Finds a inner ResultData matching the specified data name in a ResultData
-     * tree. Supports only MapResultData walking.
-     *
-     * @param data
-     *            the name of the data containing the value
-     * @param root
-     *            the root of the tree
-     * @return the ResultData matching the data name
-     */
-    protected static ResultData findData(String data, ResultData root) {
-        String[] pathItems = StringUtils.split(data, '.');
-        if (pathItems == null || !(root instanceof MapResultData)) {
-            return null;
-        }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.dashboard.DataExporter#getName()
+   */
+  @Override
+  public String getName() {
+    return name;
+  }
 
-        ResultData result = null;
-        int count = pathItems.length;
-        int index = 0;
-        MapResultData map = (MapResultData) root;
-        while (index < count && result == null) {
-            ResultData current = map.getResult(pathItems[index]);
-            if (index == count - 1) {
-                result = current;
-            } else {
-                if (current instanceof MapResultData) {
-                    map = (MapResultData) current;
-                    index++;
-                }
-            }
-        }
-        return result;
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.dashboard.DataExporter#setName(java.lang.String)
+   */
+  @Override
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  protected <T> T getPropertyFromConfig(SubConfiguration cfg, String property,
+                                        T defaultValue, Class<T> clazz)
+      throws ExportException {
+    try {
+      return cfg.getProperty(property, defaultValue, clazz);
+    } catch (ConfigurationException ex) {
+      throw new ExportException(
+          String.format("Wrong property \"%s\" in \"%s\" export configuration",
+                        property, getName()),
+          ex);
     }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.dashboard.DataExporter#getName()
-     */
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.dashboard.DataExporter#setName(java.lang.String)
-     */
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    protected <T> T getPropertyFromConfig(
-            SubConfiguration cfg, String property, T defaultValue, Class<T> clazz)
-            throws ExportException {
-        try {
-            return cfg.getProperty(property, defaultValue, clazz);
-        } catch (ConfigurationException ex) {
-            throw new ExportException(String.format("Wrong property \"%s\" in \"%s\" export configuration",
-                    property, getName()), ex);
-        }
-    }
+  }
 }

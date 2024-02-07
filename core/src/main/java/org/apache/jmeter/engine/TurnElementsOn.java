@@ -23,33 +23,30 @@ import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.collections.HashTreeTraverser;
 
 /**
- * Invokes {@link TestElement#setRunningVersion(boolean) setRunningVersion(true)} for all matched nodes
+ * Invokes {@link TestElement#setRunningVersion(boolean)
+ * setRunningVersion(true)} for all matched nodes
  */
 public class TurnElementsOn implements HashTreeTraverser {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void addNode(Object node, HashTree subTree) {
-        if (node instanceof TestElement && !(node instanceof TestPlan)) {
-            ((TestElement) node).setRunningVersion(true);
-        }
-
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addNode(Object node, HashTree subTree) {
+    if (node instanceof TestElement && !(node instanceof TestPlan)) {
+      ((TestElement)node).setRunningVersion(true);
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void subtractNode() {
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void subtractNode() {}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void processPath() {
-    }
-
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void processPath() {}
 }

@@ -24,10 +24,8 @@ import java.util.ListResourceBundle;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
-
 import org.apache.jmeter.testbeans.TestBean;
 
 /**
@@ -35,62 +33,65 @@ import org.apache.jmeter.testbeans.TestBean;
  */
 public abstract class JSR223BeanInfoSupport extends ScriptingBeanInfoSupport {
 
-    private static final String[] LANGUAGE_TAGS;
+  private static final String[] LANGUAGE_TAGS;
 
-    /**
-     * Will be removed in next version following 3.2
-     * @deprecated use {@link JSR223BeanInfoSupport#getLanguageNames()}
-     */
-    @Deprecated
-    public static final String[][] LANGUAGE_NAMES; // NOSONAR Kept for backward compatibility
+  /**
+   * Will be removed in next version following 3.2
+   * @deprecated use {@link JSR223BeanInfoSupport#getLanguageNames()}
+   */
+  @Deprecated
+  public static final String[][]
+      LANGUAGE_NAMES; // NOSONAR Kept for backward compatibility
 
-    private static final String[][] CONSTANT_LANGUAGE_NAMES;
+  private static final String[][] CONSTANT_LANGUAGE_NAMES;
 
-    static {
-        Map<String, ScriptEngineFactory> nameMap = new HashMap<>();
-        ScriptEngineManager sem = new ScriptEngineManager();
-        final List<ScriptEngineFactory> engineFactories = sem.getEngineFactories();
-        for(ScriptEngineFactory fact : engineFactories){
-            List<String> names = fact.getNames();
-            for(String shortName : names) {
-                nameMap.put(shortName.toLowerCase(Locale.ENGLISH), fact);
-            }
-        }
-        LANGUAGE_TAGS = nameMap.keySet().toArray(new String[nameMap.size()]);
-        Arrays.sort(LANGUAGE_TAGS);
-        CONSTANT_LANGUAGE_NAMES = new String[nameMap.size()][2];
-        int i = 0;
-        for(Map.Entry<String, ScriptEngineFactory> me : nameMap.entrySet()) {
-            final String key = me.getKey();
-            CONSTANT_LANGUAGE_NAMES[i][0] = key;
-            final ScriptEngineFactory fact = me.getValue();
-            CONSTANT_LANGUAGE_NAMES[i++][1] = key +
-                    "     (" // $NON-NLS-1$
-                    + fact.getLanguageName() + " " + fact.getLanguageVersion()  // $NON-NLS-1$
-                    + " / "  // $NON-NLS-1$
-                    + fact.getEngineName() + " " + fact.getEngineVersion() // $NON-NLS-1$
-                    + ")";   // $NON-NLS-1$
-        }
-
-        LANGUAGE_NAMES = getLanguageNames(); // NOSONAR Kept for backward compatibility
+  static {
+    Map<String, ScriptEngineFactory> nameMap = new HashMap<>();
+    ScriptEngineManager sem = new ScriptEngineManager();
+    final List<ScriptEngineFactory> engineFactories = sem.getEngineFactories();
+    for (ScriptEngineFactory fact : engineFactories) {
+      List<String> names = fact.getNames();
+      for (String shortName : names) {
+        nameMap.put(shortName.toLowerCase(Locale.ENGLISH), fact);
+      }
+    }
+    LANGUAGE_TAGS = nameMap.keySet().toArray(new String[nameMap.size()]);
+    Arrays.sort(LANGUAGE_TAGS);
+    CONSTANT_LANGUAGE_NAMES = new String[nameMap.size()][2];
+    int i = 0;
+    for (Map.Entry<String, ScriptEngineFactory> me : nameMap.entrySet()) {
+      final String key = me.getKey();
+      CONSTANT_LANGUAGE_NAMES[i][0] = key;
+      final ScriptEngineFactory fact = me.getValue();
+      CONSTANT_LANGUAGE_NAMES[i++][1] = key + "     (" // $NON-NLS-1$
+                                        + fact.getLanguageName() + " " +
+                                        fact.getLanguageVersion() // $NON-NLS-1$
+                                        + " / "                   // $NON-NLS-1$
+                                        + fact.getEngineName() + " " +
+                                        fact.getEngineVersion() // $NON-NLS-1$
+                                        + ")";                  // $NON-NLS-1$
     }
 
-    private static final ResourceBundle NAME_BUNDLE = new ListResourceBundle() {
-        @Override
-        protected Object[][] getContents() {
-            return CONSTANT_LANGUAGE_NAMES;
-        }
-    };
+    LANGUAGE_NAMES =
+        getLanguageNames(); // NOSONAR Kept for backward compatibility
+  }
 
-    protected JSR223BeanInfoSupport(Class<? extends TestBean> beanClass) {
-        super(beanClass, LANGUAGE_TAGS, NAME_BUNDLE);
+  private static final ResourceBundle NAME_BUNDLE = new ListResourceBundle() {
+    @Override
+    protected Object[][] getContents() {
+      return CONSTANT_LANGUAGE_NAMES;
     }
+  };
 
-    /**
-     * @return String array of 2 columns array containing Script engine short name / Script Language details
-     */
-    public static final String[][] getLanguageNames() {
-        return CONSTANT_LANGUAGE_NAMES.clone();
-    }
+  protected JSR223BeanInfoSupport(Class<? extends TestBean> beanClass) {
+    super(beanClass, LANGUAGE_TAGS, NAME_BUNDLE);
+  }
 
+  /**
+   * @return String array of 2 columns array containing Script engine short name
+   *     / Script Language details
+   */
+  public static final String[][] getLanguageNames() {
+    return CONSTANT_LANGUAGE_NAMES.clone();
+  }
 }

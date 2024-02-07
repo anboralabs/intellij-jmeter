@@ -19,13 +19,13 @@ package org.apache.jmeter.gui;
 
 public interface ClearGui {
 
-    /**
-     * Clear the gui and return it to initial default values. This is necessary
-     * because most gui classes are instantiated just once and re-used for
-     * multiple test element objects and thus they need to be cleared between
-     * uses.
-     */
-    void clearGui();
-    // N.B. originally called clear()
-    // @see also Clearable
+  /**
+   * Clear the gui and return it to initial default values. This is necessary
+   * because most gui classes are instantiated just once and re-used for
+   * multiple test element objects and thus they need to be cleared between
+   * uses.
+   */
+  void clearGui();
+  // N.B. originally called clear()
+  // @see also Clearable
 }

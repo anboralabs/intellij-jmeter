@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.jmeter.report.processor.ListResultData;
 import org.apache.jmeter.report.processor.MapResultData;
 import org.apache.jmeter.report.processor.PercentileAggregatorFactory;
@@ -41,87 +40,87 @@ import org.apache.jmeter.util.JMeterUtils;
  */
 public class ResponseTimePerSampleGraphConsumer extends AbstractGraphConsumer {
 
-    /**
-     * Instantiates a new response time per sample graph consumer.
-     */
-    public ResponseTimePerSampleGraphConsumer() {
+  /**
+   * Instantiates a new response time per sample graph consumer.
+   */
+  public ResponseTimePerSampleGraphConsumer() {}
+
+  @Override
+  public void initialize() {
+    super.initialize();
+    setRevertKeysAndValues(true);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createKeysSelector()
+   */
+  @Override
+  protected final GraphKeysSelector createKeysSelector() {
+    return new IndexedNameSelector();
+  }
+
+  /**
+   * Creates the group info for elapsed time percentile depending on jmeter
+   * properties.
+   *
+   * @param propertyKey  the property key
+   * @param defaultValue the default value
+   * @return the group info
+   */
+  private static GroupInfo createGroupInfo(String propertyKey,
+                                           int defaultValue) {
+    int property = JMeterUtils.getPropDefault(propertyKey, defaultValue);
+    PercentileAggregatorFactory factory = new PercentileAggregatorFactory();
+    factory.setPercentileIndex(property);
+    StaticSeriesSelector seriesSelector = new StaticSeriesSelector();
+    seriesSelector.setSeriesName(String.format("%dth percentile", property));
+
+    return new GroupInfo(factory, seriesSelector,
+                         // We include Transaction Controller results
+                         new ElapsedTimeValueSelector(false), false, false);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override
+  protected Map<String, GroupInfo> createGroupInfos() {
+    HashMap<String, GroupInfo> groupInfos = new HashMap<>(6);
+
+    groupInfos.put("aggregate_rpt_pct1",
+                   createGroupInfo("aggregate_rpt_pct1", 90));
+
+    groupInfos.put("aggregate_rpt_pct2",
+                   createGroupInfo("aggregate_rpt_pct2", 95));
+
+    groupInfos.put("aggregate_rpt_pct3",
+                   createGroupInfo("aggregate_rpt_pct3", 99));
+
+    return groupInfos;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
+   * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
+   */
+  @Override
+  protected void initializeExtraResults(MapResultData parentResult) {
+    ListResultData samples = new ListResultData();
+    IndexedNameSelector indexedNameSelector =
+        (IndexedNameSelector)getKeysSelector();
+    int size = indexedNameSelector.getNames().size();
+    for (int i = 0; i < size; i++) {
+      samples.addResult(
+          new ValueResultData(indexedNameSelector.getNames().get(i)));
     }
-
-    @Override
-    public void initialize() {
-        super.initialize();
-        setRevertKeysAndValues(true);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createKeysSelector()
-     */
-    @Override
-    protected final GraphKeysSelector createKeysSelector() {
-        return new IndexedNameSelector();
-    }
-
-    /**
-     * Creates the group info for elapsed time percentile depending on jmeter
-     * properties.
-     *
-     * @param propertyKey  the property key
-     * @param defaultValue the default value
-     * @return the group info
-     */
-    private static GroupInfo createGroupInfo(String propertyKey, int defaultValue) {
-        int property = JMeterUtils.getPropDefault(propertyKey, defaultValue);
-        PercentileAggregatorFactory factory = new PercentileAggregatorFactory();
-        factory.setPercentileIndex(property);
-        StaticSeriesSelector seriesSelector = new StaticSeriesSelector();
-        seriesSelector.setSeriesName(String.format(
-                "%dth percentile", property));
-
-        return new GroupInfo(factory, seriesSelector,
-                // We include Transaction Controller results
-                new ElapsedTimeValueSelector(false), false, false);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected Map<String, GroupInfo> createGroupInfos() {
-        HashMap<String, GroupInfo> groupInfos = new HashMap<>(6);
-
-        groupInfos.put("aggregate_rpt_pct1",
-                createGroupInfo("aggregate_rpt_pct1", 90));
-
-        groupInfos.put("aggregate_rpt_pct2",
-                createGroupInfo("aggregate_rpt_pct2", 95));
-
-        groupInfos.put("aggregate_rpt_pct3",
-                createGroupInfo("aggregate_rpt_pct3", 99));
-
-        return groupInfos;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
-     * initializeExtraResults(org.apache.jmeter.report.processor.MapResultData)
-     */
-    @Override
-    protected void initializeExtraResults(MapResultData parentResult) {
-        ListResultData samples = new ListResultData();
-        IndexedNameSelector indexedNameSelector = (IndexedNameSelector) getKeysSelector();
-        int size = indexedNameSelector.getNames().size();
-        for (int i = 0; i < size; i++) {
-            samples.addResult(
-                    new ValueResultData(indexedNameSelector.getNames().get(i)));
-        }
-        parentResult.setResult("sampleNames", samples);
-    }
+    parentResult.setResult("sampleNames", samples);
+  }
 }

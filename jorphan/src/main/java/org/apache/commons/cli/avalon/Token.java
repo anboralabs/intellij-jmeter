@@ -21,47 +21,43 @@ package org.apache.commons.cli.avalon;
  * Token handles tokenizing the CLI arguments
  */
 class Token {
-    /** Type for a separator token */
-    public static final int TOKEN_SEPARATOR = 0;
+  /** Type for a separator token */
+  public static final int TOKEN_SEPARATOR = 0;
 
-    /** Type for a text token */
-    public static final int TOKEN_STRING = 1;
+  /** Type for a text token */
+  public static final int TOKEN_STRING = 1;
 
-    private final int type;
+  private final int type;
 
-    private final String value;
+  private final String value;
 
-    /**
-     * New Token object with a type and value
-     *
-     * @param type  type of the token
-     * @param value value of the token
-     */
-    Token(final int type, final String value) {
-        this.type = type;
-        this.value = value;
-    }
+  /**
+   * New Token object with a type and value
+   *
+   * @param type  type of the token
+   * @param value value of the token
+   */
+  Token(final int type, final String value) {
+    this.type = type;
+    this.value = value;
+  }
 
-    /**
-     * Get the value of the token
-     *
-     * @return value of the token
-     */
-    final String getValue() {
-        return this.value;
-    }
+  /**
+   * Get the value of the token
+   *
+   * @return value of the token
+   */
+  final String getValue() { return this.value; }
 
-    /**
-     * Get the type of the token
-     *
-     * @return type of the token
-     */
-    final int getType() {
-        return this.type;
-    }
+  /**
+   * Get the type of the token
+   *
+   * @return type of the token
+   */
+  final int getType() { return this.type; }
 
-    @Override
-    public final String toString() {
-        return this.type + ":" + this.value;
-    }
+  @Override
+  public final String toString() {
+    return this.type + ":" + this.value;
+  }
 }

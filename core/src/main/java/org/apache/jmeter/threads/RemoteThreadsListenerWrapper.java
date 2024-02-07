@@ -19,7 +19,6 @@ package org.apache.jmeter.threads;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-
 import org.apache.jmeter.engine.util.NoThreadClone;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.ThreadListener;
@@ -30,36 +29,36 @@ import org.slf4j.LoggerFactory;
  * server side wrapper, used to notify RMI client
  * @since 2.10
  */
-public class RemoteThreadsListenerWrapper extends AbstractTestElement implements ThreadListener, Serializable,
-        NoThreadClone {
-    private static final Logger log = LoggerFactory.getLogger(RemoteThreadsListenerWrapper.class);
+public class RemoteThreadsListenerWrapper extends AbstractTestElement
+    implements ThreadListener, Serializable, NoThreadClone {
+  private static final Logger log =
+      LoggerFactory.getLogger(RemoteThreadsListenerWrapper.class);
 
-    private static final long serialVersionUID = 241L;
+  private static final long serialVersionUID = 241L;
 
-    private RemoteThreadsListener listener;
+  private RemoteThreadsListener listener;
 
-    public RemoteThreadsListenerWrapper(RemoteThreadsListener l) {
-        listener = l;
+  public RemoteThreadsListenerWrapper(RemoteThreadsListener l) { listener = l; }
+
+  public RemoteThreadsListenerWrapper() {}
+
+  @Override
+  public void threadStarted() {
+    try {
+      listener.threadStarted();
+    } catch (RemoteException err) {
+      log.error("Exception invoking listener on threadStarted.",
+                err); // $NON-NLS-1$
     }
+  }
 
-    public RemoteThreadsListenerWrapper() {
+  @Override
+  public void threadFinished() {
+    try {
+      listener.threadFinished();
+    } catch (RemoteException err) {
+      log.error("Exception invoking listener on threadFinished.",
+                err); // $NON-NLS-1$
     }
-
-    @Override
-    public void threadStarted() {
-        try {
-            listener.threadStarted();
-        } catch (RemoteException err) {
-            log.error("Exception invoking listener on threadStarted.", err); // $NON-NLS-1$
-        }
-    }
-
-    @Override
-    public void threadFinished() {
-        try {
-            listener.threadFinished();
-        } catch (RemoteException err) {
-            log.error("Exception invoking listener on threadFinished.", err); // $NON-NLS-1$
-        }
-    }
+  }
 }

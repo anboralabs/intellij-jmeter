@@ -21,13 +21,11 @@ import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.util.ArrayDeque;
 import java.util.Queue;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Timer;
-
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.jmeter.gui.logging.GuiLogEventListener;
 import org.apache.jmeter.gui.logging.LogEventObject;
@@ -41,123 +39,129 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
  */
 public class LoggerPanel extends JPanel implements GuiLogEventListener {
 
-    private static final long serialVersionUID = 4935188629475943229L;
+  private static final long serialVersionUID = 4935188629475943229L;
 
-    private final JTextArea textArea;
+  private final JTextArea textArea;
 
-    // Limit length of log content
-    // 0 means unlimited
-    private static final int LOGGER_PANEL_MAX_LINES =
-            JMeterUtils.getPropDefault("jmeter.loggerpanel.maxlength", 1000); // $NON-NLS-1$
+  // Limit length of log content
+  // 0 means unlimited
+  private static final int LOGGER_PANEL_MAX_LINES = JMeterUtils.getPropDefault(
+      "jmeter.loggerpanel.maxlength", 1000); // $NON-NLS-1$
 
-    // Make panel handle event even if closed
-    private static final boolean LOGGER_PANEL_RECEIVE_WHEN_CLOSED =
-            JMeterUtils.getPropDefault("jmeter.loggerpanel.enable_when_closed", true); // $NON-NLS-1$
+  // Make panel handle event even if closed
+  private static final boolean LOGGER_PANEL_RECEIVE_WHEN_CLOSED =
+      JMeterUtils.getPropDefault("jmeter.loggerpanel.enable_when_closed",
+                                 true); // $NON-NLS-1$
 
-    private static final int LOGGER_PANEL_REFRESH_PERIOD =
-            JMeterUtils.getPropDefault("jmeter.gui.refresh_period", 500); // $NON-NLS-1$
+  private static final int LOGGER_PANEL_REFRESH_PERIOD =
+      JMeterUtils.getPropDefault("jmeter.gui.refresh_period",
+                                 500); // $NON-NLS-1$
 
-    private final Queue<String> events;
+  private final Queue<String> events;
 
-    private volatile boolean logChanged = false;
+  private volatile boolean logChanged = false;
 
-    /**
-     * Pane for display JMeter log file
-     */
-    public LoggerPanel() {
-        if (LOGGER_PANEL_MAX_LINES > 0) {
-            events = new CircularFifoQueue<>(LOGGER_PANEL_MAX_LINES);
-        } else {
-            events = new ArrayDeque<>();
-        }
-        textArea = init();
+  /**
+   * Pane for display JMeter log file
+   */
+  public LoggerPanel() {
+    if (LOGGER_PANEL_MAX_LINES > 0) {
+      events = new CircularFifoQueue<>(LOGGER_PANEL_MAX_LINES);
+    } else {
+      events = new ArrayDeque<>();
+    }
+    textArea = init();
+  }
+
+  private JTextArea init() { // WARNING: called from ctor so must not be
+                             // overridden (i.e. must be private or final)
+    this.setLayout(new BorderLayout());
+    final JScrollPane areaScrollPane;
+    final JTextArea jTextArea;
+
+    if (JMeterUtils.getPropDefault("loggerpanel.usejsyntaxtext", true)) {
+      // JSyntax Text Area
+      JSyntaxTextArea jSyntaxTextArea =
+          JSyntaxTextArea.getInstance(15, 80, true);
+      jSyntaxTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
+      jSyntaxTextArea.setCodeFoldingEnabled(false);
+      jSyntaxTextArea.setAntiAliasingEnabled(false);
+      jSyntaxTextArea.setEditable(false);
+      jSyntaxTextArea.setLineWrap(false);
+      jSyntaxTextArea.setLanguage("text");
+      jSyntaxTextArea.setMargin(
+          new Insets(2, 2, 2, 2)); // space between borders and text
+      areaScrollPane = JTextScrollPane.getInstance(jSyntaxTextArea);
+      jTextArea = jSyntaxTextArea;
+    } else {
+      // Plain text area
+      jTextArea = new JTextArea(15, 80);
+      areaScrollPane = new JScrollPane(jTextArea);
     }
 
-    private JTextArea init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
-        this.setLayout(new BorderLayout());
-        final JScrollPane areaScrollPane;
-        final JTextArea jTextArea;
+    areaScrollPane.setVerticalScrollBarPolicy(
+        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    areaScrollPane.setHorizontalScrollBarPolicy(
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    this.add(areaScrollPane, BorderLayout.CENTER);
 
-        if (JMeterUtils.getPropDefault("loggerpanel.usejsyntaxtext", true)) {
-            // JSyntax Text Area
-            JSyntaxTextArea jSyntaxTextArea = JSyntaxTextArea.getInstance(15, 80, true);
-            jSyntaxTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
-            jSyntaxTextArea.setCodeFoldingEnabled(false);
-            jSyntaxTextArea.setAntiAliasingEnabled(false);
-            jSyntaxTextArea.setEditable(false);
-            jSyntaxTextArea.setLineWrap(false);
-            jSyntaxTextArea.setLanguage("text");
-            jSyntaxTextArea.setMargin(new Insets(2, 2, 2, 2)); // space between borders and text
-            areaScrollPane = JTextScrollPane.getInstance(jSyntaxTextArea);
-            jTextArea = jSyntaxTextArea;
-        } else {
-            // Plain text area
-            jTextArea =  new JTextArea(15, 80);
-            areaScrollPane = new JScrollPane(jTextArea);
-        }
+    initWorker();
 
-        areaScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        areaScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        this.add(areaScrollPane, BorderLayout.CENTER);
+    return jTextArea;
+  }
 
-        initWorker();
-
-        return jTextArea;
+  /* (non-Javadoc)
+   * @see
+   *     org.apache.jmeter.gui.logging.GuiLogEventListener#processLogEvent(org.apache.jmeter.gui.logging.LogEventObject)
+   */
+  @Override
+  public void processLogEvent(final LogEventObject logEventObject) {
+    if (!LOGGER_PANEL_RECEIVE_WHEN_CLOSED && !GuiPackage.getInstance()
+                                                  .getMenuItemLoggerPanel()
+                                                  .getModel()
+                                                  .isSelected()) {
+      return;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.jmeter.gui.logging.GuiLogEventListener#processLogEvent(org.apache.jmeter.gui.logging.LogEventObject)
-     */
-    @Override
-    public void processLogEvent(final LogEventObject logEventObject) {
-        if(!LOGGER_PANEL_RECEIVE_WHEN_CLOSED && !GuiPackage.getInstance().getMenuItemLoggerPanel().getModel().isSelected()) {
-            return;
-        }
+    String logMessage = logEventObject.toString();
+    synchronized (events) { events.add(logMessage); }
 
-        String logMessage = logEventObject.toString();
-        synchronized (events) {
-            events.add(logMessage);
-        }
+    logChanged = true;
+  }
 
-        logChanged = true;
+  private void initWorker() {
+    Timer timer =
+        new Timer(LOGGER_PANEL_REFRESH_PERIOD, e -> updateLogEntries());
+    timer.start();
+  }
+
+  private void updateLogEntries() {
+    if (!logChanged) {
+      return;
     }
-
-    private void initWorker() {
-        Timer timer = new Timer(
-            LOGGER_PANEL_REFRESH_PERIOD,
-            e -> updateLogEntries());
-        timer.start();
+    logChanged = false;
+    StringBuilder builder = new StringBuilder();
+    synchronized (events) {
+      for (String line : events) {
+        builder.append(line);
+      }
     }
-
-    private void updateLogEntries() {
-        if (!logChanged) {
-            return;
-        }
-        logChanged = false;
-        StringBuilder builder = new StringBuilder();
-        synchronized (events) {
-            for (String line: events) {
-                builder.append(line);
-            }
-        }
-        String logText = builder.toString();
-        synchronized (textArea) {
-            if (LOGGER_PANEL_MAX_LINES > 0) {
-                textArea.setText(logText);
-            } else {
-                textArea.append(logText);
-            }
-            textArea.setCaretPosition(textArea.getText().length());
-        }
+    String logText = builder.toString();
+    synchronized (textArea) {
+      if (LOGGER_PANEL_MAX_LINES > 0) {
+        textArea.setText(logText);
+      } else {
+        textArea.append(logText);
+      }
+      textArea.setCaretPosition(textArea.getText().length());
     }
+  }
 
-    /**
-     * Clear panel content
-     */
-    public void clear() {
-        synchronized (events) {
-            events.clear();
-        }
-        logChanged = true;
-    }
+  /**
+   * Clear panel content
+   */
+  public void clear() {
+    synchronized (events) { events.clear(); }
+    logChanged = true;
+  }
 }

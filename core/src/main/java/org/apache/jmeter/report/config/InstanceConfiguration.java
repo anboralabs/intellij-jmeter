@@ -25,25 +25,22 @@ package org.apache.jmeter.report.config;
  */
 public class InstanceConfiguration extends SubConfiguration {
 
-    private String className;
+  private String className;
 
-    /**
-     * Gets the class name of the item.
-     *
-     * @return the class name of the item
-     */
-    public final String getClassName() {
-        return className;
-    }
+  /**
+   * Gets the class name of the item.
+   *
+   * @return the class name of the item
+   */
+  public final String getClassName() { return className; }
 
-    /**
-     * Sets the class name of the item.
-     *
-     * @param className
-     *            the new class name
-     */
-    public final void setClassName(String className) {
-        this.className = className;
-    }
-
+  /**
+   * Sets the class name of the item.
+   *
+   * @param className
+   *            the new class name
+   */
+  public final void setClassName(String className) {
+    this.className = className;
+  }
 }

@@ -20,22 +20,22 @@ package org.apache.jmeter.gui;
 /**
  * Interface for nodes that have replaceable content.
  * <p>
- * A {@link Replaceable} component will get asked for tokens, that should be used
- * in a search. These tokens will then be matched against a user given search
- * string.
+ * A {@link Replaceable} component will get asked for tokens, that should be
+ * used in a search. These tokens will then be matched against a user given
+ * search string.
  * @since 3.2
  */
 public interface Replaceable {
-    /**
-     * Replace in object  by replaceBy
-     *
-     * @param regex Regular expression to search for
-     * @param replaceBy Text used as replacement
-     * @param caseSensitive flag, whether search should be done case sensitive
-     * @return number of replacements
-     * @throws Exception
-     *             when something fails while replacing
-     */
-    int replace(String regex, String replaceBy, boolean caseSensitive)
-        throws Exception;
+  /**
+   * Replace in object  by replaceBy
+   *
+   * @param regex Regular expression to search for
+   * @param replaceBy Text used as replacement
+   * @param caseSensitive flag, whether search should be done case sensitive
+   * @return number of replacements
+   * @throws Exception
+   *             when something fails while replacing
+   */
+  int replace(String regex, String replaceBy, boolean caseSensitive)
+      throws Exception;
 }

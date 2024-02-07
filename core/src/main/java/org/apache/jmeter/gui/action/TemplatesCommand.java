@@ -17,11 +17,10 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Open Templates
@@ -30,31 +29,31 @@ import com.google.auto.service.AutoService;
 @AutoService(Command.class)
 public class TemplatesCommand extends AbstractActionWithNoRunningTest {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    // Ensure the dialog is only created when it is first needed
-    // In turn this avoids scanning the templates until first needed
-    static class IODH {
-        private static final SelectTemplatesDialog dialog = new SelectTemplatesDialog();
-    }
+  // Ensure the dialog is only created when it is first needed
+  // In turn this avoids scanning the templates until first needed
+  static class IODH {
+    private static final SelectTemplatesDialog dialog =
+        new SelectTemplatesDialog();
+  }
 
-    static {
-        commands.add(ActionNames.TEMPLATES);
-    }
+  static { commands.add(ActionNames.TEMPLATES); }
 
-    /**
-     * @see org.apache.jmeter.gui.action.AbstractActionWithNoRunningTest#doActionAfterCheck(ActionEvent)
-     */
-    @Override
-    public void doActionAfterCheck(ActionEvent e) {
-        IODH.dialog.setVisible(true);
-    }
+  /**
+   * @see
+   *     org.apache.jmeter.gui.action.AbstractActionWithNoRunningTest#doActionAfterCheck(ActionEvent)
+   */
+  @Override
+  public void doActionAfterCheck(ActionEvent e) {
+    IODH.dialog.setVisible(true);
+  }
 
-    /**
-     * @see Command#getActionNames()
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * @see Command#getActionNames()
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 }

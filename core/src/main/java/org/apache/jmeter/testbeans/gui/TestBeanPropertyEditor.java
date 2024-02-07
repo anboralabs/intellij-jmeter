@@ -22,6 +22,5 @@ import java.beans.PropertyEditor;
 
 public interface TestBeanPropertyEditor extends PropertyEditor {
 
-    void setDescriptor(PropertyDescriptor descriptor);
-
+  void setDescriptor(PropertyDescriptor descriptor);
 }

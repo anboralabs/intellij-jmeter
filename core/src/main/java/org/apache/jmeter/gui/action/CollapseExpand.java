@@ -17,15 +17,12 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.swing.JTree;
-
 import org.apache.jmeter.gui.GuiPackage;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Processes the Collapse All and Expand All options.
@@ -34,48 +31,47 @@ import com.google.auto.service.AutoService;
 @AutoService(Command.class)
 public class CollapseExpand extends AbstractAction {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.COLLAPSE_ALL);
-        commands.add(ActionNames.EXPAND_ALL);
-    }
+  static {
+    commands.add(ActionNames.COLLAPSE_ALL);
+    commands.add(ActionNames.EXPAND_ALL);
+  }
 
-    /**
-     * Constructor for the CollapseExpand object.
-     */
-    public CollapseExpand() {
-    }
+  /**
+   * Constructor for the CollapseExpand object.
+   */
+  public CollapseExpand() {}
 
-    /**
-     * Gets the ActionNames attribute of the CollapseExpand object.
-     *
-     * @return the ActionNames value
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * Gets the ActionNames attribute of the CollapseExpand object.
+   *
+   * @return the ActionNames value
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    /**
-     * This method performs the actual command processing.
-     *
-     * @param e
-     *            the generic UI action event
-     */
-    @Override
-    public void doAction(ActionEvent e) {
-        boolean collapse=ActionNames.COLLAPSE_ALL.equals(e.getActionCommand());
-        GuiPackage guiInstance = GuiPackage.getInstance();
-        JTree jTree = guiInstance.getMainFrame().getTree();
-        if (collapse) {
-            for (int i = jTree.getRowCount() - 1; i >= 0; i--) {
-                jTree.collapseRow(i);
-            }
-            return;
-        }
-        for(int i = 0; i < jTree.getRowCount(); i++) {
-            jTree.expandRow(i);
-        }
+  /**
+   * This method performs the actual command processing.
+   *
+   * @param e
+   *            the generic UI action event
+   */
+  @Override
+  public void doAction(ActionEvent e) {
+    boolean collapse = ActionNames.COLLAPSE_ALL.equals(e.getActionCommand());
+    GuiPackage guiInstance = GuiPackage.getInstance();
+    JTree jTree = guiInstance.getMainFrame().getTree();
+    if (collapse) {
+      for (int i = jTree.getRowCount() - 1; i >= 0; i--) {
+        jTree.collapseRow(i);
+      }
+      return;
     }
+    for (int i = 0; i < jTree.getRowCount(); i++) {
+      jTree.expandRow(i);
+    }
+  }
 }

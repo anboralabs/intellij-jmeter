@@ -24,16 +24,15 @@ package org.apache.jmeter.report.processor;
  */
 public class SumAggregatorFactory extends AbstractAggregatorFactory {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.core.AbstractAggregatorFactory#createAggregator
-     * ()
-     */
-    @Override
-    protected Aggregator createAggregator() {
-        return new SumAggregator();
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.core.AbstractAggregatorFactory#createAggregator
+   * ()
+   */
+  @Override
+  protected Aggregator createAggregator() {
+    return new SumAggregator();
+  }
 }

@@ -19,5 +19,5 @@ package org.apache.jmeter.util;
 
 // TODO no reference to this interface, is it really useful ?
 public interface NamedObject {
-    String getName();
+  String getName();
 }

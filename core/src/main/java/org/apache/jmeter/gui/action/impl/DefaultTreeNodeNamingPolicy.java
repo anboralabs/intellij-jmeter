@@ -18,7 +18,6 @@
 package org.apache.jmeter.gui.action.impl;
 
 import java.text.DecimalFormat;
-
 import org.apache.jmeter.control.TransactionController;
 import org.apache.jmeter.gui.action.TreeNodeNamingPolicy;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
@@ -31,45 +30,52 @@ import org.apache.jmeter.util.JMeterUtils;
  * @since 3.2
  */
 public class DefaultTreeNodeNamingPolicy implements TreeNodeNamingPolicy {
-    public static final char TRANSACTION_CHILDREN_SEPARATOR = '-';
-    private static final String PREFIX = JMeterUtils.getPropDefault("naming_policy.prefix", "");
-    private static final String SUFFIX = JMeterUtils.getPropDefault("naming_policy.suffix", "");
-    private int index;
-    private DecimalFormat formatter;
+  public static final char TRANSACTION_CHILDREN_SEPARATOR = '-';
+  private static final String PREFIX =
+      JMeterUtils.getPropDefault("naming_policy.prefix", "");
+  private static final String SUFFIX =
+      JMeterUtils.getPropDefault("naming_policy.suffix", "");
+  private int index;
+  private DecimalFormat formatter;
 
-
-    /**
-     * @see org.apache.jmeter.gui.action.TreeNodeNamingPolicy#rename(org.apache.jmeter.gui.tree.JMeterTreeNode, org.apache.jmeter.gui.tree.JMeterTreeNode, int)
-     */
-    @Override
-    public void rename(JMeterTreeNode parentNode, JMeterTreeNode childNode, int iterationIndex) {
-        if(childNode.getUserObject() instanceof TransactionController ||
-                childNode.getUserObject() instanceof Sampler) {
-            childNode.setName(parentNode.getName()+TRANSACTION_CHILDREN_SEPARATOR+formatter.format(index));
-            index++;
-        }
+  /**
+   * @see
+   *     org.apache.jmeter.gui.action.TreeNodeNamingPolicy#rename(org.apache.jmeter.gui.tree.JMeterTreeNode,
+   *     org.apache.jmeter.gui.tree.JMeterTreeNode, int)
+   */
+  @Override
+  public void rename(JMeterTreeNode parentNode, JMeterTreeNode childNode,
+                     int iterationIndex) {
+    if (childNode.getUserObject() instanceof TransactionController ||
+        childNode.getUserObject() instanceof Sampler) {
+      childNode.setName(parentNode.getName() + TRANSACTION_CHILDREN_SEPARATOR +
+                        formatter.format(index));
+      index++;
     }
+  }
 
-    /**
-     * @see org.apache.jmeter.gui.action.TreeNodeNamingPolicy#resetState(org.apache.jmeter.gui.tree.JMeterTreeNode)
-     */
-    @Override
-    public void resetState(JMeterTreeNode rootNode) {
-        int numberOfChildren = rootNode.getChildCount();
-        this.index = 0;
-        int numberOfDigits = String.valueOf(numberOfChildren).length();
-        StringBuilder formatSB = new StringBuilder(numberOfDigits);
-        for (int i=0; i<numberOfDigits;i++) {
-            formatSB.append("0");
-        }
-        this.formatter = new DecimalFormat(formatSB.toString());
+  /**
+   * @see
+   *     org.apache.jmeter.gui.action.TreeNodeNamingPolicy#resetState(org.apache.jmeter.gui.tree.JMeterTreeNode)
+   */
+  @Override
+  public void resetState(JMeterTreeNode rootNode) {
+    int numberOfChildren = rootNode.getChildCount();
+    this.index = 0;
+    int numberOfDigits = String.valueOf(numberOfChildren).length();
+    StringBuilder formatSB = new StringBuilder(numberOfDigits);
+    for (int i = 0; i < numberOfDigits; i++) {
+      formatSB.append("0");
     }
+    this.formatter = new DecimalFormat(formatSB.toString());
+  }
 
-    @Override
-    public void nameOnCreation(JMeterTreeNode node) {
-        if(node.getName().isEmpty()) {
-            node.setName(((TestElement)node.getUserObject()).getClass().getSimpleName());
-        }
-        node.setName(PREFIX+node.getName()+SUFFIX);
+  @Override
+  public void nameOnCreation(JMeterTreeNode node) {
+    if (node.getName().isEmpty()) {
+      node.setName(
+          ((TestElement)node.getUserObject()).getClass().getSimpleName());
     }
+    node.setName(PREFIX + node.getName() + SUFFIX);
+  }
 }

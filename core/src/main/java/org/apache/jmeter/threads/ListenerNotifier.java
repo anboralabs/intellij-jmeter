@@ -19,7 +19,6 @@ package org.apache.jmeter.threads;
 
 import java.io.Serializable;
 import java.util.List;
-
 import org.apache.jmeter.samplers.SampleEvent;
 import org.apache.jmeter.samplers.SampleListener;
 import org.apache.jmeter.testbeans.TestBeanHelper;
@@ -34,33 +33,32 @@ import org.slf4j.LoggerFactory;
  * Thread safe class
  */
 public class ListenerNotifier implements Serializable {
-    /**
-     *
-     */
-    private static final long serialVersionUID = -4861457279068497917L;
-    private static final Logger log = LoggerFactory.getLogger(ListenerNotifier.class);
+  /**
+   *
+   */
+  private static final long serialVersionUID = -4861457279068497917L;
+  private static final Logger log =
+      LoggerFactory.getLogger(ListenerNotifier.class);
 
-
-    /**
-     * Notify a list of listeners that a sample has occurred.
-     *
-     * @param res
-     *            the sample event that has occurred. Must be non-null.
-     * @param listeners
-     *            a list of the listeners which should be notified. This list
-     *            must not be null and must contain only SampleListener
-     *            elements.
-     */
-    public void notifyListeners(SampleEvent res, List<SampleListener> listeners) {
-        for (SampleListener sampleListener : listeners) {
-            try {
-                TestBeanHelper.prepare((TestElement) sampleListener);
-                sampleListener.sampleOccurred(res);
-            } catch (RuntimeException e) {
-                log.error("Detected problem in Listener.", e);
-                log.info("Continuing to process further listeners");
-            }
-        }
+  /**
+   * Notify a list of listeners that a sample has occurred.
+   *
+   * @param res
+   *            the sample event that has occurred. Must be non-null.
+   * @param listeners
+   *            a list of the listeners which should be notified. This list
+   *            must not be null and must contain only SampleListener
+   *            elements.
+   */
+  public void notifyListeners(SampleEvent res, List<SampleListener> listeners) {
+    for (SampleListener sampleListener : listeners) {
+      try {
+        TestBeanHelper.prepare((TestElement)sampleListener);
+        sampleListener.sampleOccurred(res);
+      } catch (RuntimeException e) {
+        log.error("Detected problem in Listener.", e);
+        log.info("Continuing to process further listeners");
+      }
     }
-
+  }
 }

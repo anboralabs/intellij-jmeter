@@ -24,70 +24,66 @@ import org.apache.jmeter.testelement.TestElement;
  * interface for retrieving a property iterator for the sub values.
  *
  */
-public abstract class MultiProperty extends AbstractProperty implements Iterable<JMeterProperty> {
-    private static final long serialVersionUID = 240L;
+public abstract class MultiProperty
+    extends AbstractProperty implements Iterable<JMeterProperty> {
+  private static final long serialVersionUID = 240L;
 
-    protected MultiProperty() {
-        super();
+  protected MultiProperty() { super(); }
+
+  protected MultiProperty(String name) { super(name); }
+
+  /**
+   * Get the property iterator to iterate through the sub-values of this
+   * JMeterProperty.
+   *
+   * @return an iterator for the sub-values of this property
+   */
+  @Override public abstract PropertyIterator iterator();
+
+  /**
+   * Add a property to the collection.
+   *
+   * @param prop the {@link JMeterProperty} to add
+   */
+  public abstract void addProperty(JMeterProperty prop);
+
+  /**
+   * Clear away all values in the property.
+   */
+  public abstract void clear();
+
+  @Override
+  public void setRunningVersion(boolean running) {
+    super.setRunningVersion(running);
+    for (JMeterProperty jMeterProperty : this) {
+      jMeterProperty.setRunningVersion(running);
     }
+  }
 
-    protected MultiProperty(String name) {
-        super(name);
+  protected void recoverRunningVersionOfSubElements(TestElement owner) {
+    PropertyIterator iter = iterator();
+    while (iter.hasNext()) {
+      JMeterProperty prop = iter.next();
+      if (owner.isTemporary(prop)) {
+        iter.remove();
+      } else {
+        prop.recoverRunningVersion(owner);
+      }
     }
+  }
 
-    /**
-     * Get the property iterator to iterate through the sub-values of this
-     * JMeterProperty.
-     *
-     * @return an iterator for the sub-values of this property
-     */
-    @Override
-    public abstract PropertyIterator iterator();
-
-    /**
-     * Add a property to the collection.
-     *
-     * @param prop the {@link JMeterProperty} to add
-     */
-    public abstract void addProperty(JMeterProperty prop);
-
-    /**
-     * Clear away all values in the property.
-     */
-    public abstract void clear();
-
-    @Override
-    public void setRunningVersion(boolean running) {
-        super.setRunningVersion(running);
-        for (JMeterProperty jMeterProperty : this) {
-            jMeterProperty.setRunningVersion(running);
-        }
+  @Override
+  public void mergeIn(JMeterProperty prop) {
+    if (prop.getObjectValue() == getObjectValue()) {
+      return;
     }
-
-    protected void recoverRunningVersionOfSubElements(TestElement owner) {
-        PropertyIterator iter = iterator();
-        while (iter.hasNext()) {
-            JMeterProperty prop = iter.next();
-            if (owner.isTemporary(prop)) {
-                iter.remove();
-            } else {
-                prop.recoverRunningVersion(owner);
-            }
-        }
+    log.debug("merging in {}", prop.getClass());
+    if (prop instanceof MultiProperty) {
+      for (JMeterProperty item : (MultiProperty)prop) {
+        addProperty(item);
+      }
+    } else {
+      addProperty(prop);
     }
-
-    @Override
-    public void mergeIn(JMeterProperty prop) {
-        if (prop.getObjectValue() == getObjectValue()) {
-            return;
-        }
-        log.debug("merging in {}", prop.getClass());
-        if (prop instanceof MultiProperty) {
-            for (JMeterProperty item : (MultiProperty) prop) {
-                addProperty(item);
-            }
-        } else {
-            addProperty(prop);
-        }
-    }
+  }
 }

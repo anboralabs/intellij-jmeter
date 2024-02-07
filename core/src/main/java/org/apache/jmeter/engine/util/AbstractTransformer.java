@@ -22,25 +22,21 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 abstract class AbstractTransformer implements ValueTransformer {
 
-    private CompoundVariable masterFunction;
+  private CompoundVariable masterFunction;
 
-    private Map<String, String> variables;
+  private Map<String, String> variables;
 
-    @Override
-    public void setMasterFunction(CompoundVariable variable) {
-        masterFunction = variable;
-    }
+  @Override
+  public void setMasterFunction(CompoundVariable variable) {
+    masterFunction = variable;
+  }
 
-    protected CompoundVariable getMasterFunction() {
-        return masterFunction;
-    }
+  protected CompoundVariable getMasterFunction() { return masterFunction; }
 
-    public Map<String, String> getVariables() {
-        return variables;
-    }
+  public Map<String, String> getVariables() { return variables; }
 
-    @Override
-    public void setVariables(Map<String, String> map) {
-        variables = map;
-    }
+  @Override
+  public void setVariables(Map<String, String> map) {
+    variables = map;
+  }
 }

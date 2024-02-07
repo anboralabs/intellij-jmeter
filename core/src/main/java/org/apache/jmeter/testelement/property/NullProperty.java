@@ -24,109 +24,105 @@ import org.apache.jmeter.testelement.TestElement;
  *
  */
 public final class NullProperty extends AbstractProperty {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    private JMeterProperty tempValue; // TODO - why does null property have a value?
+  private JMeterProperty
+      tempValue; // TODO - why does null property have a value?
 
-    public NullProperty(String name) {
-        super(name);
+  public NullProperty(String name) { super(name); }
+
+  public NullProperty() { super(); }
+
+  /**
+   * @see JMeterProperty#getStringValue()
+   */
+  @Override
+  public String getStringValue() {
+    if (tempValue != null) {
+      return tempValue.getStringValue();
     }
+    return "";
+  }
 
-    public NullProperty() {
-        super();
-    }
+  @Override
+  public void setObjectValue(Object v) {
+    // NOOP
+  }
 
-    /**
-     * @see JMeterProperty#getStringValue()
-     */
-    @Override
-    public String getStringValue() {
-        if (tempValue != null) {
-            return tempValue.getStringValue();
-        }
-        return "";
-    }
+  /**
+   * @see JMeterProperty#getObjectValue()
+   */
+  @Override
+  public Object getObjectValue() {
+    return null;
+  }
 
-    @Override
-    public void setObjectValue(Object v) {
-        // NOOP
-    }
+  /**
+   * @see JMeterProperty#isRunningVersion()
+   */
+  @Override
+  public boolean isRunningVersion() {
+    return false;
+  }
 
-    /**
-     * @see JMeterProperty#getObjectValue()
-     */
-    @Override
-    public Object getObjectValue() {
-        return null;
-    }
+  /**
+   * @see JMeterProperty#mergeIn(JMeterProperty)
+   */
+  @Override
+  public void mergeIn(JMeterProperty prop) {
+    tempValue = prop;
+  }
 
-    /**
-     * @see JMeterProperty#isRunningVersion()
-     */
-    @Override
-    public boolean isRunningVersion() {
-        return false;
-    }
+  @Override
+  public NullProperty clone() {
+    return this;
+  }
 
-    /**
-     * @see JMeterProperty#mergeIn(JMeterProperty)
-     */
-    @Override
-    public void mergeIn(JMeterProperty prop) {
-        tempValue = prop;
-    }
+  /**
+   * @see JMeterProperty#getBooleanValue()
+   */
+  @Override
+  public boolean getBooleanValue() {
+    return false;
+  }
 
-    @Override
-    public NullProperty clone() {
-        return this;
-    }
+  /**
+   * @see JMeterProperty#getDoubleValue()
+   */
+  @Override
+  public double getDoubleValue() {
+    return 0;
+  }
 
-    /**
-     * @see JMeterProperty#getBooleanValue()
-     */
-    @Override
-    public boolean getBooleanValue() {
-        return false;
-    }
+  /**
+   * @see JMeterProperty#getFloatValue()
+   */
+  @Override
+  public float getFloatValue() {
+    return 0;
+  }
 
-    /**
-     * @see JMeterProperty#getDoubleValue()
-     */
-    @Override
-    public double getDoubleValue() {
-        return 0;
-    }
+  /**
+   * @see JMeterProperty#getIntValue()
+   */
+  @Override
+  public int getIntValue() {
+    return 0;
+  }
 
-    /**
-     * @see JMeterProperty#getFloatValue()
-     */
-    @Override
-    public float getFloatValue() {
-        return 0;
-    }
+  /**
+   * @see JMeterProperty#getLongValue()
+   */
+  @Override
+  public long getLongValue() {
+    return 0;
+  }
 
-    /**
-     * @see JMeterProperty#getIntValue()
-     */
-    @Override
-    public int getIntValue() {
-        return 0;
-    }
-
-    /**
-     * @see JMeterProperty#getLongValue()
-     */
-    @Override
-    public long getLongValue() {
-        return 0;
-    }
-
-    /**
-     * @see JMeterProperty#recoverRunningVersion(TestElement)
-     */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        tempValue = null;
-    }
-
+  /**
+   * @see JMeterProperty#recoverRunningVersion(TestElement)
+   */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    tempValue = null;
+  }
 }

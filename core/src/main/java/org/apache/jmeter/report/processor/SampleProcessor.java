@@ -31,45 +31,44 @@ package org.apache.jmeter.report.processor;
  */
 public interface SampleProcessor {
 
-    /**
-     * Gets the sample context.
-     *
-     * @return the sample context
-     */
-    SampleContext getSampleContext();
+  /**
+   * Gets the sample context.
+   *
+   * @return the sample context
+   */
+  SampleContext getSampleContext();
 
-    /**
-     * Set sample context that this consumer should rely on.
-     *
-     * @param ctx
-     *            the new sample context
-     */
-    void setSampleContext(SampleContext ctx);
+  /**
+   * Set sample context that this consumer should rely on.
+   *
+   * @param ctx
+   *            the new sample context
+   */
+  void setSampleContext(SampleContext ctx);
 
-    /**
-     * Associate an attribute to the specified channel for this sample processor<br>
-     * If the attribute already exist, it is replaced.
-     *
-     * @param channel
-     *            The channel number to associate the attribute on
-     * @param key
-     *            The attribute key
-     * @param value
-     *            The attribute value to be set
-     */
-    void setChannelAttribute(int channel, String key, Object value);
+  /**
+   * Associate an attribute to the specified channel for this sample
+   * processor<br> If the attribute already exist, it is replaced.
+   *
+   * @param channel
+   *            The channel number to associate the attribute on
+   * @param key
+   *            The attribute key
+   * @param value
+   *            The attribute value to be set
+   */
+  void setChannelAttribute(int channel, String key, Object value);
 
-    /**
-     * Return an attribute value associated on a channel on this sample
-     * processor
-     *
-     * @param channel
-     *            The channel on which the attribute is associated
-     * @param key
-     *            The attribute key to be retrieved
-     * @return The attribute value or null if none is found for the specified
-     *         key
-     */
-    Object getChannelAttribute(int channel, String key);
-
+  /**
+   * Return an attribute value associated on a channel on this sample
+   * processor
+   *
+   * @param channel
+   *            The channel on which the attribute is associated
+   * @param key
+   *            The attribute key to be retrieved
+   * @return The attribute value or null if none is found for the specified
+   *         key
+   */
+  Object getChannelAttribute(int channel, String key);
 }

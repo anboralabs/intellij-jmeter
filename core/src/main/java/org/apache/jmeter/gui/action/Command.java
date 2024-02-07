@@ -19,13 +19,12 @@ package org.apache.jmeter.gui.action;
 
 import java.awt.event.ActionEvent;
 import java.util.Set;
-
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jorphan.reflect.JMeterService;
 
 @JMeterService
 public interface Command {
-    void doAction(ActionEvent e) throws IllegalUserActionException;
+  void doAction(ActionEvent e) throws IllegalUserActionException;
 
-    Set<String> getActionNames();
+  Set<String> getActionNames();
 }

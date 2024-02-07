@@ -32,34 +32,32 @@ import java.net.URLStreamHandlerFactory;
  */
 public class DynamicClassLoader extends URLClassLoader {
 
-    public DynamicClassLoader(URL[] urls) {
-        super(urls);
-    }
+  public DynamicClassLoader(URL[] urls) { super(urls); }
 
-    public DynamicClassLoader(URL[] urls, ClassLoader parent) {
-        super(urls, parent);
-    }
+  public DynamicClassLoader(URL[] urls, ClassLoader parent) {
+    super(urls, parent);
+  }
 
-    public DynamicClassLoader(URL[] urls, ClassLoader parent,
-            URLStreamHandlerFactory factory) {
-        super(urls, parent, factory);
-    }
+  public DynamicClassLoader(URL[] urls, ClassLoader parent,
+                            URLStreamHandlerFactory factory) {
+    super(urls, parent, factory);
+  }
 
-    // Make the addURL method visible
-    @Override
-    public void addURL(URL url) {
-        super.addURL(url);
-    }
+  // Make the addURL method visible
+  @Override
+  public void addURL(URL url) {
+    super.addURL(url);
+  }
 
-    /**
-     * Returns list of URLs to add to the thread's classloader.
-     * @param urls - list of URLs to add to the thread's classloader
-     */
-    public static void updateLoader(URL [] urls) {
-        DynamicClassLoader loader
-            = (DynamicClassLoader) Thread.currentThread().getContextClassLoader();
-        for(URL url : urls) {
-            loader.addURL(url);
-        }
+  /**
+   * Returns list of URLs to add to the thread's classloader.
+   * @param urls - list of URLs to add to the thread's classloader
+   */
+  public static void updateLoader(URL[] urls) {
+    DynamicClassLoader loader =
+        (DynamicClassLoader)Thread.currentThread().getContextClassLoader();
+    for (URL url : urls) {
+      loader.addURL(url);
     }
+  }
 }

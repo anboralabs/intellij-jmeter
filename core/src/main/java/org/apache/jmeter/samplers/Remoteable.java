@@ -18,8 +18,7 @@
 package org.apache.jmeter.samplers;
 
 /**
- * Marker interface used by ConvertListeners to determine which test elements to wrap
- * so that the results are processed by the client rather than the server
+ * Marker interface used by ConvertListeners to determine which test elements to
+ * wrap so that the results are processed by the client rather than the server
  */
-public interface Remoteable {
-}
+public interface Remoteable {}

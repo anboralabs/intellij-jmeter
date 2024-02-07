@@ -27,28 +27,28 @@ import java.io.OutputStream;
  */
 public class SlowOutputStream extends FilterOutputStream {
 
-    private final CPSPauser pauser;
+  private final CPSPauser pauser;
 
-    /**
-     * Create wrapped Output Stream toe emulate the requested CPS.
-     * @param out OutputStream
-     * @param cps characters per second
-     */
-    public SlowOutputStream(OutputStream out, int cps) {
-        super(out);
-        pauser = new CPSPauser(cps);
-    }
+  /**
+   * Create wrapped Output Stream toe emulate the requested CPS.
+   * @param out OutputStream
+   * @param cps characters per second
+   */
+  public SlowOutputStream(OutputStream out, int cps) {
+    super(out);
+    pauser = new CPSPauser(cps);
+  }
 
-    // Also handles write(byte[])
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-        pauser.pause(len);
-        out.write(b, off, len);
-    }
+  // Also handles write(byte[])
+  @Override
+  public void write(byte[] b, int off, int len) throws IOException {
+    pauser.pause(len);
+    out.write(b, off, len);
+  }
 
-    @Override
-    public void write(int b) throws IOException {
-        pauser.pause(1);
-        out.write(b);
-    }
+  @Override
+  public void write(int b) throws IOException {
+    pauser.pause(1);
+    out.write(b);
+  }
 }

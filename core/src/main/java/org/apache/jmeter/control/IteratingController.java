@@ -28,26 +28,28 @@ import org.apache.jmeter.util.JMeterUtils;
  */
 public interface IteratingController extends LoopIterationListener {
 
-    /**
-     * Start next iteration ("continue" keyword equivalent in loops)
-     */
-    public void startNextLoop();
+  /**
+   * Start next iteration ("continue" keyword equivalent in loops)
+   */
+  public void startNextLoop();
 
-    /**
-     * Break loop ("break" keyword equivalent)
-     */
-    public void breakLoop();
+  /**
+   * Break loop ("break" keyword equivalent)
+   */
+  public void breakLoop();
 
-    /**
-     * @param elementName Test Element
-     * @param iterCount iteration count
-     */
-    default void updateIterationIndex(String elementName, int iterCount) {
-        JMeterVariables variables = JMeterContextService.getContext().getVariables();
-        if(variables != null) {
-            variables.putObject(
-                    JMeterUtils.formatJMeterExportedVariableName(elementName+GenericController.INDEX_VAR_NAME_SUFFIX), iterCount);
-        }
+  /**
+   * @param elementName Test Element
+   * @param iterCount iteration count
+   */
+  default void updateIterationIndex(String elementName, int iterCount) {
+    JMeterVariables variables =
+        JMeterContextService.getContext().getVariables();
+    if (variables != null) {
+      variables.putObject(
+          JMeterUtils.formatJMeterExportedVariableName(
+              elementName + GenericController.INDEX_VAR_NAME_SUFFIX),
+          iterCount);
     }
-
+  }
 }

@@ -17,49 +17,52 @@
 
 package org.apache.jmeter.save.converters;
 
-import org.apache.jmeter.testelement.property.BooleanProperty;
-
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.apache.jmeter.testelement.property.BooleanProperty;
 
 public class BooleanPropertyConverter implements Converter {
 
-    /**
-     * Returns the converter version; used to check for possible
-     * incompatibilities
-     *
-     * @return the version of this converter
-     */
-    public static String getVersion() {
-        return "$Revision$"; // $NON-NLS-1$
-    }
+  /**
+   * Returns the converter version; used to check for possible
+   * incompatibilities
+   *
+   * @return the version of this converter
+   */
+  public static String getVersion() {
+    return "$Revision$"; // $NON-NLS-1$
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean canConvert(@SuppressWarnings("rawtypes") Class arg0) {// superclass does not use types
-        return BooleanProperty.class.equals(arg0);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public boolean canConvert(@SuppressWarnings("rawtypes")
+                            Class arg0) { // superclass does not use types
+    return BooleanProperty.class.equals(arg0);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void marshal(Object obj, HierarchicalStreamWriter writer, MarshallingContext arg2) {
-        BooleanProperty prop = (BooleanProperty) obj;
-        writer.addAttribute(ConversionHelp.ATT_NAME, ConversionHelp.encode(prop.getName()));
-        writer.setValue(prop.getStringValue());
+  /** {@inheritDoc} */
+  @Override
+  public void marshal(Object obj, HierarchicalStreamWriter writer,
+                      MarshallingContext arg2) {
+    BooleanProperty prop = (BooleanProperty)obj;
+    writer.addAttribute(ConversionHelp.ATT_NAME,
+                        ConversionHelp.encode(prop.getName()));
+    writer.setValue(prop.getStringValue());
+  }
 
+  /** {@inheritDoc} */
+  @Override
+  public Object unmarshal(HierarchicalStreamReader reader,
+                          UnmarshallingContext context) {
+    final String name = ConversionHelp.getPropertyName(reader, context);
+    if (name == null) {
+      return null;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        final String name = ConversionHelp.getPropertyName(reader, context);
-        if (name == null) {
-            return null;
-        }
-        BooleanProperty prop = new BooleanProperty(name, Boolean.valueOf(reader.getValue()));
-        return prop;
-    }
+    BooleanProperty prop =
+        new BooleanProperty(name, Boolean.valueOf(reader.getValue()));
+    return prop;
+  }
 }

@@ -28,21 +28,19 @@ package org.apache.jorphan.gui;
  */
 public class MinMaxLongRenderer extends NumberRenderer { // NOSONAR
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public MinMaxLongRenderer(String format) {
-        super(format);
-    }
+  public MinMaxLongRenderer(String format) { super(format); }
 
-    @Override
-    public void setValue(Object value) {
-        if (value instanceof Long) {
-            long longValue = (Long) value;
-            if (!(longValue == Long.MAX_VALUE || longValue == Long.MIN_VALUE)) {
-                setText(formatter.format(longValue));
-                return;
-            }
-        }
-        setText("#N/A");
+  @Override
+  public void setValue(Object value) {
+    if (value instanceof Long) {
+      long longValue = (Long)value;
+      if (!(longValue == Long.MAX_VALUE || longValue == Long.MIN_VALUE)) {
+        setText(formatter.format(longValue));
+        return;
+      }
     }
+    setText("#N/A");
+  }
 }

@@ -23,5 +23,4 @@ package org.apache.jmeter.engine.util;
  * to clone every test element for each thread.
  *
  */
-public interface NoThreadClone {
-}
+public interface NoThreadClone {}

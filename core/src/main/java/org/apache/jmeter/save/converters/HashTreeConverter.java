@@ -17,67 +17,66 @@
 
 package org.apache.jmeter.save.converters;
 
-import org.apache.jorphan.collections.HashTree;
-
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.collections.AbstractCollectionConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
+import org.apache.jorphan.collections.HashTree;
 
 public class HashTreeConverter extends AbstractCollectionConverter {
 
-    /**
-     * Returns the converter version; used to check for possible
-     * incompatibilities
-     *
-     * @return the version of this converter
-     */
-    public static String getVersion() {
-        return "$Revision$";  //$NON-NLS-1$
-    }
+  /**
+   * Returns the converter version; used to check for possible
+   * incompatibilities
+   *
+   * @return the version of this converter
+   */
+  public static String getVersion() {
+    return "$Revision$"; //$NON-NLS-1$
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean canConvert(@SuppressWarnings("rawtypes") Class arg0) { // superclass does not use types
-        return HashTree.class.isAssignableFrom(arg0);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public boolean canConvert(@SuppressWarnings("rawtypes")
+                            Class arg0) { // superclass does not use types
+    return HashTree.class.isAssignableFrom(arg0);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void marshal(Object arg0, HierarchicalStreamWriter writer, MarshallingContext context) {
-        HashTree tree = (HashTree) arg0;
-        for (Object item : tree.list()) {
-            writeCompleteItem(item, context, writer);
-            writeCompleteItem(tree.getTree(item), context, writer);
-        }
-
+  /** {@inheritDoc} */
+  @Override
+  public void marshal(Object arg0, HierarchicalStreamWriter writer,
+                      MarshallingContext context) {
+    HashTree tree = (HashTree)arg0;
+    for (Object item : tree.list()) {
+      writeCompleteItem(item, context, writer);
+      writeCompleteItem(tree.getTree(item), context, writer);
     }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        boolean isKey = true;
-        Object current = null;
-        HashTree tree = (HashTree) createCollection(context.getRequiredType());
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            Object item = readBareItem(reader, context, tree);
-            if (isKey) {
-                tree.add(item);
-                current = item;
-                isKey = false;
-            } else {
-                tree.set(current, (HashTree) item);
-                isKey = true;
-            }
-            reader.moveUp();
-        }
-        return tree;
+  /** {@inheritDoc} */
+  @Override
+  public Object unmarshal(HierarchicalStreamReader reader,
+                          UnmarshallingContext context) {
+    boolean isKey = true;
+    Object current = null;
+    HashTree tree = (HashTree)createCollection(context.getRequiredType());
+    while (reader.hasMoreChildren()) {
+      reader.moveDown();
+      Object item = readBareItem(reader, context, tree);
+      if (isKey) {
+        tree.add(item);
+        current = item;
+        isKey = false;
+      } else {
+        tree.set(current, (HashTree)item);
+        isKey = true;
+      }
+      reader.moveUp();
     }
+    return tree;
+  }
 
-    public HashTreeConverter(Mapper arg0) {
-        super(arg0);
-    }
+  public HashTreeConverter(Mapper arg0) { super(arg0); }
 }

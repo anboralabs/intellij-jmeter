@@ -28,32 +28,32 @@ import org.apache.jmeter.report.core.Converters;
  */
 public class ConfigurationUtils {
 
-    /**
-     * Instantiates a new configuration utils.
-     */
-    private ConfigurationUtils() {
-    }
+  /**
+   * Instantiates a new configuration utils.
+   */
+  private ConfigurationUtils() {}
 
-    /**
-     * Convert the specified string value to the property type.
-     *
-     * @param <TProperty>
-     *            the type of the property
-     * @param value
-     *            the string value
-     * @param clazz
-     *            the class of the property (must not be {@code null})
-     * @return the converted string
-     * @throws ConfigurationException
-     *             when unable to convert the string
-     */
-    public static <TProperty> TProperty convert(String value,
-            Class<TProperty> clazz) throws ConfigurationException {
-        try {
-            return Converters.convert(clazz, value);
-        } catch (ConvertException ex) {
-            throw new ConfigurationException(String.format(
-                    "Convert \"%s\" to \"%s\" is not supported", value, clazz.getName()));
-        }
+  /**
+   * Convert the specified string value to the property type.
+   *
+   * @param <TProperty>
+   *            the type of the property
+   * @param value
+   *            the string value
+   * @param clazz
+   *            the class of the property (must not be {@code null})
+   * @return the converted string
+   * @throws ConfigurationException
+   *             when unable to convert the string
+   */
+  public static <TProperty> TProperty convert(String value,
+                                              Class<TProperty> clazz)
+      throws ConfigurationException {
+    try {
+      return Converters.convert(clazz, value);
+    } catch (ConvertException ex) {
+      throw new ConfigurationException(String.format(
+          "Convert \"%s\" to \"%s\" is not supported", value, clazz.getName()));
     }
+  }
 }

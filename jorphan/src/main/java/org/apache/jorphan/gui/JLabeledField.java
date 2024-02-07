@@ -17,20 +17,20 @@
 
 package org.apache.jorphan.gui;
 
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
-import java.util.List;
 
 /**
  */
 public interface JLabeledField {
-    String getText();
+  String getText();
 
-    void setText(String text);
+  void setText(String text);
 
-    void setLabel(String pLabel);
+  void setLabel(String pLabel);
 
-    void addChangeListener(ChangeListener pChangeListener);
+  void addChangeListener(ChangeListener pChangeListener);
 
-    List<JComponent> getComponentList();
+  List<JComponent> getComponentList();
 }

@@ -17,52 +17,53 @@
 
 package org.apache.jorphan.gui.ui;
 
-import org.apiguardian.api.API;
-
 import javax.swing.*;
 import javax.swing.plaf.ComponentUI;
 import javax.swing.text.JTextComponent;
+import org.apiguardian.api.API;
 
 /**
  * Installs undo for all {@code TextField} Swing components.
  */
 @API(since = "5.3", status = API.Status.EXPERIMENTAL)
 public class TextFieldUIWithUndo {
-    public static final String UI_CLASS = "TextFieldUI"; // $NON-NLS-1$
-    public static final String BACKUP_UI_CLASS = "[jmeter]" + UI_CLASS; // $NON-NLS-1$
+  public static final String UI_CLASS = "TextFieldUI"; // $NON-NLS-1$
+  public static final String BACKUP_UI_CLASS =
+      "[jmeter]" + UI_CLASS; // $NON-NLS-1$
 
-    /**
-     * Configures {@link UIDefaults} to use the patched class for {@code TextFieldUI}.
-     * @param defaults look and feel defaults
-     */
-    public static void install(UIDefaults defaults) {
-        Object lafUI = defaults.get(UI_CLASS);
-        String newUI = TextFieldUIWithUndo.class.getName();
-        if (newUI.equals(lafUI)) {
-            // Do not install the hook twice
-            return;
-        }
-        defaults.put(BACKUP_UI_CLASS, lafUI);
-        defaults.put(UI_CLASS, newUI);
+  /**
+   * Configures {@link UIDefaults} to use the patched class for {@code
+   * TextFieldUI}.
+   * @param defaults look and feel defaults
+   */
+  public static void install(UIDefaults defaults) {
+    Object lafUI = defaults.get(UI_CLASS);
+    String newUI = TextFieldUIWithUndo.class.getName();
+    if (newUI.equals(lafUI)) {
+      // Do not install the hook twice
+      return;
     }
+    defaults.put(BACKUP_UI_CLASS, lafUI);
+    defaults.put(UI_CLASS, newUI);
+  }
 
-    /**
-     * Creates a UI for a JTextField.
-     * <p>Note: this method is called by Swing.</p>
-     *
-     * @param c the text field
-     * @return the UI
-     */
-    @SuppressWarnings("unused")
-    public static ComponentUI createUI(JComponent c) {
-        TextComponentUI.INSTANCE.installUndo((JTextComponent) c);
-        // Temporary restore the proper UI class
-        UIManager.put(UI_CLASS, UIManager.get(BACKUP_UI_CLASS));
-        try {
-            return UIManager.getUI(c);
-        } finally {
-            // Add our class back so we handle the next created editor
-            UIManager.put(UI_CLASS, TextFieldUIWithUndo.class.getName());
-        }
+  /**
+   * Creates a UI for a JTextField.
+   * <p>Note: this method is called by Swing.</p>
+   *
+   * @param c the text field
+   * @return the UI
+   */
+  @SuppressWarnings("unused")
+  public static ComponentUI createUI(JComponent c) {
+    TextComponentUI.INSTANCE.installUndo((JTextComponent)c);
+    // Temporary restore the proper UI class
+    UIManager.put(UI_CLASS, UIManager.get(BACKUP_UI_CLASS));
+    try {
+      return UIManager.getUI(c);
+    } finally {
+      // Add our class back so we handle the next created editor
+      UIManager.put(UI_CLASS, TextFieldUIWithUndo.class.getName());
     }
+  }
 }

@@ -26,15 +26,17 @@ import java.util.List;
  * Collects all the failures in a collection.
  * @param <S> the service type
  */
-public class CollectServiceLoadExceptionHandler<S> implements ServiceLoadExceptionHandler<S> {
-    private final List<ServiceLoadFailure<S>> failures = new ArrayList<>();
+public class CollectServiceLoadExceptionHandler<S>
+    implements ServiceLoadExceptionHandler<S> {
+  private final List<ServiceLoadFailure<S>> failures = new ArrayList<>();
 
-    @Override
-    public void handle(Class<? extends S> service, String className, Throwable throwable) {
-        failures.add(new ServiceLoadFailure<>(service, className, throwable));
-    }
+  @Override
+  public void handle(Class<? extends S> service, String className,
+                     Throwable throwable) {
+    failures.add(new ServiceLoadFailure<>(service, className, throwable));
+  }
 
-    public Collection<ServiceLoadFailure<S>> toCollection() {
-        return Collections.unmodifiableCollection(failures);
-    }
+  public Collection<ServiceLoadFailure<S>> toCollection() {
+    return Collections.unmodifiableCollection(failures);
+  }
 }

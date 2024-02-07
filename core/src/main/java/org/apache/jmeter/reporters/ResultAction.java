@@ -18,7 +18,6 @@
 package org.apache.jmeter.reporters;
 
 import java.io.Serializable;
-
 import org.apache.jmeter.samplers.SampleEvent;
 import org.apache.jmeter.samplers.SampleListener;
 import org.apache.jmeter.samplers.SampleResult;
@@ -31,64 +30,66 @@ import org.slf4j.LoggerFactory;
  * ResultAction - take action based on the status of the last Result
  *
  */
-public class ResultAction extends OnErrorTestElement implements Serializable, SampleListener {
+public class ResultAction
+    extends OnErrorTestElement implements Serializable, SampleListener {
 
-    private static final long serialVersionUID = 242L;
+  private static final long serialVersionUID = 242L;
 
-    private static final Logger log = LoggerFactory.getLogger(ResultAction.class);
+  private static final Logger log = LoggerFactory.getLogger(ResultAction.class);
 
-    /**
-     * Constructor is initially called once for each occurrence in the test plan
-     * For GUI, several more instances are created Then clear is called at start
-     * of test Called several times during test startup The name will not
-     * necessarily have been set at this point.
-     */
-    public ResultAction() {
-        super();
+  /**
+   * Constructor is initially called once for each occurrence in the test plan
+   * For GUI, several more instances are created Then clear is called at start
+   * of test Called several times during test startup The name will not
+   * necessarily have been set at this point.
+   */
+  public ResultAction() { super(); }
+
+  /**
+   * Examine the sample(s) and take appropriate action
+   *
+   * @see
+   *     org.apache.jmeter.samplers.SampleListener#sampleOccurred(org.apache.jmeter.samplers.SampleEvent)
+   */
+  @Override
+  public void sampleOccurred(SampleEvent e) {
+    SampleResult s = e.getResult();
+    if (log.isDebugEnabled()) {
+      log.debug("ResultStatusHandler {} for {} OK? {}", getName(),
+                s.getSampleLabel(), s.isSuccessful());
     }
-
-    /**
-     * Examine the sample(s) and take appropriate action
-     *
-     * @see org.apache.jmeter.samplers.SampleListener#sampleOccurred(org.apache.jmeter.samplers.SampleEvent)
-     */
-    @Override
-    public void sampleOccurred(SampleEvent e) {
-        SampleResult s = e.getResult();
-        if (log.isDebugEnabled()) {
-            log.debug("ResultStatusHandler {} for {} OK? {}", getName(), s.getSampleLabel(), s.isSuccessful());
-        }
-        if (!s.isSuccessful()) {
-            if (isStopTestNow()) {
-                s.setStopTestNow(true);
-            } else if (isStopTest()) {
-                s.setStopTest(true);
-            } else if (isStopThread()) {
-                s.setStopThread(true);
-            } else if (isStartNextThreadLoop()) {
-                s.setTestLogicalAction(TestLogicalAction.START_NEXT_ITERATION_OF_THREAD);
-            } else if(isStartNextIterationOfCurrentLoop()) {
-                s.setTestLogicalAction(TestLogicalAction.START_NEXT_ITERATION_OF_CURRENT_LOOP);
-            } else if(isBreakCurrentLoop()) {
-                s.setTestLogicalAction(TestLogicalAction.BREAK_CURRENT_LOOP);
-            }
-        }
+    if (!s.isSuccessful()) {
+      if (isStopTestNow()) {
+        s.setStopTestNow(true);
+      } else if (isStopTest()) {
+        s.setStopTest(true);
+      } else if (isStopThread()) {
+        s.setStopThread(true);
+      } else if (isStartNextThreadLoop()) {
+        s.setTestLogicalAction(
+            TestLogicalAction.START_NEXT_ITERATION_OF_THREAD);
+      } else if (isStartNextIterationOfCurrentLoop()) {
+        s.setTestLogicalAction(
+            TestLogicalAction.START_NEXT_ITERATION_OF_CURRENT_LOOP);
+      } else if (isBreakCurrentLoop()) {
+        s.setTestLogicalAction(TestLogicalAction.BREAK_CURRENT_LOOP);
+      }
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void sampleStarted(SampleEvent e) {
-        // not used
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void sampleStarted(SampleEvent e) {
+    // not used
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void sampleStopped(SampleEvent e) {
-        // not used
-    }
-
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void sampleStopped(SampleEvent e) {
+    // not used
+  }
 }

@@ -20,128 +20,128 @@ package org.apache.jmeter.samplers;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
-
 import org.apache.jmeter.util.JMeterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The standard remote sample reporting should be more friendly to the main purpose of
- * remote testing - which is scalability.  To increase scalability, this class strips out the
- * response data before sending.
+ * The standard remote sample reporting should be more friendly to the main
+ * purpose of remote testing - which is scalability.  To increase scalability,
+ * this class strips out the response data before sending.
  */
-public class DataStrippingSampleSender extends AbstractSampleSender implements Serializable {
+public class DataStrippingSampleSender
+    extends AbstractSampleSender implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    /** empty array which can be returned instead of null */
-    private static final byte[] EMPTY_BA = new byte[0];
+  /** empty array which can be returned instead of null */
+  private static final byte[] EMPTY_BA = new byte[0];
 
-    private static final Logger log = LoggerFactory.getLogger(DataStrippingSampleSender.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(DataStrippingSampleSender.class);
 
-    private static final boolean DEFAULT_STRIP_ALSO_ON_ERROR = true;
+  private static final boolean DEFAULT_STRIP_ALSO_ON_ERROR = true;
 
-    private static final boolean SERVER_CONFIGURED_STRIP_ALSO_ON_ERROR =
-            JMeterUtils.getPropDefault("sample_sender_strip_also_on_error", DEFAULT_STRIP_ALSO_ON_ERROR); // $NON-NLS-1$
+  private static final boolean SERVER_CONFIGURED_STRIP_ALSO_ON_ERROR =
+      JMeterUtils.getPropDefault("sample_sender_strip_also_on_error",
+                                 DEFAULT_STRIP_ALSO_ON_ERROR); // $NON-NLS-1$
 
-    // instance fields are copied from the client instance
-    private final boolean clientConfiguredStripAlsoOnError =
-            JMeterUtils.getPropDefault("sample_sender_strip_also_on_error", DEFAULT_STRIP_ALSO_ON_ERROR); // $NON-NLS-1$
+  // instance fields are copied from the client instance
+  private final boolean clientConfiguredStripAlsoOnError =
+      JMeterUtils.getPropDefault("sample_sender_strip_also_on_error",
+                                 DEFAULT_STRIP_ALSO_ON_ERROR); // $NON-NLS-1$
 
+  private final RemoteSampleListener listener;
+  private final SampleSender decoratedSender;
+  // Configuration items, set up by readResolve
+  private transient volatile boolean stripAlsoOnError;
 
-    private final RemoteSampleListener listener;
-    private final SampleSender decoratedSender;
-    // Configuration items, set up by readResolve
-    private transient volatile boolean stripAlsoOnError;
+  /**
+   * @deprecated only for use by test code
+   */
+  @Deprecated
+  public DataStrippingSampleSender() {
+    log.warn("Constructor only intended for use in testing"); // $NON-NLS-1$
+    listener = null;
+    decoratedSender = null;
+  }
 
+  DataStrippingSampleSender(RemoteSampleListener listener) {
+    this.listener = listener;
+    decoratedSender = null;
+    log.info("Using DataStrippingSampleSender for this run");
+  }
 
-    /**
-     * @deprecated only for use by test code
-     */
-    @Deprecated
-    public DataStrippingSampleSender(){
-        log.warn("Constructor only intended for use in testing"); // $NON-NLS-1$
-        listener = null;
-        decoratedSender = null;
+  DataStrippingSampleSender(SampleSender decorate) {
+    this.decoratedSender = decorate;
+    this.listener = null;
+    log.info("Using DataStrippingSampleSender for this run");
+  }
+
+  @Override
+  public void testEnded(String host) {
+    log.info("Test Ended on {}", host);
+    if (decoratedSender != null) {
+      decoratedSender.testEnded(host);
     }
+  }
 
-    DataStrippingSampleSender(RemoteSampleListener listener) {
-        this.listener = listener;
-        decoratedSender = null;
-        log.info("Using DataStrippingSampleSender for this run");
+  @Override
+  public void sampleOccurred(SampleEvent event) {
+    // Strip the response data before writing, but only for a successful
+    // request.
+    SampleResult result = event.getResult();
+    if (stripAlsoOnError || result.isSuccessful()) {
+      stripContent(result, 3);
     }
+    if (decoratedSender == null) {
+      try {
+        listener.sampleOccurred(event);
+      } catch (RemoteException e) {
+        log.error("Error sending sample result over network", e);
+      }
+    } else {
+      decoratedSender.sampleOccurred(event);
+    }
+  }
 
-    DataStrippingSampleSender(SampleSender decorate)
-    {
-        this.decoratedSender = decorate;
-        this.listener = null;
-        log.info("Using DataStrippingSampleSender for this run");
+  private static void stripContent(SampleResult result, int level) {
+    if (level < 0) {
+      return;
     }
+    // Compute bytes before stripping
+    stripResponse(result);
+    // see Bug 57449 and 63674
+    for (SampleResult subResult : result.getSubResults()) {
+      stripContent(subResult, level - 1);
+    }
+  }
 
-    @Override
-    public void testEnded(String host) {
-        log.info("Test Ended on {}", host);
-        if(decoratedSender != null) {
-            decoratedSender.testEnded(host);
-        }
-    }
+  /**
+   * Strip response but fill in bytes field.
+   * @param result {@link SampleResult}
+   */
+  private static void stripResponse(SampleResult result) {
+    result.setBytes(result.getBytesAsLong());
+    result.setResponseData(EMPTY_BA);
+  }
 
-    @Override
-    public void sampleOccurred(SampleEvent event) {
-        //Strip the response data before writing, but only for a successful request.
-        SampleResult result = event.getResult();
-        if(stripAlsoOnError || result.isSuccessful()) {
-            stripContent(result, 3);
-        }
-        if(decoratedSender == null)
-        {
-            try {
-                listener.sampleOccurred(event);
-            } catch (RemoteException e) {
-                log.error("Error sending sample result over network", e);
-            }
-        }
-        else
-        {
-            decoratedSender.sampleOccurred(event);
-        }
+  /**
+   * Processed by the RMI server code; acts as testStarted().
+   *
+   * @return this
+   * @throws ObjectStreamException
+   *             never
+   */
+  protected Object readResolve() throws ObjectStreamException {
+    if (isClientConfigured()) {
+      stripAlsoOnError = clientConfiguredStripAlsoOnError;
+    } else {
+      stripAlsoOnError = SERVER_CONFIGURED_STRIP_ALSO_ON_ERROR;
     }
-
-    private static void stripContent(SampleResult result, int level) {
-        if (level < 0) {
-            return;
-        }
-        // Compute bytes before stripping
-        stripResponse(result);
-        // see Bug 57449 and 63674
-        for (SampleResult subResult : result.getSubResults()) {
-            stripContent(subResult, level - 1);
-        }
-    }
-
-    /**
-     * Strip response but fill in bytes field.
-     * @param result {@link SampleResult}
-     */
-    private static void stripResponse(SampleResult result) {
-        result.setBytes(result.getBytesAsLong());
-        result.setResponseData(EMPTY_BA);
-    }
-
-    /**
-     * Processed by the RMI server code; acts as testStarted().
-     *
-     * @return this
-     * @throws ObjectStreamException
-     *             never
-     */
-    protected Object readResolve() throws ObjectStreamException{
-        if (isClientConfigured()) {
-            stripAlsoOnError = clientConfiguredStripAlsoOnError;
-        } else {
-            stripAlsoOnError = SERVER_CONFIGURED_STRIP_ALSO_ON_ERROR;
-        }
-        log.info("Using DataStrippingSampleSender for this run with stripAlsoOnError: {}", stripAlsoOnError);
-        return this;
-    }
+    log.info(
+        "Using DataStrippingSampleSender for this run with stripAlsoOnError: {}",
+        stripAlsoOnError);
+    return this;
+  }
 }

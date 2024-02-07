@@ -19,7 +19,6 @@ package org.apache.jmeter.util;
 
 import java.util.Arrays;
 import java.util.Properties;
-
 import org.apache.jmeter.testbeans.TestBean;
 
 /**
@@ -27,20 +26,20 @@ import org.apache.jmeter.testbeans.TestBean;
  */
 public abstract class BSFBeanInfoSupport extends ScriptingBeanInfoSupport {
 
-    private static final String[] LANGUAGE_TAGS;
+  private static final String[] LANGUAGE_TAGS;
 
-    static {
-        Properties languages = JMeterUtils.loadProperties("org/apache/bsf/Languages.properties"); // $NON-NLS-1$
-        LANGUAGE_TAGS = new String[languages.size()];
-        int i = 0;
-        for (Object language : languages.keySet()) {
-            LANGUAGE_TAGS[i++] = language.toString();
-        }
-        Arrays.sort(LANGUAGE_TAGS);
+  static {
+    Properties languages = JMeterUtils.loadProperties(
+        "org/apache/bsf/Languages.properties"); // $NON-NLS-1$
+    LANGUAGE_TAGS = new String[languages.size()];
+    int i = 0;
+    for (Object language : languages.keySet()) {
+      LANGUAGE_TAGS[i++] = language.toString();
     }
+    Arrays.sort(LANGUAGE_TAGS);
+  }
 
-    protected BSFBeanInfoSupport(Class<? extends TestBean> beanClass) {
-        super(beanClass, LANGUAGE_TAGS);
-    }
-
+  protected BSFBeanInfoSupport(Class<? extends TestBean> beanClass) {
+    super(beanClass, LANGUAGE_TAGS);
+  }
 }

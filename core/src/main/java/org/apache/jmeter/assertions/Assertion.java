@@ -27,16 +27,16 @@ import org.apache.jmeter.samplers.SampleResult;
  *
  */
 public interface Assertion {
-    /**
-     * Returns the AssertionResult object encapsulating information about the
-     * success or failure of the assertion.
-     *
-     * @param response
-     *            the SampleResult containing information about the Sample
-     *            (duration, success, etc)
-     *
-     * @return the AssertionResult containing the information about whether the
-     *         assertion passed or failed.
-     */
-    AssertionResult getResult(SampleResult response);
+  /**
+   * Returns the AssertionResult object encapsulating information about the
+   * success or failure of the assertion.
+   *
+   * @param response
+   *            the SampleResult containing information about the Sample
+   *            (duration, success, etc)
+   *
+   * @return the AssertionResult containing the information about whether the
+   *         assertion passed or failed.
+   */
+  AssertionResult getResult(SampleResult response);
 }

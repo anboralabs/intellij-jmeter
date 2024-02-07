@@ -17,12 +17,12 @@
 
 package org.apache.jorphan.util;
 
-import javax.management.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import javax.management.*;
 
 /**
  * Class allowing access to Sun's heapDump method (Java 1.6+).
@@ -31,167 +31,173 @@ import java.time.format.DateTimeFormatter;
  */
 public class HeapDumper {
 
-    // SingletonHolder idiom for lazy initialisation
-    private static class DumperHolder {
-        private static final HeapDumper DUMPER = new HeapDumper();
+  // SingletonHolder idiom for lazy initialisation
+  private static class DumperHolder {
+    private static final HeapDumper DUMPER = new HeapDumper();
+  }
+
+  private static HeapDumper getInstance() { return DumperHolder.DUMPER; }
+
+  // This is the name of the HotSpot Diagnostic platform MBean (Sun Java 1.6)
+  // See:
+  // http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/HotSpotDiagnosticMXBean.html
+  private static final String HOTSPOT_BEAN_NAME =
+      "com.sun.management:type=HotSpotDiagnostic";
+
+  // These are needed for invoking the method
+  private final MBeanServer server;
+  private final ObjectName hotspotDiagnosticBean;
+
+  // If we could not find the method, store the exception here
+  private final Exception exception;
+
+  // Only invoked by IODH class
+  private HeapDumper() {
+    server =
+        ManagementFactory.getPlatformMBeanServer(); // get the platform beans
+    ObjectName on = null;
+    Exception ex = null;
+    try {
+      on = new ObjectName(HOTSPOT_BEAN_NAME); // should never fail
+      server.getObjectInstance(on); // See if we can actually find the object
+    } catch (MalformedObjectNameException e) { // Should never happen
+      throw new AssertionError(
+          "Could not establish the HotSpotDiagnostic Bean Name: " + e);
+    } catch (InstanceNotFoundException e) {
+      ex = e;
+      on = null; // Prevent useless dump attempts
     }
+    exception = ex;
+    hotspotDiagnosticBean = on;
+  }
 
-    private static HeapDumper getInstance(){
-        return DumperHolder.DUMPER;
+  /**
+   * Initialise the dumper, and report if there is a problem.
+   * This is optional, as the dump methods will initialise if necessary.
+   *
+   * @throws Exception if there is a problem finding the heapDump MXBean
+   */
+  public static void init() throws Exception {
+    Exception e = getInstance().exception;
+    if (e != null) {
+      throw e;
     }
+  }
 
-    // This is the name of the HotSpot Diagnostic platform MBean (Sun Java 1.6)
-    // See: http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/HotSpotDiagnosticMXBean.html
-    private static final String HOTSPOT_BEAN_NAME =
-         "com.sun.management:type=HotSpotDiagnostic";
+  /**
+   * Dumps the heap to the outputFile file in the same format as the hprof heap
+   * dump. <p> Calls the dumpHeap() method of the HotSpotDiagnostic MXBean, if
+   * available. <p> See <a
+   * href="http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/HotSpotDiagnosticMXBean.html">
+   * HotSpotDiagnosticMXBean
+   * </a>
+   * @param fileName name of the heap dump file. Must be creatable, i.e. must
+   *     not exist.
+   * @param live if true, dump only the live objects
+   * @throws Exception if the MXBean cannot be found, or if there is a problem
+   *     during invocation
+   */
+  public static void dumpHeap(String fileName, boolean live) throws Exception {
+    getInstance().dumpHeap0(fileName, live);
+  }
 
-    // These are needed for invoking the method
-    private final MBeanServer server;
-    private final ObjectName hotspotDiagnosticBean;
+  /**
+   * Dumps live objects from the heap to the outputFile file in the same format
+   * as the hprof heap dump.
+   *
+   * @see #dumpHeap(String, boolean)
+   * @param fileName name of the heap dump file. Must be creatable, i.e. must
+   *     not exist.
+   * @throws Exception if the MXBean cannot be found, or if there is a problem
+   *     during invocation
+   */
+  public static void dumpHeap(String fileName) throws Exception {
+    dumpHeap(fileName, true);
+  }
 
-    // If we could not find the method, store the exception here
-    private final Exception exception;
+  /**
+   * Dumps live objects from the heap to the outputFile file in the same format
+   * as the hprof heap dump. <p> Creates the dump using the file name:
+   * dump_yyyyMMdd_hhmmss_SSS.hprof The dump is created in the current
+   * directory.
+   * </p>
+   * @see #dumpHeap(boolean)
+   * @return the name of the dump file that was created
+   * @throws Exception if the MXBean cannot be found, or if there is a problem
+   *     during invocation
+   */
+  public static String dumpHeap() throws Exception { return dumpHeap(true); }
 
-    // Only invoked by IODH class
-    private HeapDumper() {
-        server = ManagementFactory.getPlatformMBeanServer(); // get the platform beans
-        ObjectName on = null;
-        Exception ex = null;
-        try {
-            on = new ObjectName(HOTSPOT_BEAN_NAME); // should never fail
-            server.getObjectInstance(on); // See if we can actually find the object
-        } catch (MalformedObjectNameException e) { // Should never happen
-            throw new AssertionError("Could not establish the HotSpotDiagnostic Bean Name: "+e);
-        } catch (InstanceNotFoundException e) {
-            ex = e;
-            on = null; // Prevent useless dump attempts
-        }
-        exception = ex;
-        hotspotDiagnosticBean = on;
+  /**
+   * Dumps objects from the heap to the outputFile file in the same format as
+   * the hprof heap dump. <p> Creates the dump using the file name:
+   * dump_yyyyMMdd_hhmmss_SSS.hprof The dump is created in the current
+   * directory.
+   * </p>
+   * @see #dumpHeap(String, boolean)
+   * @param live true id only live objects are to be dumped.
+   *
+   * @return the name of the dump file that was created
+   * @throws Exception if the MXBean cannot be found, or if there is a problem
+   *     during invocation
+   */
+  public static String dumpHeap(boolean live) throws Exception {
+    return dumpHeap(new File("."), live);
+  }
+
+  /**
+   * Dumps objects from the heap to the outputFile file in the same format as
+   * the hprof heap dump. The dump is created in the specified directory. <p>
+   * Creates the dump using the file name: dump_yyyyMMdd_hhmmss_SSS.hprof
+   * </p>
+   * @see #dumpHeap(String, boolean)
+   * @param basedir File object for the target base directory.
+   * @param live true id only live objects are to be dumped.
+   *
+   * @return the name of the dump file that was created
+   * @throws Exception if the MXBean cannot be found, or if there is a problem
+   *     during invocation
+   */
+  public static String dumpHeap(File basedir, boolean live) throws Exception {
+    DateTimeFormatter timestampFormat =
+        DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss_SSS")
+            .withZone(ZoneId.systemDefault());
+    String stamp = timestampFormat.format(Instant.now());
+    File temp = new File(basedir, "dump_" + stamp + ".hprof");
+    final String path = temp.getPath();
+    dumpHeap(path, live);
+    return path;
+  }
+
+  /**
+   * Perform the dump using the dumpHeap method.
+   *
+   * @param fileName the file to use
+   * @param live true to dump only live objects
+   * @throws Exception if the MXBean cannot be found, or if there is a problem
+   *     during invocation
+   */
+  private void dumpHeap0(String fileName, boolean live) throws Exception {
+    try {
+      if (exception == null) {
+        server.invoke(hotspotDiagnosticBean, "dumpHeap",
+                      new Object[] {fileName, live},
+                      new String[] {"java.lang.String", "boolean"});
+      } else {
+        throw exception;
+      }
+    } catch (RuntimeMBeanException e) {
+      Throwable f = e.getCause();
+      if (f instanceof Exception) {
+        throw (Exception)f;
+      }
+      throw e;
+    } catch (MBeanException e) {
+      Throwable f = e.getCause();
+      if (f instanceof Exception) {
+        throw (Exception)f;
+      }
+      throw e;
     }
-
-    /**
-     * Initialise the dumper, and report if there is a problem.
-     * This is optional, as the dump methods will initialise if necessary.
-     *
-     * @throws Exception if there is a problem finding the heapDump MXBean
-     */
-    public static void init() throws Exception {
-        Exception e =getInstance().exception;
-        if (e != null) {
-            throw e;
-        }
-    }
-
-    /**
-     * Dumps the heap to the outputFile file in the same format as the hprof heap dump.
-     * <p>
-     * Calls the dumpHeap() method of the HotSpotDiagnostic MXBean, if available.
-     * <p>
-     * See
-     * <a href="http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/HotSpotDiagnosticMXBean.html">
-     * HotSpotDiagnosticMXBean
-     * </a>
-     * @param fileName name of the heap dump file. Must be creatable, i.e. must not exist.
-     * @param live if true, dump only the live objects
-     * @throws Exception if the MXBean cannot be found, or if there is a problem during invocation
-     */
-    public static void dumpHeap(String fileName, boolean live) throws Exception{
-        getInstance().dumpHeap0(fileName, live);
-    }
-
-    /**
-     * Dumps live objects from the heap to the outputFile file in the same format as the hprof heap dump.
-     *
-     * @see #dumpHeap(String, boolean)
-     * @param fileName name of the heap dump file. Must be creatable, i.e. must not exist.
-     * @throws Exception if the MXBean cannot be found, or if there is a problem during invocation
-     */
-    public static void dumpHeap(String fileName) throws Exception{
-        dumpHeap(fileName, true);
-    }
-
-    /**
-     * Dumps live objects from the heap to the outputFile file in the same format as the hprof heap dump.
-     * <p>
-     * Creates the dump using the file name: dump_yyyyMMdd_hhmmss_SSS.hprof
-     * The dump is created in the current directory.
-     * </p>
-     * @see #dumpHeap(boolean)
-     * @return the name of the dump file that was created
-     * @throws Exception if the MXBean cannot be found, or if there is a problem during invocation
-     */
-    public static String dumpHeap() throws Exception{
-        return dumpHeap(true);
-    }
-
-    /**
-     * Dumps objects from the heap to the outputFile file in the same format as the hprof heap dump.
-     * <p>
-     * Creates the dump using the file name: dump_yyyyMMdd_hhmmss_SSS.hprof
-     * The dump is created in the current directory.
-     * </p>
-     * @see #dumpHeap(String, boolean)
-     * @param live true id only live objects are to be dumped.
-     *
-     * @return the name of the dump file that was created
-     * @throws Exception if the MXBean cannot be found, or if there is a problem during invocation
-     */
-    public static String dumpHeap(boolean live) throws Exception {
-        return dumpHeap(new File("."), live);
-    }
-
-    /**
-     * Dumps objects from the heap to the outputFile file in the same format as the hprof heap dump.
-     * The dump is created in the specified directory.
-     * <p>
-     * Creates the dump using the file name: dump_yyyyMMdd_hhmmss_SSS.hprof
-     * </p>
-     * @see #dumpHeap(String, boolean)
-     * @param basedir File object for the target base directory.
-     * @param live true id only live objects are to be dumped.
-     *
-     * @return the name of the dump file that was created
-     * @throws Exception if the MXBean cannot be found, or if there is a problem during invocation
-     */
-    public static String dumpHeap(File basedir, boolean live) throws Exception {
-        DateTimeFormatter timestampFormat = DateTimeFormatter.ofPattern("yyyyMMdd_hhmmss_SSS").withZone(ZoneId.systemDefault());
-        String stamp = timestampFormat.format(Instant.now());
-        File temp = new File(basedir,"dump_"+stamp+".hprof");
-        final String path = temp.getPath();
-        dumpHeap(path, live);
-        return path;
-    }
-
-    /**
-     * Perform the dump using the dumpHeap method.
-     *
-     * @param fileName the file to use
-     * @param live true to dump only live objects
-     * @throws Exception if the MXBean cannot be found, or if there is a problem during invocation
-     */
-    private void dumpHeap0(String fileName, boolean live) throws Exception {
-        try {
-            if (exception == null) {
-                server.invoke(hotspotDiagnosticBean,
-                        "dumpHeap",
-                        new Object[]{fileName, live},
-                        new String[]{"java.lang.String", "boolean"});
-            } else {
-                throw exception;
-            }
-        } catch (RuntimeMBeanException e) {
-            Throwable f = e.getCause();
-            if (f instanceof Exception){
-                throw (Exception) f;
-            }
-            throw e;
-        } catch (MBeanException e) {
-            Throwable f = e.getCause();
-            if (f instanceof Exception){
-                throw (Exception) f;
-            }
-            throw e;
-        }
-    }
+  }
 }

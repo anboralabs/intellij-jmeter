@@ -18,7 +18,6 @@
 package org.apache.jmeter.reporters;
 
 import java.lang.ref.WeakReference;
-
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.visualizers.Visualizer;
 
@@ -27,30 +26,29 @@ import org.apache.jmeter.visualizers.Visualizer;
  */
 
 public abstract class AbstractListenerElement extends AbstractTestElement {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    // TODO should class implement SampleListener?
-    private transient WeakReference<Visualizer> listener;
+  // TODO should class implement SampleListener?
+  private transient WeakReference<Visualizer> listener;
 
-    protected AbstractListenerElement() {
+  protected AbstractListenerElement() {}
+
+  protected final Visualizer getVisualizer() {
+    if (listener == null) { // e.g. in non-GUI mode
+      return null;
     }
+    return listener.get();
+  }
 
-    protected final Visualizer getVisualizer() {
-        if (listener == null){ // e.g. in non-GUI mode
-            return null;
-        }
-        return listener.get();
-    }
+  public void setListener(Visualizer vis) {
+    listener = new WeakReference<>(vis);
+  }
 
-    public void setListener(Visualizer vis) {
-        listener = new WeakReference<>(vis);
-    }
+  @Override
+  public Object clone() {
+    AbstractListenerElement clone = (AbstractListenerElement)super.clone();
 
-    @Override
-    public Object clone() {
-        AbstractListenerElement clone = (AbstractListenerElement) super.clone();
-
-        clone.listener=this.listener;
-        return clone;
-    }
+    clone.listener = this.listener;
+    return clone;
+  }
 }

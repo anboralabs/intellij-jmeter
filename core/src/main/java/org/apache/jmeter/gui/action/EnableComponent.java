@@ -17,73 +17,73 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Implements the Enable menu item.
  */
 @AutoService(Command.class)
 public class EnableComponent extends AbstractAction {
-    private static final Logger log = LoggerFactory.getLogger(EnableComponent.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(EnableComponent.class);
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.ENABLE);
-        commands.add(ActionNames.DISABLE);
-        commands.add(ActionNames.TOGGLE);
+  static {
+    commands.add(ActionNames.ENABLE);
+    commands.add(ActionNames.DISABLE);
+    commands.add(ActionNames.TOGGLE);
+  }
+
+  /**
+   * @see org.apache.jmeter.gui.action.Command#doAction(ActionEvent)
+   */
+  @Override
+  public void doAction(ActionEvent e) {
+    JMeterTreeNode[] nodes =
+        GuiPackage.getInstance().getTreeListener().getSelectedNodes();
+
+    if (e.getActionCommand().equals(ActionNames.ENABLE)) {
+      log.debug("enabling currently selected gui objects");
+      enableComponents(nodes, true);
+    } else if (e.getActionCommand().equals(ActionNames.DISABLE)) {
+      log.debug("disabling currently selected gui objects");
+      enableComponents(nodes, false);
+    } else if (e.getActionCommand().equals(ActionNames.TOGGLE)) {
+      log.debug("toggling currently selected gui objects");
+      toggleComponents(nodes);
     }
+  }
 
-    /**
-     * @see org.apache.jmeter.gui.action.Command#doAction(ActionEvent)
-     */
-    @Override
-    public void doAction(ActionEvent e) {
-        JMeterTreeNode[] nodes = GuiPackage.getInstance().getTreeListener().getSelectedNodes();
-
-        if (e.getActionCommand().equals(ActionNames.ENABLE)) {
-            log.debug("enabling currently selected gui objects");
-            enableComponents(nodes, true);
-        } else if (e.getActionCommand().equals(ActionNames.DISABLE)) {
-            log.debug("disabling currently selected gui objects");
-            enableComponents(nodes, false);
-        } else if (e.getActionCommand().equals(ActionNames.TOGGLE)) {
-            log.debug("toggling currently selected gui objects");
-            toggleComponents(nodes);
-        }
+  private static void enableComponents(JMeterTreeNode[] nodes, boolean enable) {
+    GuiPackage pack = GuiPackage.getInstance();
+    for (JMeterTreeNode node : nodes) {
+      node.setEnabled(enable);
+      pack.getGui(node.getTestElement()).setEnabled(enable);
     }
+  }
 
-    private static void enableComponents(JMeterTreeNode[] nodes, boolean enable) {
-        GuiPackage pack = GuiPackage.getInstance();
-        for (JMeterTreeNode node : nodes) {
-            node.setEnabled(enable);
-            pack.getGui(node.getTestElement()).setEnabled(enable);
-        }
+  private static void toggleComponents(JMeterTreeNode[] nodes) {
+    GuiPackage pack = GuiPackage.getInstance();
+    for (JMeterTreeNode node : nodes) {
+      boolean enable = !node.isEnabled();
+      node.setEnabled(enable);
+      pack.getGui(node.getTestElement()).setEnabled(enable);
     }
+  }
 
-    private static void toggleComponents(JMeterTreeNode[] nodes) {
-        GuiPackage pack = GuiPackage.getInstance();
-        for (JMeterTreeNode node : nodes) {
-            boolean enable = !node.isEnabled();
-            node.setEnabled(enable);
-            pack.getGui(node.getTestElement()).setEnabled(enable);
-        }
-    }
-
-    /**
-     * @see org.apache.jmeter.gui.action.Command#getActionNames()
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * @see org.apache.jmeter.gui.action.Command#getActionNames()
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 }

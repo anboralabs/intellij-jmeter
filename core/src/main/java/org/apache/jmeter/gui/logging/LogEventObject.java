@@ -18,7 +18,6 @@
 package org.apache.jmeter.gui.logging;
 
 import java.util.EventObject;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LogEvent;
 
@@ -28,49 +27,47 @@ import org.apache.logging.log4j.core.LogEvent;
  */
 public class LogEventObject extends EventObject {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    private Level level;
-    private final String seralizedString;
+  private Level level;
+  private final String seralizedString;
 
-    public LogEventObject(Object source) {
-        this(source, null);
+  public LogEventObject(Object source) { this(source, null); }
+
+  public LogEventObject(Object source, String seralizedString) {
+    super(source);
+    if (source instanceof LogEvent) {
+      level = ((LogEvent)source).getLevel();
     }
+    this.seralizedString = seralizedString;
+  }
 
-    public LogEventObject(Object source, String seralizedString) {
-        super(source);
-        if (source instanceof LogEvent) {
-            level = ((LogEvent) source).getLevel();
-        }
-        this.seralizedString = seralizedString;
+  public boolean isMoreSpecificThanError() {
+    if (level != null) {
+      return level.isMoreSpecificThan(Level.ERROR);
     }
+    return false;
+  }
 
-    public boolean isMoreSpecificThanError() {
-        if (level != null) {
-            return level.isMoreSpecificThan(Level.ERROR);
-        }
-        return false;
+  public boolean isMoreSpecificThanWarn() {
+    if (level != null) {
+      return level.isMoreSpecificThan(Level.WARN);
     }
+    return false;
+  }
 
-    public boolean isMoreSpecificThanWarn() {
-        if (level != null) {
-            return level.isMoreSpecificThan(Level.WARN);
-        }
-        return false;
+  public boolean isMoreSpecificThanInfo() {
+    if (level != null) {
+      return level.isMoreSpecificThan(Level.INFO);
     }
+    return false;
+  }
 
-    public boolean isMoreSpecificThanInfo() {
-        if (level != null) {
-            return level.isMoreSpecificThan(Level.INFO);
-        }
-        return false;
+  @Override
+  public String toString() {
+    if (seralizedString != null) {
+      return seralizedString;
     }
-
-    @Override
-    public String toString() {
-        if (seralizedString != null) {
-            return seralizedString;
-        }
-        return super.toString();
-    }
+    return super.toString();
+  }
 }

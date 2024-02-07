@@ -27,119 +27,117 @@ import org.apache.jmeter.util.JMeterUtils;
  * Class that implements the Function property
  */
 public class FunctionProperty extends AbstractProperty {
-    private static final long serialVersionUID = 233L;
-    private static final boolean FUNCTION_CACHE_PER_ITERATION =
-            JMeterUtils.getPropDefault("function.cache.per.iteration", false);
+  private static final long serialVersionUID = 233L;
+  private static final boolean FUNCTION_CACHE_PER_ITERATION =
+      JMeterUtils.getPropDefault("function.cache.per.iteration", false);
 
-    private transient CompoundVariable function;
+  private transient CompoundVariable function;
 
-    private int testIteration = -1;
+  private int testIteration = -1;
 
-    /**
-     * The cache will be removed in the subsequent releases.
-     * For now, it is kept for backward compatibility.
-     */
-    private String cacheValue;
+  /**
+   * The cache will be removed in the subsequent releases.
+   * For now, it is kept for backward compatibility.
+   */
+  private String cacheValue;
 
-    private String overrideValue;
+  private String overrideValue;
 
-    public FunctionProperty(String name, CompoundVariable func) {
-        super(name);
-        function = func;
+  public FunctionProperty(String name, CompoundVariable func) {
+    super(name);
+    function = func;
+  }
+
+  public FunctionProperty() { super(); }
+
+  @Override
+  public void setObjectValue(Object v) {
+    if (v instanceof CompoundVariable && !isRunningVersion()) {
+      function = (CompoundVariable)v;
+    } else {
+      overrideValue = v.toString();
     }
+  }
 
-    public FunctionProperty() {
-        super();
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof FunctionProperty) {
+      if (function != null) {
+        return function.equals(((JMeterProperty)o).getObjectValue());
+      }
     }
+    return false;
+  }
 
-    @Override
-    public void setObjectValue(Object v) {
-        if (v instanceof CompoundVariable && !isRunningVersion()) {
-            function = (CompoundVariable) v;
-        } else {
-            overrideValue = v.toString();
-        }
+  @Override
+  public int hashCode() {
+    int hash = super.hashCode();
+    if (function != null) {
+      hash = hash * 37 + function.hashCode();
     }
+    return hash;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof FunctionProperty) {
-            if (function != null) {
-                return function.equals(((JMeterProperty) o).getObjectValue());
-            }
-        }
-        return false;
+  /**
+   * Executes the function (and caches the value for the duration of the test
+   * iteration) if the property is a running version. Otherwise, the raw
+   * string representation of the function is provided.
+   *
+   * @see JMeterProperty#getStringValue()
+   */
+  @Override
+  public String getStringValue() {
+    JMeterContext ctx = JMeterContextService.getContext(); // Expensive, so
+                                                           // do
+    // once
+    if (!isRunningVersion() /*|| !ctx.isSamplingStarted()*/) {
+      log.debug("Not running version, return raw function string");
+      return function.getRawParameters();
     }
-
-    @Override
-    public int hashCode(){
-        int hash = super.hashCode();
-        if (function != null) {
-            hash = hash*37 + function.hashCode();
-        }
-        return hash;
+    String overrideValue = this.overrideValue;
+    if (overrideValue != null) {
+      return overrideValue;
     }
-
-    /**
-     * Executes the function (and caches the value for the duration of the test
-     * iteration) if the property is a running version. Otherwise, the raw
-     * string representation of the function is provided.
-     *
-     * @see JMeterProperty#getStringValue()
-     */
-    @Override
-    public String getStringValue() {
-        JMeterContext ctx = JMeterContextService.getContext();// Expensive, so
-                                                                // do
-        // once
-        if (!isRunningVersion() /*|| !ctx.isSamplingStarted()*/) {
-            log.debug("Not running version, return raw function string");
-            return function.getRawParameters();
-        }
-        String overrideValue = this.overrideValue;
-        if (overrideValue != null) {
-            return overrideValue;
-        }
-        if (!FUNCTION_CACHE_PER_ITERATION || !ctx.isSamplingStarted()) {
-            return function.execute();
-        }
-        log.debug("Running version, executing function");
-        int iter = ctx.getVariables() != null ? ctx.getVariables().getIteration() : -1;
-        if (iter < testIteration) {
-            testIteration = -1;
-        }
-        if (iter > testIteration || cacheValue == null) {
-            testIteration = iter;
-            cacheValue = function.execute();
-        }
-        return cacheValue;
-
+    if (!FUNCTION_CACHE_PER_ITERATION || !ctx.isSamplingStarted()) {
+      return function.execute();
     }
-
-    /**
-     * @see JMeterProperty#getObjectValue()
-     */
-    @Override
-    public Object getObjectValue() {
-        return function;
+    log.debug("Running version, executing function");
+    int iter =
+        ctx.getVariables() != null ? ctx.getVariables().getIteration() : -1;
+    if (iter < testIteration) {
+      testIteration = -1;
     }
-
-    @Override
-    public FunctionProperty clone() {
-        FunctionProperty prop = (FunctionProperty) super.clone();
-        prop.cacheValue = cacheValue;
-        prop.overrideValue = overrideValue;
-        prop.testIteration = testIteration;
-        prop.function = function;
-        return prop;
+    if (iter > testIteration || cacheValue == null) {
+      testIteration = iter;
+      cacheValue = function.execute();
     }
+    return cacheValue;
+  }
 
-    /**
-     * @see JMeterProperty#recoverRunningVersion(TestElement)
-     */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        cacheValue = null;
-        overrideValue = null;
-    }
+  /**
+   * @see JMeterProperty#getObjectValue()
+   */
+  @Override
+  public Object getObjectValue() {
+    return function;
+  }
+
+  @Override
+  public FunctionProperty clone() {
+    FunctionProperty prop = (FunctionProperty)super.clone();
+    prop.cacheValue = cacheValue;
+    prop.overrideValue = overrideValue;
+    prop.testIteration = testIteration;
+    prop.function = function;
+    return prop;
+  }
+
+  /**
+   * @see JMeterProperty#recoverRunningVersion(TestElement)
+   */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    cacheValue = null;
+    overrideValue = null;
+  }
 }

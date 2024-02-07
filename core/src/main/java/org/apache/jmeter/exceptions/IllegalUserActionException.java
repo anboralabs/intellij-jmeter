@@ -20,22 +20,19 @@ package org.apache.jmeter.exceptions;
 /**
  */
 public class IllegalUserActionException extends Exception {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    /**
-     * @deprecated - use IllegalUserActionException(String)
-     */
-    @Deprecated // Needed for serialisation testing
-    public IllegalUserActionException() {
-        super();
-    }
+  /**
+   * @deprecated - use IllegalUserActionException(String)
+   */
+  @Deprecated // Needed for serialisation testing
+  public IllegalUserActionException() {
+    super();
+  }
 
-    public IllegalUserActionException(String name) {
-        super(name);
-    }
+  public IllegalUserActionException(String name) { super(name); }
 
-    public IllegalUserActionException(String name, Throwable t) {
-        super(name, t);
-    }
-
+  public IllegalUserActionException(String name, Throwable t) {
+    super(name, t);
+  }
 }

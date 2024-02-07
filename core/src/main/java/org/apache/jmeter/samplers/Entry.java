@@ -21,73 +21,66 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.jmeter.assertions.Assertion;
 import org.apache.jmeter.config.ConfigElement;
 
 // TODO - the class contents are not used at present - could perhaps be removed
 public class Entry {
 
-    private final Map<Class<?>, ConfigElement> configSet;
+  private final Map<Class<?>, ConfigElement> configSet;
 
-    private Class<?> sampler;
+  private Class<?> sampler;
 
-    private final List<Assertion> assertions;
+  private final List<Assertion> assertions;
 
-    public Entry() {
-        configSet = new HashMap<>();
-        assertions = new ArrayList<>();
+  public Entry() {
+    configSet = new HashMap<>();
+    assertions = new ArrayList<>();
+  }
+
+  public void addAssertion(Assertion assertion) { assertions.add(assertion); }
+
+  public List<Assertion> getAssertions() { return assertions; }
+
+  public void setSamplerClass(Class<?> samplerClass) {
+    this.sampler = samplerClass;
+  }
+
+  public Class<?> getSamplerClass() { return this.sampler; }
+
+  public ConfigElement getConfigElement(Class<?> configClass) {
+    return configSet.get(configClass);
+  }
+
+  public void addConfigElement(ConfigElement config) {
+    addConfigElement(config, config.getClass());
+  }
+
+  /**
+   * Add a config element as a specific class. Usually this is done to add a
+   * subclass as one of it's parent classes.
+   *
+   * @param config
+   *            the {@link ConfigElement} to be added
+   * @param asClass
+   *            the {@link Class} under which the {@link ConfigElement} should
+   *            be registered
+   */
+  public void addConfigElement(ConfigElement config, Class<?> asClass) {
+    if (config != null) {
+      ConfigElement current = configSet.get(asClass);
+      if (current == null) {
+        configSet.put(asClass, cloneIfNecessary(config));
+      } else {
+        current.addConfigElement(config);
+      }
     }
+  }
 
-    public void addAssertion(Assertion assertion) {
-        assertions.add(assertion);
+  private static ConfigElement cloneIfNecessary(ConfigElement config) {
+    if (config.expectsModification()) {
+      return config;
     }
-
-    public List<Assertion> getAssertions() {
-        return assertions;
-    }
-
-    public void setSamplerClass(Class<?> samplerClass) {
-        this.sampler = samplerClass;
-    }
-
-    public Class<?> getSamplerClass() {
-        return this.sampler;
-    }
-
-    public ConfigElement getConfigElement(Class<?> configClass) {
-        return configSet.get(configClass);
-    }
-
-    public void addConfigElement(ConfigElement config) {
-        addConfigElement(config, config.getClass());
-    }
-
-    /**
-     * Add a config element as a specific class. Usually this is done to add a
-     * subclass as one of it's parent classes.
-     *
-     * @param config
-     *            the {@link ConfigElement} to be added
-     * @param asClass
-     *            the {@link Class} under which the {@link ConfigElement} should
-     *            be registered
-     */
-    public void addConfigElement(ConfigElement config, Class<?> asClass) {
-        if (config != null) {
-            ConfigElement current = configSet.get(asClass);
-            if (current == null) {
-                configSet.put(asClass, cloneIfNecessary(config));
-            } else {
-                current.addConfigElement(config);
-            }
-        }
-    }
-
-    private static ConfigElement cloneIfNecessary(ConfigElement config) {
-        if (config.expectsModification()) {
-            return config;
-        }
-        return (ConfigElement) config.clone();
-    }
+    return (ConfigElement)config.clone();
+  }
 }

@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.jmeter.report.core.Sample;
 
 /**
@@ -30,34 +29,31 @@ import org.apache.jmeter.report.core.Sample;
  */
 public class IndexedNameSelector implements GraphKeysSelector {
 
-    /** The names. */
-    private final List<String> names = new ArrayList<>();
+  /** The names. */
+  private final List<String> names = new ArrayList<>();
 
-    /**
-     * Gets the names.
-     *
-     * @return the names
-     */
-    public final List<String> getNames() {
-        return names;
+  /**
+   * Gets the names.
+   *
+   * @return the names
+   */
+  public final List<String> getNames() { return names; }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.SampleSelector#select(org.apache
+   * .jmeter.report.csv.core.Sample)
+   */
+  @Override
+  public Double select(Sample sample) {
+    String name = sample.getName();
+    int index = names.indexOf(name);
+    if (index < 0) {
+      names.add(name);
+      index = names.size() - 1;
     }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.SampleSelector#select(org.apache
-     * .jmeter.report.csv.core.Sample)
-     */
-    @Override
-    public Double select(Sample sample) {
-        String name = sample.getName();
-        int index = names.indexOf(name);
-        if (index < 0) {
-            names.add(name);
-            index = names.size() - 1;
-        }
-        return (double) index;
-    }
-
+    return (double)index;
+  }
 }

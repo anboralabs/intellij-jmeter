@@ -17,59 +17,57 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.util.JMeterError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Change language
  */
 @AutoService(Command.class)
 public class ChangeLanguage extends AbstractActionWithNoRunningTest {
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    private static final Logger log = LoggerFactory.getLogger(ChangeLanguage.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(ChangeLanguage.class);
 
-    static {
-        commands.add(ActionNames.CHANGE_LANGUAGE);
+  static { commands.add(ActionNames.CHANGE_LANGUAGE); }
+
+  /**
+   * @see
+   *     org.apache.jmeter.gui.action.AbstractActionWithNoRunningTest#doActionAfterCheck(ActionEvent)
+   */
+  @Override
+  public void doActionAfterCheck(ActionEvent e) {
+    String locale = ((Component)e.getSource()).getName();
+    Locale loc;
+
+    int sep = locale.indexOf('_');
+    if (sep > 0) {
+      loc = new Locale(locale.substring(0, sep), locale.substring(sep + 1));
+    } else {
+      loc = new Locale(locale, "");
     }
-
-    /**
-     * @see org.apache.jmeter.gui.action.AbstractActionWithNoRunningTest#doActionAfterCheck(ActionEvent)
-     */
-    @Override
-    public void doActionAfterCheck(ActionEvent e) {
-        String locale = ((Component) e.getSource()).getName();
-        Locale loc;
-
-        int sep = locale.indexOf('_');
-        if (sep > 0) {
-            loc = new Locale(locale.substring(0, sep), locale.substring(sep + 1));
-        } else {
-            loc = new Locale(locale, "");
-        }
-        log.debug("Changing locale to {}", loc);
-        try {
-            JMeterUtils.setLocale(loc);
-        } catch (JMeterError err) {
-            JMeterUtils.reportErrorToUser(err.toString());
-        }
+    log.debug("Changing locale to {}", loc);
+    try {
+      JMeterUtils.setLocale(loc);
+    } catch (JMeterError err) {
+      JMeterUtils.reportErrorToUser(err.toString());
     }
+  }
 
-    /**
-     * @see org.apache.jmeter.gui.action.Command#getActionNames()
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * @see org.apache.jmeter.gui.action.Command#getActionNames()
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 }

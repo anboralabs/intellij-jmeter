@@ -18,7 +18,6 @@
 package org.apache.jmeter.reporters.gui;
 
 import java.awt.BorderLayout;
-
 import org.apache.jmeter.gui.TestElementMetadata;
 import org.apache.jmeter.reporters.Summariser;
 import org.apache.jmeter.testelement.TestElement;
@@ -31,42 +30,44 @@ import org.apache.jmeter.visualizers.gui.AbstractListenerGui;
 @TestElementMetadata(labelResource = "summariser_title")
 public class SummariserGui extends AbstractListenerGui {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public SummariserGui() {
-        super();
-        init();
-    }
+  public SummariserGui() {
+    super();
+    init();
+  }
 
-    @Override
-    public String getLabelResource() {
-        return "summariser_title"; //$NON-NLS-1$
-    }
+  @Override
+  public String getLabelResource() {
+    return "summariser_title"; //$NON-NLS-1$
+  }
 
-    /**
-     * @see org.apache.jmeter.gui.JMeterGUIComponent#createTestElement()
-     */
-    @Override
-    public TestElement createTestElement() {
-        Summariser summariser = new Summariser();
-        modifyTestElement(summariser);
-        return summariser;
-    }
+  /**
+   * @see org.apache.jmeter.gui.JMeterGUIComponent#createTestElement()
+   */
+  @Override
+  public TestElement createTestElement() {
+    Summariser summariser = new Summariser();
+    modifyTestElement(summariser);
+    return summariser;
+  }
 
-    /**
-     * Modifies a given TestElement to mirror the data in the gui components.
-     *
-     * @see org.apache.jmeter.gui.JMeterGUIComponent#modifyTestElement(TestElement)
-     */
-    @Override
-    public void modifyTestElement(TestElement summariser) {
-        super.configureTestElement(summariser);
-    }
+  /**
+   * Modifies a given TestElement to mirror the data in the gui components.
+   *
+   * @see
+   *     org.apache.jmeter.gui.JMeterGUIComponent#modifyTestElement(TestElement)
+   */
+  @Override
+  public void modifyTestElement(TestElement summariser) {
+    super.configureTestElement(summariser);
+  }
 
-    private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
-        setLayout(new BorderLayout());
-        setBorder(makeBorder());
+  private void init() { // WARNING: called from ctor so must not be overridden
+                        // (i.e. must be private or final)
+    setLayout(new BorderLayout());
+    setBorder(makeBorder());
 
-        add(makeTitlePanel(), BorderLayout.NORTH);
-    }
+    add(makeTitlePanel(), BorderLayout.NORTH);
+  }
 }

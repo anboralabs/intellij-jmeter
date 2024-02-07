@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph.impl;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.apache.jmeter.report.core.Sample;
 import org.apache.jmeter.report.processor.ListResultData;
 import org.apache.jmeter.report.processor.MapResultData;
@@ -40,78 +39,84 @@ import org.apache.jmeter.report.processor.graph.TimeStampKeysSelector;
  */
 public class TotalTPSGraphConsumer extends AbstractOverTimeGraphConsumer {
 
-    private static final String STATUS_SERIES_FORMAT = "%s-%s";
-    private static final String SUCCESS_SERIES_SUFFIX = "success";
-    private static final String FAILURE_SERIES_SUFFIX = "failure";
-    private static final String TRANSACTION_SUCCESS_LABEL = String.format(STATUS_SERIES_FORMAT, "Transaction", SUCCESS_SERIES_SUFFIX);
-    private static final String TRANSACTION_FAILURE_LABEL = String.format(STATUS_SERIES_FORMAT, "Transaction", FAILURE_SERIES_SUFFIX);
+  private static final String STATUS_SERIES_FORMAT = "%s-%s";
+  private static final String SUCCESS_SERIES_SUFFIX = "success";
+  private static final String FAILURE_SERIES_SUFFIX = "failure";
+  private static final String TRANSACTION_SUCCESS_LABEL =
+      String.format(STATUS_SERIES_FORMAT, "Transaction", SUCCESS_SERIES_SUFFIX);
+  private static final String TRANSACTION_FAILURE_LABEL =
+      String.format(STATUS_SERIES_FORMAT, "Transaction", FAILURE_SERIES_SUFFIX);
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.impl.AbstractOverTimeGraphConsumer
-     * #createTimeStampKeysSelector()
-     */
-    @Override
-    protected TimeStampKeysSelector createTimeStampKeysSelector() {
-        TimeStampKeysSelector keysSelector = new TimeStampKeysSelector();
-        keysSelector.setSelectBeginTime(false);
-        return keysSelector;
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.impl.AbstractOverTimeGraphConsumer
+   * #createTimeStampKeysSelector()
+   */
+  @Override
+  protected TimeStampKeysSelector createTimeStampKeysSelector() {
+    TimeStampKeysSelector keysSelector = new TimeStampKeysSelector();
+    keysSelector.setSelectBeginTime(false);
+    return keysSelector;
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override
+  protected Map<String, GroupInfo> createGroupInfos() {
+    AbstractSeriesSelector seriesSelector = new AbstractSeriesSelector(true) {
+      @Override
+      public Iterable<String> select(Sample sample) {
+        return Collections.singletonList(sample.getSuccess()
+                                             ? TRANSACTION_SUCCESS_LABEL
+                                             : TRANSACTION_FAILURE_LABEL);
+      }
+    };
+    return Collections.singletonMap(
+        AbstractGraphConsumer.DEFAULT_GROUP,
+        new GroupInfo(new TimeRateAggregatorFactory(), seriesSelector,
+                      // We include Transaction Controller results
+                      new CountValueSelector(false), false, false));
+  }
+
+  @Override
+  protected void initializeExtraResults(MapResultData parentResult) {
+    super.initializeExtraResults(parentResult);
+    String[] seriesLabels =
+        new String[] {TRANSACTION_SUCCESS_LABEL, TRANSACTION_FAILURE_LABEL};
+    initializeSeries(parentResult, seriesLabels);
+  }
+
+  @Override
+  public void initialize() {
+    super.initialize();
+    // Override the granularity of the aggregators factory
+    ((TimeRateAggregatorFactory)getGroupInfos()
+         .get(AbstractGraphConsumer.DEFAULT_GROUP)
+         .getAggregatorFactory())
+        .setGranularity(getGranularity());
+  }
+
+  private void initializeSeries(MapResultData parentResult, String[] series) {
+    ListResultData listResultData =
+        (ListResultData)parentResult.getResult("series");
+    for (String s : series) {
+      listResultData.addResult(create(s));
     }
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected Map<String, GroupInfo> createGroupInfos() {
-        AbstractSeriesSelector seriesSelector = new AbstractSeriesSelector(true) {
-            @Override
-            public Iterable<String> select(Sample sample) {
-                return Collections.singletonList(sample.getSuccess() ? TRANSACTION_SUCCESS_LABEL : TRANSACTION_FAILURE_LABEL);
-            }
-        };
-        return Collections.singletonMap(
-                AbstractGraphConsumer.DEFAULT_GROUP,
-                new GroupInfo(
-                        new TimeRateAggregatorFactory(), seriesSelector,
-                        // We include Transaction Controller results
-                        new CountValueSelector(false), false, false));
-    }
-
-    @Override
-    protected void initializeExtraResults(MapResultData parentResult) {
-        super.initializeExtraResults(parentResult);
-        String[] seriesLabels = new String[]{
-                TRANSACTION_SUCCESS_LABEL, TRANSACTION_FAILURE_LABEL
-        };
-        initializeSeries(parentResult, seriesLabels);
-    }
-
-    @Override
-    public void initialize() {
-        super.initialize();
-        // Override the granularity of the aggregators factory
-        ((TimeRateAggregatorFactory) getGroupInfos().get(AbstractGraphConsumer.DEFAULT_GROUP).getAggregatorFactory())
-                .setGranularity(getGranularity());
-    }
-
-
-    private void initializeSeries(MapResultData parentResult, String[] series) {
-        ListResultData listResultData = (ListResultData) parentResult.getResult("series");
-        for (String s : series) {
-            listResultData.addResult(create(s));
-        }
-    }
-
-    private MapResultData create(String serie) {
-        GroupInfo groupInfo = getGroupInfos().get(AbstractGraphConsumer.DEFAULT_GROUP);
-        SeriesData seriesData = new SeriesData(groupInfo.getAggregatorFactory(),
-                groupInfo.enablesAggregatedKeysSeries(), false,
-                groupInfo.enablesOverallSeries());
-        return createSerieResult(serie, seriesData);
-    }
+  private MapResultData create(String serie) {
+    GroupInfo groupInfo =
+        getGroupInfos().get(AbstractGraphConsumer.DEFAULT_GROUP);
+    SeriesData seriesData =
+        new SeriesData(groupInfo.getAggregatorFactory(),
+                       groupInfo.enablesAggregatedKeysSeries(), false,
+                       groupInfo.enablesOverallSeries());
+    return createSerieResult(serie, seriesData);
+  }
 }

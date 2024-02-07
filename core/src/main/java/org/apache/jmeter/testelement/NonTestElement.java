@@ -20,6 +20,4 @@ package org.apache.jmeter.testelement;
 /**
  * Identify Non Test Elements
  */
-public interface NonTestElement {
-
-}
+public interface NonTestElement {}

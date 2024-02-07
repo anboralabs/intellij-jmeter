@@ -17,16 +17,14 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.tree.JMeterTreeListener;
 import org.apache.jmeter.gui.tree.JMeterTreeModel;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Implements the Duplicate menu command
@@ -34,33 +32,32 @@ import com.google.auto.service.AutoService;
 @AutoService(Command.class)
 public class Duplicate extends AbstractAction {
 
-    private static final HashSet<String> commands = new HashSet<>();
+  private static final HashSet<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.DUPLICATE);
-    }
+  static { commands.add(ActionNames.DUPLICATE); }
 
-    /*
-     * @see org.apache.jmeter.gui.action.Command#getActionNames()
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /*
+   * @see org.apache.jmeter.gui.action.Command#getActionNames()
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    @Override
-    public void doAction(ActionEvent e) {
-        GuiPackage instance = GuiPackage.getInstance();
-        JMeterTreeListener treeListener = instance.getTreeListener();
-        JMeterTreeNode[] copiedNodes = Copy.cloneTreeNodes(treeListener.getSelectedNodes());
-        JMeterTreeNode currentNode = treeListener.getCurrentNode();
-        JMeterTreeNode parentNode = (JMeterTreeNode) currentNode.getParent();
-        JMeterTreeModel treeModel = instance.getTreeModel();
-        for (int nodeIndex = copiedNodes.length - 1; nodeIndex >= 0; nodeIndex--) {
-            JMeterTreeNode copiedNode = copiedNodes[nodeIndex];
-            int index = parentNode.getIndex(currentNode) + 1;
-            treeModel.insertNodeInto(copiedNode, parentNode, index);
-        }
-        instance.getMainFrame().repaint();
+  @Override
+  public void doAction(ActionEvent e) {
+    GuiPackage instance = GuiPackage.getInstance();
+    JMeterTreeListener treeListener = instance.getTreeListener();
+    JMeterTreeNode[] copiedNodes =
+        Copy.cloneTreeNodes(treeListener.getSelectedNodes());
+    JMeterTreeNode currentNode = treeListener.getCurrentNode();
+    JMeterTreeNode parentNode = (JMeterTreeNode)currentNode.getParent();
+    JMeterTreeModel treeModel = instance.getTreeModel();
+    for (int nodeIndex = copiedNodes.length - 1; nodeIndex >= 0; nodeIndex--) {
+      JMeterTreeNode copiedNode = copiedNodes[nodeIndex];
+      int index = parentNode.getIndex(currentNode) + 1;
+      treeModel.insertNodeInto(copiedNode, parentNode, index);
     }
+    instance.getMainFrame().repaint();
+  }
 }

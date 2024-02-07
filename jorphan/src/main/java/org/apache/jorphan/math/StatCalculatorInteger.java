@@ -22,31 +22,30 @@ package org.apache.jorphan.math;
  */
 public class StatCalculatorInteger extends StatCalculator<Integer> {
 
-    public StatCalculatorInteger() {
-        super(0, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    }
+  public StatCalculatorInteger() {
+    super(0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+  }
 
-    public void addValue(int val){
-        super.addValue(val);
-    }
+  public void addValue(int val) { super.addValue(val); }
 
-    /**
-     * Update the calculator with the value for an aggregated sample.
-     *
-     * @param val the aggregate value
-     * @param sampleCount the number of samples contributing to the aggregate value
-     */
-    public void addValue(int val, int sampleCount){
-        super.addValue(val, sampleCount);
-    }
+  /**
+   * Update the calculator with the value for an aggregated sample.
+   *
+   * @param val the aggregate value
+   * @param sampleCount the number of samples contributing to the aggregate
+   *     value
+   */
+  public void addValue(int val, int sampleCount) {
+    super.addValue(val, sampleCount);
+  }
 
-    @Override
-    protected Integer divide(Integer val, int n) {
-        return val / n;
-    }
+  @Override
+  protected Integer divide(Integer val, int n) {
+    return val / n;
+  }
 
-    @Override
-    protected Integer divide(Integer val, long n) {
-        return (int) (val / n);
-    }
+  @Override
+  protected Integer divide(Integer val, long n) {
+    return (int)(val / n);
+  }
 }

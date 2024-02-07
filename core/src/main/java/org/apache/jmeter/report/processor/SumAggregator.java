@@ -24,49 +24,48 @@ package org.apache.jmeter.report.processor;
  */
 public class SumAggregator implements Aggregator {
 
-    private long count = 0;
-    private double sum = 0;
+  private long count = 0;
+  private double sum = 0;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#getCount()
-     */
-    @Override
-    public long getCount() {
-        return count;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#getCount()
+   */
+  @Override
+  public long getCount() {
+    return count;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#getResult()
-     */
-    @Override
-    public double getResult() {
-        return sum;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#getResult()
+   */
+  @Override
+  public double getResult() {
+    return sum;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#addValue(double)
-     */
-    @Override
-    public void addValue(double value) {
-        count++;
-        sum += value;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#addValue(double)
+   */
+  @Override
+  public void addValue(double value) {
+    count++;
+    sum += value;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#reset()
-     */
-    @Override
-    public void reset() {
-        count = 0;
-        sum = 0;
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#reset()
+   */
+  @Override
+  public void reset() {
+    count = 0;
+    sum = 0;
+  }
 }

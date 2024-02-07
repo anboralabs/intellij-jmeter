@@ -18,7 +18,6 @@
 package org.apache.jmeter.gui;
 
 import java.io.Serializable;
-
 import org.apache.jmeter.engine.TreeCloner;
 import org.apache.jorphan.collections.HashTree;
 
@@ -28,60 +27,56 @@ import org.apache.jorphan.collections.HashTree;
  */
 public class UndoHistoryItem implements Serializable {
 
-    private static final long serialVersionUID = -8683007040160205040L;
-    private final HashTree tree;
-    // TODO: find a way to show this comment in menu item and toolbar tooltip
-    private final String comment;
-    private final TreeState treeState;
-    private final boolean dirty;
+  private static final long serialVersionUID = -8683007040160205040L;
+  private final HashTree tree;
+  // TODO: find a way to show this comment in menu item and toolbar tooltip
+  private final String comment;
+  private final TreeState treeState;
+  private final boolean dirty;
 
-    /**
-     * This constructor is for Unit test purposes only
-     * @deprecated DO NOT USE
-     */
-    @Deprecated
-    public UndoHistoryItem() {
-        this(null, null, null, false);
-    }
+  /**
+   * This constructor is for Unit test purposes only
+   * @deprecated DO NOT USE
+   */
+  @Deprecated
+  public UndoHistoryItem() {
+    this(null, null, null, false);
+  }
 
-    /**
-     * @param copy {@link HashTree}
-     * @param acomment String
-     * @param treeState {@link TreeState}
-     * @param dirty boolean
-     */
-    public UndoHistoryItem(HashTree copy, String acomment, TreeState treeState, boolean dirty) {
-        tree = copy;
-        comment = acomment;
-        this.treeState = treeState;
-        this.dirty = dirty;
-    }
+  /**
+   * @param copy {@link HashTree}
+   * @param acomment String
+   * @param treeState {@link TreeState}
+   * @param dirty boolean
+   */
+  public UndoHistoryItem(HashTree copy, String acomment, TreeState treeState,
+                         boolean dirty) {
+    tree = copy;
+    comment = acomment;
+    this.treeState = treeState;
+    this.dirty = dirty;
+  }
 
-    public boolean isDirty() {
-        return dirty;
-    }
+  public boolean isDirty() { return dirty; }
 
-    public TreeState getTreeState() {
-        return treeState;
-    }
+  public TreeState getTreeState() { return treeState; }
 
-    /**
-     * @return {@link org.apache.jorphan.collections.HashTree}
-     */
-    public HashTree getTree() {
-        //EMI: It's important we return a clone here and not the actual tree because
-        // the history item might still be part of some undo action and we don't
-        // want to expose (and corrupt then via edits) internal data
-        TreeCloner cloner = new TreeCloner(false);
-        tree.traverse(cloner);
+  /**
+   * @return {@link org.apache.jorphan.collections.HashTree}
+   */
+  public HashTree getTree() {
+    // EMI: It's important we return a clone here and not the actual tree
+    // because
+    //  the history item might still be part of some undo action and we don't
+    //  want to expose (and corrupt then via edits) internal data
+    TreeCloner cloner = new TreeCloner(false);
+    tree.traverse(cloner);
 
-        return cloner.getClonedTree();
-    }
+    return cloner.getClonedTree();
+  }
 
-    /**
-     * @return String comment
-     */
-    public String getComment() {
-        return comment;
-    }
+  /**
+   * @return String comment
+   */
+  public String getComment() { return comment; }
 }

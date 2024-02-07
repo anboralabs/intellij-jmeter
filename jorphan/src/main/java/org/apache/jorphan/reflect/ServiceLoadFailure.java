@@ -18,34 +18,27 @@
 package org.apache.jorphan.reflect;
 
 public class ServiceLoadFailure<S> {
-    private final Class<? extends S> service;
-    private final String className;
-    private final Throwable throwable;
+  private final Class<? extends S> service;
+  private final String className;
+  private final Throwable throwable;
 
-    public ServiceLoadFailure(Class<? extends S> service, String className, Throwable throwable) {
-        this.service = service;
-        this.className = className;
-        this.throwable = throwable;
-    }
+  public ServiceLoadFailure(Class<? extends S> service, String className,
+                            Throwable throwable) {
+    this.service = service;
+    this.className = className;
+    this.throwable = throwable;
+  }
 
-    public Class<? extends S> getService() {
-        return service;
-    }
+  public Class<? extends S> getService() { return service; }
 
-    public String getClassName() {
-        return className;
-    }
+  public String getClassName() { return className; }
 
-    public Throwable getThrowable() {
-        return throwable;
-    }
+  public Throwable getThrowable() { return throwable; }
 
-    @Override
-    public String toString() {
-        return "ServiceLoadFailure{" +
-                "service=" + service +
-                ", className='" + className + '\'' +
-                ", throwable=" + throwable +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "ServiceLoadFailure{"
+        + "service=" + service + ", className='" + className + '\'' +
+        ", throwable=" + throwable + '}';
+  }
 }

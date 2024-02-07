@@ -24,12 +24,11 @@ package org.apache.jmeter.report.processor;
  */
 public class MinAggregatorFactory extends AbstractAggregatorFactory {
 
-
-    /**
-     * @see AbstractAggregatorFactory#createAggregator()
-     */
-    @Override
-    protected Aggregator createAggregator() {
-        return new MinAggregator();
-    }
+  /**
+   * @see AbstractAggregatorFactory#createAggregator()
+   */
+  @Override
+  protected Aggregator createAggregator() {
+    return new MinAggregator();
+  }
 }

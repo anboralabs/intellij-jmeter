@@ -24,39 +24,36 @@ package org.apache.jmeter.report.processor;
  */
 public class TimeRateAggregatorFactory extends AbstractAggregatorFactory {
 
-    private long granularity = 1L;
+  private long granularity = 1L;
 
-    /**
-     * Gets the granularity used by created aggregators.
-     *
-     * @return the granularity
-     */
-    public final long getGranularity() {
-        return granularity;
-    }
+  /**
+   * Gets the granularity used by created aggregators.
+   *
+   * @return the granularity
+   */
+  public final long getGranularity() { return granularity; }
 
-    /**
-     * Sets the granularity used by created aggregators.
-     *
-     * @param granularity
-     *            the granularity to set
-     */
-    public final void setGranularity(long granularity) {
-        this.granularity = granularity;
-    }
+  /**
+   * Sets the granularity used by created aggregators.
+   *
+   * @param granularity
+   *            the granularity to set
+   */
+  public final void setGranularity(long granularity) {
+    this.granularity = granularity;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.core.AbstractAggregatorFactory#createAggregator
-     * ()
-     */
-    @Override
-    protected Aggregator createAggregator() {
-        TimeRateAggregator aggregator = new TimeRateAggregator();
-        aggregator.setGranularity(granularity);
-        return aggregator;
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.core.AbstractAggregatorFactory#createAggregator
+   * ()
+   */
+  @Override
+  protected Aggregator createAggregator() {
+    TimeRateAggregator aggregator = new TimeRateAggregator();
+    aggregator.setGranularity(granularity);
+    return aggregator;
+  }
 }

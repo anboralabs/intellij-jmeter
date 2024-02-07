@@ -36,90 +36,90 @@ import java.util.Locale;
  */
 public class SampleBuilder {
 
-    private static final DecimalFormat DEFAULT_FLOAT_FORMATTER = new DecimalFormat(
-            "#########0.00#");
+  private static final DecimalFormat DEFAULT_FLOAT_FORMATTER =
+      new DecimalFormat("#########0.00#");
 
-    static {
-        DEFAULT_FLOAT_FORMATTER.setRoundingMode(RoundingMode.HALF_DOWN);
-        DEFAULT_FLOAT_FORMATTER.setGroupingUsed(false);
-        DecimalFormatSymbols newSymbols = new DecimalFormatSymbols(
-                Locale.getDefault());
-        newSymbols.setDecimalSeparator('.');
-        DEFAULT_FLOAT_FORMATTER.setDecimalFormatSymbols(newSymbols);
+  static {
+    DEFAULT_FLOAT_FORMATTER.setRoundingMode(RoundingMode.HALF_DOWN);
+    DEFAULT_FLOAT_FORMATTER.setGroupingUsed(false);
+    DecimalFormatSymbols newSymbols =
+        new DecimalFormatSymbols(Locale.getDefault());
+    newSymbols.setDecimalSeparator('.');
+    DEFAULT_FLOAT_FORMATTER.setDecimalFormatSymbols(newSymbols);
+  }
+
+  private final SampleMetadata metadata;
+
+  private final String[] data;
+
+  private final NumberFormat floatFormatter;
+
+  private int k = 0;
+
+  private long row = 0;
+
+  /**
+   * Construct a SampleBuilder.
+   *
+   * @param metadata
+   *            the details about expected sample data (must not be {@code
+   * null})
+   * @param floatFormatter
+   *            the formatter to be used (the default formatter will be used, if
+   *            {@code null} is given.)
+   */
+  public SampleBuilder(SampleMetadata metadata, NumberFormat floatFormatter) {
+    if (floatFormatter == null) {
+      this.floatFormatter = DEFAULT_FLOAT_FORMATTER;
+    } else {
+      this.floatFormatter = floatFormatter;
     }
+    this.metadata = metadata;
+    this.data = new String[metadata.getColumnCount()];
+    k = 0;
+    row = 0;
+  }
 
-    private final SampleMetadata metadata;
+  /**
+   * Construct a SampleBuilder with default formatter
+   * @param metadata
+   *            the details about expected sample data (must not be {@code
+   * null})
+   */
+  public SampleBuilder(SampleMetadata metadata) {
+    this(metadata, DEFAULT_FLOAT_FORMATTER);
+  }
 
-    private final String[] data;
+  /**
+   * @return the metadata
+   */
+  public final SampleMetadata getMetadata() { return metadata; }
 
-    private final NumberFormat floatFormatter;
-
-    private int k = 0;
-
-    private long row = 0;
-
-    /**
-     * Construct a SampleBuilder.
-     *
-     * @param metadata
-     *            the details about expected sample data (must not be {@code null})
-     * @param floatFormatter
-     *            the formatter to be used (the default formatter will be used, if
-     *            {@code null} is given.)
-     */
-    public SampleBuilder(SampleMetadata metadata, NumberFormat floatFormatter) {
-        if (floatFormatter == null) {
-            this.floatFormatter = DEFAULT_FLOAT_FORMATTER;
-        } else {
-            this.floatFormatter = floatFormatter;
-        }
-        this.metadata = metadata;
-        this.data = new String[metadata.getColumnCount()];
-        k = 0;
-        row = 0;
+  public SampleBuilder add(String e) {
+    if (k < data.length) {
+      data[k++] = e;
     }
+    return this;
+  }
 
-    /**
-     * Construct a SampleBuilder with default formatter
-     * @param metadata
-     *            the details about expected sample data (must not be {@code null})
-     */
-    public SampleBuilder(SampleMetadata metadata) {
-        this(metadata, DEFAULT_FLOAT_FORMATTER);
-    }
+  public SampleBuilder add(long e) {
+    add(Long.toString(e));
+    return this;
+  }
 
-    /**
-     * @return the metadata
-     */
-    public final SampleMetadata getMetadata() {
-        return metadata;
-    }
+  public SampleBuilder add(double e) {
+    add(floatFormatter.format(e));
+    return this;
+  }
 
-    public SampleBuilder add(String e) {
-        if (k < data.length) {
-            data[k++] = e;
-        }
-        return this;
+  public Sample build() {
+    while (k < data.length) {
+      data[k++] = "";
     }
-
-    public SampleBuilder add(long e) {
-        add(Long.toString(e));
-        return this;
-    }
-
-    public SampleBuilder add(double e) {
-        add(floatFormatter.format(e));
-        return this;
-    }
-
-    public Sample build() {
-        while (k < data.length) {
-            data[k++] = "";
-        }
-        String[] sampleData = new String[data.length];
-        System.arraycopy(data, 0, sampleData, 0, data.length);
-        Sample out = new Sample(row++, metadata, sampleData);
-        k = 0;
-        return out;
-    }
+    String[] sampleData = new String[data.length];
+    System.arraycopy(data, 0, sampleData, 0, data.length);
+    Sample out = new Sample(row++, metadata, sampleData);
+    k = 0;
+    return out;
+  }
 }

@@ -17,63 +17,66 @@
 
 package org.apache.jorphan.gui;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 /**
  * Provides actions for moving focus forward and backward.
  */
 class FocusActions {
-    static final AbstractAction TRANSFER_FOCUS = new TransferFocusAction();
-    static final AbstractAction TRANSFER_FOCUS_BACKWARD = new TransferFocusBackwardAction();
+  static final AbstractAction TRANSFER_FOCUS = new TransferFocusAction();
+  static final AbstractAction TRANSFER_FOCUS_BACKWARD =
+      new TransferFocusBackwardAction();
 
-    /**
-     * Binds the given key stokes to focus transfer actions.
-     * @param c component for adding key strokes
-     * @param focusForward keystroke for forward focus transfer, or null
-     * @param focusBackward keystroke for backward focus transfer, or null
-     */
-    static void bind(JComponent c, KeyStroke focusForward, KeyStroke focusBackward) {
-        Object transferFocusName = TRANSFER_FOCUS.getValue(Action.NAME);
-        Object transferFocusBackward = TRANSFER_FOCUS_BACKWARD.getValue(Action.NAME);
-        InputMap inputMap = c.getInputMap();
-        ActionMap actionMap = c.getActionMap();
-        if (focusForward != null) {
-            inputMap.put(focusForward, transferFocusName);
-            actionMap.put(transferFocusName, TRANSFER_FOCUS);
-        }
-        if (focusBackward != null) {
-            inputMap.put(focusBackward, transferFocusBackward);
-            actionMap.put(transferFocusBackward, TRANSFER_FOCUS_BACKWARD);
-        }
+  /**
+   * Binds the given key stokes to focus transfer actions.
+   * @param c component for adding key strokes
+   * @param focusForward keystroke for forward focus transfer, or null
+   * @param focusBackward keystroke for backward focus transfer, or null
+   */
+  static void bind(JComponent c, KeyStroke focusForward,
+                   KeyStroke focusBackward) {
+    Object transferFocusName = TRANSFER_FOCUS.getValue(Action.NAME);
+    Object transferFocusBackward =
+        TRANSFER_FOCUS_BACKWARD.getValue(Action.NAME);
+    InputMap inputMap = c.getInputMap();
+    ActionMap actionMap = c.getActionMap();
+    if (focusForward != null) {
+      inputMap.put(focusForward, transferFocusName);
+      actionMap.put(transferFocusName, TRANSFER_FOCUS);
+    }
+    if (focusBackward != null) {
+      inputMap.put(focusBackward, transferFocusBackward);
+      actionMap.put(transferFocusBackward, TRANSFER_FOCUS_BACKWARD);
+    }
+  }
+
+  private static class TransferFocusAction extends AbstractAction {
+    public TransferFocusAction() {
+      super("Transfer focus forward"); // $NON-NLS-1$
     }
 
-    private static class TransferFocusAction extends AbstractAction {
-        public TransferFocusAction() {
-            super("Transfer focus forward"); // $NON-NLS-1$
-        }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      Component comp = (Component)e.getSource();
+      if (comp != null) {
+        comp.transferFocus();
+      }
+    }
+  }
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Component comp = (Component) e.getSource();
-            if (comp != null) {
-                comp.transferFocus();
-            }
-        }
+  private static class TransferFocusBackwardAction extends AbstractAction {
+    public TransferFocusBackwardAction() {
+      super("Transfer focus backward"); // $NON-NLS-1$
     }
 
-    private static class TransferFocusBackwardAction extends AbstractAction {
-        public TransferFocusBackwardAction() {
-            super("Transfer focus backward"); // $NON-NLS-1$
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Component comp = (Component) e.getSource();
-            if (comp != null) {
-                comp.transferFocusBackward();
-            }
-        }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      Component comp = (Component)e.getSource();
+      if (comp != null) {
+        comp.transferFocusBackward();
+      }
     }
+  }
 }

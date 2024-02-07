@@ -24,42 +24,43 @@ import java.beans.PropertyEditorSupport;
  */
 public class BooleanPropertyEditor extends PropertyEditorSupport {
 
-    // These are the mixed-case values as returned by the RI JVM boolean property editor
-    // However, they are different from the lower-case values returned by e.g. Boolean.FALSE.toString()
-    private static final String FALSE = "False"; // $NON-NLS-1$
-    private static final String TRUE  = "True";  // $NON-NLS-1$
+  // These are the mixed-case values as returned by the RI JVM boolean property
+  // editor However, they are different from the lower-case values returned by
+  // e.g. Boolean.FALSE.toString()
+  private static final String FALSE = "False"; // $NON-NLS-1$
+  private static final String TRUE = "True";   // $NON-NLS-1$
 
-    private static final String[] TAGS = {TRUE, FALSE};
+  private static final String[] TAGS = {TRUE, FALSE};
 
-    // Make sure we return one of the TAGS
-    @Override
-    public String getAsText() {
-        Object value = getValue();
-        return value instanceof Boolean ?  toString((Boolean) value) : null;
+  // Make sure we return one of the TAGS
+  @Override
+  public String getAsText() {
+    Object value = getValue();
+    return value instanceof Boolean ? toString((Boolean)value) : null;
+  }
+
+  private static String toString(Boolean value) { return value ? TRUE : FALSE; }
+
+  @Override
+  public void setAsText(String text) {
+    this.setValue(text);
+  }
+
+  @Override
+  public void setValue(Object value) {
+    if (value instanceof String) {
+      super.setValue(Boolean.valueOf((String)value));
+    } else if (value == null || value instanceof Boolean) {
+      super.setValue(
+          value); // not sure if null is passed in but no harm in setting it
+    } else {
+      throw new java.lang.IllegalArgumentException("Unexpected type: " +
+                                                   value.getClass().getName());
     }
+  }
 
-    private static String toString(Boolean value) {
-        return value ? TRUE : FALSE;
-    }
-
-    @Override
-    public void setAsText(String text) {
-        this.setValue(text);
-    }
-
-    @Override
-    public void setValue(Object value){
-        if (value instanceof String) {
-            super.setValue(Boolean.valueOf((String) value));
-        } else if (value == null || value instanceof Boolean) {
-            super.setValue(value); // not sure if null is passed in but no harm in setting it
-        } else {
-            throw new java.lang.IllegalArgumentException("Unexpected type: "+value.getClass().getName());
-        }
-    }
-
-    @Override
-    public String[] getTags() {
-        return TAGS;
-    }
+  @Override
+  public String[] getTags() {
+    return TAGS;
+  }
 }

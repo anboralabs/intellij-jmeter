@@ -18,7 +18,6 @@
 package org.apache.jmeter.functions;
 
 import java.util.Collection;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.samplers.SampleResult;
@@ -32,134 +31,133 @@ import org.apache.jmeter.threads.JMeterVariables;
  */
 public abstract class AbstractFunction implements Function {
 
-    /**
-     * <p><b>
-     * N.B. execute() should be synchronized if function is operating with non-thread-safe
-     * objects (e.g. operates with files).
-     * </b></p>
-     * JMeter ensures setParameters() happens-before execute(): setParameters is executed in main thread,
-     * and worker threads are started after that.
-     * @see Function#execute(SampleResult, Sampler)
-     */
-    @Override
-    abstract public String execute(SampleResult previousResult, Sampler currentSampler) throws InvalidVariableException;
+  /**
+   * <p><b>
+   * N.B. execute() should be synchronized if function is operating with
+   * non-thread-safe objects (e.g. operates with files).
+   * </b></p>
+   * JMeter ensures setParameters() happens-before execute(): setParameters is
+   * executed in main thread, and worker threads are started after that.
+   * @see Function#execute(SampleResult, Sampler)
+   */
+  @Override
+  abstract public String execute(SampleResult previousResult,
+                                 Sampler currentSampler)
+      throws InvalidVariableException;
 
-    public String execute() throws InvalidVariableException {
-        JMeterContext context = JMeterContextService.getContext();
-        SampleResult previousResult = context.getPreviousResult();
-        Sampler currentSampler = context.getCurrentSampler();
-        return execute(previousResult, currentSampler);
+  public String execute() throws InvalidVariableException {
+    JMeterContext context = JMeterContextService.getContext();
+    SampleResult previousResult = context.getPreviousResult();
+    Sampler currentSampler = context.getCurrentSampler();
+    return execute(previousResult, currentSampler);
+  }
+
+  /**
+   * Note: This is always called even if no parameters are provided
+   * (versions of JMeter after 2.3.1)
+   *
+   * @see Function#setParameters(Collection)
+   */
+  @Override
+  abstract public void setParameters(Collection<CompoundVariable> parameters)
+      throws InvalidVariableException;
+
+  /**
+   * @see Function#getReferenceKey()
+   */
+  @Override abstract public String getReferenceKey();
+
+  /**
+   * Gives access to the JMeter variables for the current thread.
+   *
+   * @return a pointer to the JMeter variables.
+   */
+  protected JMeterVariables getVariables() {
+    return JMeterContextService.getContext().getVariables();
+  }
+
+  /**
+   * Utility method to check parameter counts.
+   *
+   * @param parameters collection of parameters
+   * @param min minimum number of parameters allowed
+   * @param max maximum number of parameters allowed
+   *
+   * @throws InvalidVariableException if the number of parameters is incorrect
+   */
+  protected void checkParameterCount(Collection<CompoundVariable> parameters,
+                                     int min, int max)
+      throws InvalidVariableException {
+    int num = parameters.size();
+    if ((num > max) || (num < min)) {
+      throw new InvalidVariableException(
+          getReferenceKey() +
+          " called with wrong number of parameters. Actual: " + num +
+          (min == max ? ". Expected: " + min + "."
+                      : ". Expected: >= " + min + " and <= " + max));
     }
+  }
 
-    /**
-     * Note: This is always called even if no parameters are provided
-     * (versions of JMeter after 2.3.1)
-     *
-     * @see Function#setParameters(Collection)
-     */
-    @Override
-    abstract public void setParameters(Collection<CompoundVariable> parameters) throws InvalidVariableException;
-
-    /**
-     * @see Function#getReferenceKey()
-     */
-    @Override
-    abstract public String getReferenceKey();
-
-    /**
-     * Gives access to the JMeter variables for the current thread.
-     *
-     * @return a pointer to the JMeter variables.
-     */
-    protected JMeterVariables getVariables() {
-        return JMeterContextService.getContext().getVariables();
+  /**
+   * Utility method to check parameter counts.
+   *
+   * @param parameters collection of parameters
+   * @param count number of parameters expected
+   *
+   * @throws InvalidVariableException if the number of parameters is incorrect
+   */
+  protected void checkParameterCount(Collection<CompoundVariable> parameters,
+                                     int count)
+      throws InvalidVariableException {
+    int num = parameters.size();
+    if (num != count) {
+      throw new InvalidVariableException(
+          getReferenceKey() +
+          " called with wrong number of parameters. Actual: " + num +
+          ". Expected: " + count + ".");
     }
+  }
 
-    /**
-     * Utility method to check parameter counts.
-     *
-     * @param parameters collection of parameters
-     * @param min minimum number of parameters allowed
-     * @param max maximum number of parameters allowed
-     *
-     * @throws InvalidVariableException if the number of parameters is incorrect
-     */
-    protected void checkParameterCount(Collection<CompoundVariable> parameters, int min, int max)
-        throws InvalidVariableException
-    {
-        int num = parameters.size();
-        if ((num > max) || (num < min)) {
-            throw new InvalidVariableException(
-                    getReferenceKey() +
-                    " called with wrong number of parameters. Actual: "+num+
-                    (
-                        min==max ?
-                        ". Expected: "+min+"."
-                        : ". Expected: >= "+min+" and <= "+max
-                    )
-                    );
+  /**
+   * Utility method to check parameter counts.
+   *
+   * @param parameters collection of parameters
+   * @param minimum number of parameters expected
+   *
+   * @throws InvalidVariableException if the number of parameters is incorrect
+   */
+  protected void checkMinParameterCount(Collection<CompoundVariable> parameters,
+                                        int minimum)
+      throws InvalidVariableException {
+    int num = parameters.size();
+    if (num < minimum) {
+      throw new InvalidVariableException(
+          getReferenceKey() +
+          " called with wrong number of parameters. Actual: " + num +
+          ". Expected at least: " + minimum + ".");
+    }
+  }
+
+  /**
+   * Utility method to store value in a variable
+   * @param value
+   *            value of variable to update
+   * @param values
+   *            array of {@link CompoundVariable} from which variable name
+   *            will be extracted
+   * @param index
+   *            index of variable in values array
+   */
+  protected final void addVariableValue(String value, CompoundVariable[] values,
+                                        int index) {
+    if (values.length > index) {
+      String variableName = values[index].execute().trim();
+      if (StringUtils.isNotEmpty(variableName)) {
+        JMeterVariables vars = getVariables();
+        if (vars != null) {
+          vars.put(variableName, value);
         }
+      }
     }
-
-    /**
-     * Utility method to check parameter counts.
-     *
-     * @param parameters collection of parameters
-     * @param count number of parameters expected
-     *
-     * @throws InvalidVariableException if the number of parameters is incorrect
-     */
-    protected void checkParameterCount(Collection<CompoundVariable> parameters, int count)
-        throws InvalidVariableException
-    {
-        int num = parameters.size();
-        if (num != count) {
-            throw new InvalidVariableException(
-                    getReferenceKey() +
-                    " called with wrong number of parameters. Actual: "+num+". Expected: "+count+"."
-                   );
-        }
-    }
-
-    /**
-     * Utility method to check parameter counts.
-     *
-     * @param parameters collection of parameters
-     * @param minimum number of parameters expected
-     *
-     * @throws InvalidVariableException if the number of parameters is incorrect
-     */
-    protected void checkMinParameterCount(Collection<CompoundVariable> parameters, int minimum)
-        throws InvalidVariableException
-    {
-        int num = parameters.size();
-        if (num < minimum) {
-            throw new InvalidVariableException(
-                    getReferenceKey() +
-                    " called with wrong number of parameters. Actual: "+num+". Expected at least: "+minimum+"."
-                   );
-        }
-    }
-
-    /**
-     * Utility method to store value in a variable
-     * @param value
-     *            value of variable to update
-     * @param values
-     *            array of {@link CompoundVariable} from which variable name
-     *            will be extracted
-     * @param index
-     *            index of variable in values array
-     */
-    protected final void addVariableValue(String value, CompoundVariable[] values, int index) {
-        if (values.length > index) {
-            String variableName = values[index].execute().trim();
-            if (StringUtils.isNotEmpty(variableName)) {
-                JMeterVariables vars = getVariables();
-                if (vars != null) {
-                    vars.put(variableName, value);
-                }
-            }
-        }
-    }
+  }
 }

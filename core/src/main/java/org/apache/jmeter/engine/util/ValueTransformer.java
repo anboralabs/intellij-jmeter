@@ -18,7 +18,6 @@
 package org.apache.jmeter.engine.util;
 
 import java.util.Map;
-
 import org.apache.jmeter.functions.InvalidVariableException;
 import org.apache.jmeter.testelement.property.JMeterProperty;
 import org.apiguardian.api.API;
@@ -29,40 +28,41 @@ import org.apiguardian.api.API;
 @Deprecated
 @API(status = API.Status.DEPRECATED, since = "5.6")
 interface ValueTransformer extends PropertyTransformer {
-    @Override
-    default JMeterProperty transform(JMeterProperty input) {
-        try {
-            return transformValue(input);
-        } catch (InvalidVariableException e) {
-            throw new RuntimeException(e);
-        }
+  @Override
+  default JMeterProperty transform(JMeterProperty input) {
+    try {
+      return transformValue(input);
+    } catch (InvalidVariableException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    /**
-     * Transform the given property and return the new version.
-     *
-     * @param property
-     *            Property to be transformed
-     * @return the transformed property
-     * @throws InvalidVariableException
-     *             if something went wrong while computing variables or
-     *             functions
-     */
-    JMeterProperty transformValue(JMeterProperty property) throws InvalidVariableException;
+  /**
+   * Transform the given property and return the new version.
+   *
+   * @param property
+   *            Property to be transformed
+   * @return the transformed property
+   * @throws InvalidVariableException
+   *             if something went wrong while computing variables or
+   *             functions
+   */
+  JMeterProperty transformValue(JMeterProperty property)
+      throws InvalidVariableException;
 
-    /**
-     * Set the master function for the value transformer. This handles
-     * converting strings to functions.
-     *
-     * @param masterFunction Function to be used for the transformation
-     */
-    void setMasterFunction(CompoundVariable masterFunction);
+  /**
+   * Set the master function for the value transformer. This handles
+   * converting strings to functions.
+   *
+   * @param masterFunction Function to be used for the transformation
+   */
+  void setMasterFunction(CompoundVariable masterFunction);
 
-    /**
-     * Set the variable names and values used to reverse replace functions with
-     * strings, and undo functions to raw values.
-     *
-     * @param vars Map of names and values to be used for the transformation
-     */
-    void setVariables(Map<String, String> vars);
+  /**
+   * Set the variable names and values used to reverse replace functions with
+   * strings, and undo functions to raw values.
+   *
+   * @param vars Map of names and values to be used for the transformation
+   */
+  void setVariables(Map<String, String> vars);
 }

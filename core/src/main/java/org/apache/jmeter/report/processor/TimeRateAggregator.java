@@ -24,65 +24,62 @@ package org.apache.jmeter.report.processor;
  */
 public class TimeRateAggregator implements Aggregator {
 
-    private long count = 0;
-    private long granularity = 1;
-    private double value = 0;
+  private long count = 0;
+  private long granularity = 1;
+  private double value = 0;
 
-    /**
-     * @return the granularity
-     */
-    public final long getGranularity() {
-        return granularity;
-    }
+  /**
+   * @return the granularity
+   */
+  public final long getGranularity() { return granularity; }
 
-    /**
-     * @param granularity
-     *            the granularity to set
-     */
-    public final void setGranularity(long granularity) {
-        this.granularity = granularity;
-    }
+  /**
+   * @param granularity
+   *            the granularity to set
+   */
+  public final void setGranularity(long granularity) {
+    this.granularity = granularity;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#getCount()
-     */
-    @Override
-    public long getCount() {
-        return count;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#getCount()
+   */
+  @Override
+  public long getCount() {
+    return count;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#getResult()
-     */
-    @Override
-    public double getResult() {
-        return value * 1000 / granularity;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#getResult()
+   */
+  @Override
+  public double getResult() {
+    return value * 1000 / granularity;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#addValue(double)
-     */
-    @Override
-    public void addValue(final double value) {
-        this.count++;
-        this.value += value;
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#addValue(double)
+   */
+  @Override
+  public void addValue(final double value) {
+    this.count++;
+    this.value += value;
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.core.GraphAggregator#reset()
-     */
-    @Override
-    public void reset() {
-        count = 0;
-        value = 0;
-    }
-
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.core.GraphAggregator#reset()
+   */
+  @Override
+  public void reset() {
+    count = 0;
+    value = 0;
+  }
 }

@@ -19,7 +19,6 @@ package org.apache.jmeter.engine;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.jmeter.engine.util.NoThreadClone;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jorphan.collections.HashTree;
@@ -27,81 +26,75 @@ import org.apache.jorphan.collections.HashTreeTraverser;
 import org.apache.jorphan.collections.ListedHashTree;
 
 /**
- * Clones the test tree,  skipping test elements that implement {@link NoThreadClone} by default.
+ * Clones the test tree,  skipping test elements that implement {@link
+ * NoThreadClone} by default.
  */
 public class TreeCloner implements HashTreeTraverser {
 
-    private final ListedHashTree newTree;
+  private final ListedHashTree newTree;
 
-    private final List<Object> objects = new ArrayList<>();
+  private final List<Object> objects = new ArrayList<>();
 
-    private final boolean honourNoThreadClone;
+  private final boolean honourNoThreadClone;
 
-    /**
-     * Clone the test tree, honouring NoThreadClone markers.
-     *
-     */
-    public TreeCloner() {
-        this(true);
+  /**
+   * Clone the test tree, honouring NoThreadClone markers.
+   *
+   */
+  public TreeCloner() { this(true); }
+
+  /**
+   * Clone the test tree.
+   *
+   * @param honourNoThreadClone set false to clone NoThreadClone nodes as well
+   */
+  public TreeCloner(boolean honourNoThreadClone) {
+    newTree = new ListedHashTree();
+    this.honourNoThreadClone = honourNoThreadClone;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final void addNode(Object node, HashTree subTree) {
+    Object newNode = addNodeToTree(node);
+    addLast(newNode);
+  }
+
+  /**
+   * @param node Node to add to tree or not
+   * @return Object node (clone or not)
+   */
+  protected Object addNodeToTree(Object node) {
+    if ((node instanceof TestElement) // Check can cast for clone
+                                      // Don't clone NoThreadClone unless
+                                      // honourNoThreadClone == false
+        && !(honourNoThreadClone && node instanceof NoThreadClone)) {
+      Object newNode = ((TestElement)node).clone();
+      newTree.add(objects, newNode);
+      return newNode;
+    } else {
+      newTree.add(objects, node);
+      return node;
     }
+  }
 
-    /**
-     * Clone the test tree.
-     *
-     * @param honourNoThreadClone set false to clone NoThreadClone nodes as well
-     */
-    public TreeCloner(boolean honourNoThreadClone) {
-        newTree = new ListedHashTree();
-        this.honourNoThreadClone = honourNoThreadClone;
-    }
+  /**
+   * add node to objects LinkedList
+   * @param node Object
+   */
+  private void addLast(Object node) { objects.add(node); }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final void addNode(Object node, HashTree subTree) {
-        Object newNode = addNodeToTree(node);
-        addLast(newNode);
-    }
+  @Override
+  public void subtractNode() {
+    objects.remove(objects.size() - 1);
+  }
 
-    /**
-     * @param node Node to add to tree or not
-     * @return Object node (clone or not)
-     */
-    protected Object addNodeToTree(Object node) {
-        if ( (node instanceof TestElement) // Check can cast for clone
-           // Don't clone NoThreadClone unless honourNoThreadClone == false
-          && !(honourNoThreadClone && node instanceof NoThreadClone)
-        ) {
-            Object newNode = ((TestElement) node).clone();
-            newTree.add(objects, newNode);
-            return newNode;
-        } else {
-            newTree.add(objects, node);
-            return node;
-        }
-    }
+  public ListedHashTree getClonedTree() { return newTree; }
 
-    /**
-     * add node to objects LinkedList
-     * @param node Object
-     */
-    private void addLast(Object node) {
-        objects.add(node);
-    }
-
-    @Override
-    public void subtractNode() {
-        objects.remove(objects.size() - 1);
-    }
-
-    public ListedHashTree getClonedTree() {
-        return newTree;
-    }
-
-    @Override
-    public void processPath() {
-        // NOOP
-    }
-
+  @Override
+  public void processPath() {
+    // NOOP
+  }
 }

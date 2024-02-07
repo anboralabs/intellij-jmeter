@@ -24,26 +24,26 @@ package org.apache.jmeter.report.processor;
  */
 public interface AggregatorFactory {
 
-    /**
-     * Creates a new Aggregator object to calculate an aggregated value in a
-     * graph.
-     *
-     * @return the graph data aggregator
-     */
-    Aggregator createValueAggregator();
+  /**
+   * Creates a new Aggregator object to calculate an aggregated value in a
+   * graph.
+   *
+   * @return the graph data aggregator
+   */
+  Aggregator createValueAggregator();
 
-    /**
-     * Creates a new Aggregator object to calculate an aggregated key.
-     *
-     * @return the graph data aggregator
-     */
-    Aggregator createKeyAggregator();
+  /**
+   * Creates a new Aggregator object to calculate an aggregated key.
+   *
+   * @return the graph data aggregator
+   */
+  Aggregator createKeyAggregator();
 
-    /**
-     * Creates a new Aggregator object to calculate an aggregated value of an
-     * aggregated key series.
-     *
-     * @return the graph data aggregator
-     */
-    Aggregator createAggregatedKeyValueAggregator();
+  /**
+   * Creates a new Aggregator object to calculate an aggregated value of an
+   * aggregated key series.
+   *
+   * @return the graph data aggregator
+   */
+  Aggregator createAggregatedKeyValueAggregator();
 }

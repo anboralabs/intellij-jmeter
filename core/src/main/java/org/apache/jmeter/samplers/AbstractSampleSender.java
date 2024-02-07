@@ -24,30 +24,28 @@ import org.apache.jmeter.util.JMeterUtils;
  */
 public abstract class AbstractSampleSender implements SampleSender {
 
-    // Note: this is an instance field (and is not transient), so is created by the JMeter client
-    // and propagated to the server instance by RMI.
-    // [a static field would be recreated on the server, and would pick up the server properties]
-    private final boolean isClientConfigured = JMeterUtils.getPropDefault("sample_sender_client_configured", true); // $NON-NLS-1$
+  // Note: this is an instance field (and is not transient), so is created by
+  // the JMeter client and propagated to the server instance by RMI. [a static
+  // field would be recreated on the server, and would pick up the server
+  // properties]
+  private final boolean isClientConfigured = JMeterUtils.getPropDefault(
+      "sample_sender_client_configured", true); // $NON-NLS-1$
 
-    /**
-     * @return boolean indicates how SampleSender configuration is done, {@code true}
-     *         means use client properties and send to servers, {@code false} means use
-     *         server configurations
-     */
-    public boolean isClientConfigured() {
-        return isClientConfigured;
-    }
+  /**
+   * @return boolean indicates how SampleSender configuration is done, {@code
+   *     true}
+   *         means use client properties and send to servers, {@code false}
+   * means use server configurations
+   */
+  public boolean isClientConfigured() { return isClientConfigured; }
 
-    /**
-     *
-     */
-    protected AbstractSampleSender() {
-        super();
-    }
+  /**
+   *
+   */
+  protected AbstractSampleSender() { super(); }
 
-    @Override
-    public void testEnded() {
-        // Not used
-    }
-
+  @Override
+  public void testEnded() {
+    // Not used
+  }
 }

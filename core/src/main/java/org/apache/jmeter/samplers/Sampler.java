@@ -18,7 +18,6 @@
 package org.apache.jmeter.samplers;
 
 import java.io.Serializable;
-
 import org.apache.jmeter.testelement.TestElement;
 
 /**
@@ -27,13 +26,13 @@ import org.apache.jmeter.testelement.TestElement;
  *
  */
 public interface Sampler extends Serializable, TestElement {
-    /**
-     * Obtains statistics about the given Entry, and packages the information
-     * into a SampleResult.
-     *
-     * @param e
-     *            the Entry (TODO seems to be unused)
-     * @return information about the sample
-     */
-    SampleResult sample(Entry e);
+  /**
+   * Obtains statistics about the given Entry, and packages the information
+   * into a SampleResult.
+   *
+   * @param e
+   *            the Entry (TODO seems to be unused)
+   * @return information about the sample
+   */
+  SampleResult sample(Entry e);
 }

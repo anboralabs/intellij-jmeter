@@ -22,120 +22,117 @@ import org.apache.jmeter.testelement.TestElement;
 /**
  */
 public class DoubleProperty extends NumberProperty {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    private double value;
+  private double value;
 
-    private double savedValue;
+  private double savedValue;
 
-    public DoubleProperty(String name, double value) {
-        super(name);
-        this.value = value;
-    }
+  public DoubleProperty(String name, double value) {
+    super(name);
+    this.value = value;
+  }
 
-    public DoubleProperty() {
-    }
+  public DoubleProperty() {}
 
-    public void setValue(float value) {
-        this.value = value;
-    }
+  public void setValue(float value) { this.value = value; }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setNumberValue(Number n) {
-        value = n.doubleValue();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void setNumberValue(Number n) {
+    value = n.doubleValue();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setNumberValue(String n) throws NumberFormatException {
-        value = Double.parseDouble(n);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void setNumberValue(String n) throws NumberFormatException {
+    value = Double.parseDouble(n);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getStringValue() {
-        return Double.toString(value);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getStringValue() {
+    return Double.toString(value);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Object getObjectValue() {
-        return value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getObjectValue() {
+    return value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DoubleProperty clone() {
-        DoubleProperty prop = (DoubleProperty) super.clone();
-        prop.value = value;
-        return prop;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public DoubleProperty clone() {
+    DoubleProperty prop = (DoubleProperty)super.clone();
+    prop.value = value;
+    return prop;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean getBooleanValue() {
-        return value > 0;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean getBooleanValue() {
+    return value > 0;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public double getDoubleValue() {
-        return value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public double getDoubleValue() {
+    return value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public float getFloatValue() {
-        return (float) value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public float getFloatValue() {
+    return (float)value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getIntValue() {
-        return (int) value;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getIntValue() {
+    return (int)value;
+  }
 
-    /**
-     * @see JMeterProperty#getLongValue()
-     */
-    @Override
-    public long getLongValue() {
-        return (long) value;
-    }
+  /**
+   * @see JMeterProperty#getLongValue()
+   */
+  @Override
+  public long getLongValue() {
+    return (long)value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setRunningVersion(boolean runningVersion) {
-        savedValue = value;
-        super.setRunningVersion(runningVersion);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setRunningVersion(boolean runningVersion) {
+    savedValue = value;
+    super.setRunningVersion(runningVersion);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        value = savedValue;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    value = savedValue;
+  }
 }

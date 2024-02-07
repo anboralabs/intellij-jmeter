@@ -22,7 +22,6 @@ import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.stream.Stream;
-
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.X509KeyManager;
 
@@ -33,70 +32,71 @@ import javax.net.ssl.X509KeyManager;
  */
 public class AliasKeyManager implements X509KeyManager {
 
-    private final String alias;
-    private final X509KeyManager km;
+  private final String alias;
+  private final X509KeyManager km;
 
-    public AliasKeyManager(X509KeyManager km, String alias) {
-        this.km = km;
-        this.alias = alias;
-    }
+  public AliasKeyManager(X509KeyManager km, String alias) {
+    this.km = km;
+    this.alias = alias;
+  }
 
-    /**
-     * Wraps the first found {@link X509KeyManager} that has a private key for
-     * the given {@code alias} as an {@link AliasKeyManager} and returns it as
-     * the only element in a newly created array.
-     *
-     * @param kms
-     *            the KeyManagers to be searched for the {@code alias}
-     * @param alias
-     *            the name to be searched for
-     * @return an array with one {@link AliasKeyManager} that has a private key
-     *         named {@code alias}
-     * @throws IllegalArgumentException
-     *             if no valid KeyManager is found
-     */
-    public static AliasKeyManager[] wrap(KeyManager[] kms, String alias) {
-        AliasKeyManager validManager = Stream.of(kms)
-                .filter(m -> m instanceof X509KeyManager)
-                .map(m -> (X509KeyManager) m)
-                .filter(m -> m.getPrivateKey(alias) != null)
-                .map(m -> new AliasKeyManager(m, alias))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "No key found for alias '" + alias + "'"));
-        return new AliasKeyManager[] { validManager };
-    }
+  /**
+   * Wraps the first found {@link X509KeyManager} that has a private key for
+   * the given {@code alias} as an {@link AliasKeyManager} and returns it as
+   * the only element in a newly created array.
+   *
+   * @param kms
+   *            the KeyManagers to be searched for the {@code alias}
+   * @param alias
+   *            the name to be searched for
+   * @return an array with one {@link AliasKeyManager} that has a private key
+   *         named {@code alias}
+   * @throws IllegalArgumentException
+   *             if no valid KeyManager is found
+   */
+  public static AliasKeyManager[] wrap(KeyManager[] kms, String alias) {
+    AliasKeyManager validManager =
+        Stream.of(kms)
+            .filter(m -> m instanceof X509KeyManager)
+            .map(m -> (X509KeyManager)m)
+            .filter(m -> m.getPrivateKey(alias) != null)
+            .map(m -> new AliasKeyManager(m, alias))
+            .findFirst()
+            .orElseThrow(()
+                             -> new IllegalArgumentException(
+                                 "No key found for alias '" + alias + "'"));
+    return new AliasKeyManager[] {validManager};
+  }
 
-    @Override
-    public String chooseClientAlias(String[] keyType, Principal[] issuers,
-            Socket socket) {
-        return alias;
-    }
+  @Override
+  public String chooseClientAlias(String[] keyType, Principal[] issuers,
+                                  Socket socket) {
+    return alias;
+  }
 
-    @Override
-    public String chooseServerAlias(String keyType, Principal[] issuers,
-            Socket socket) {
-        return alias;
-    }
+  @Override
+  public String chooseServerAlias(String keyType, Principal[] issuers,
+                                  Socket socket) {
+    return alias;
+  }
 
-    @Override
-    public X509Certificate[] getCertificateChain(String alias) {
-        return this.km.getCertificateChain(alias);
-    }
+  @Override
+  public X509Certificate[] getCertificateChain(String alias) {
+    return this.km.getCertificateChain(alias);
+  }
 
-    @Override
-    public String[] getClientAliases(String keyType, Principal[] issuers) {
-        return this.km.getClientAliases(keyType, issuers);
-    }
+  @Override
+  public String[] getClientAliases(String keyType, Principal[] issuers) {
+    return this.km.getClientAliases(keyType, issuers);
+  }
 
-    @Override
-    public PrivateKey getPrivateKey(String alias) {
-        return this.km.getPrivateKey(alias);
-    }
+  @Override
+  public PrivateKey getPrivateKey(String alias) {
+    return this.km.getPrivateKey(alias);
+  }
 
-    @Override
-    public String[] getServerAliases(String keyType, Principal[] issuers) {
-        return this.km.getServerAliases(keyType, issuers);
-    }
-
+  @Override
+  public String[] getServerAliases(String keyType, Principal[] issuers) {
+    return this.km.getServerAliases(keyType, issuers);
+  }
 }

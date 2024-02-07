@@ -23,13 +23,13 @@ package org.apache.commons.cli.avalon;
  * @see AbstractParserControl
  */
 public interface ParserControl {
-    /**
-     * Called by the parser to determine whether it should stop after last
-     * option parsed.
-     *
-     * @param lastOptionCode
-     *            the code of last option parsed
-     * @return return true to halt, false to continue parsing
-     */
-    boolean isFinished(int lastOptionCode);
+  /**
+   * Called by the parser to determine whether it should stop after last
+   * option parsed.
+   *
+   * @param lastOptionCode
+   *            the code of last option parsed
+   * @return return true to halt, false to continue parsing
+   */
+  boolean isFinished(int lastOptionCode);
 }

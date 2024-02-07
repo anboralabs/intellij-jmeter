@@ -22,125 +22,119 @@ import org.apache.jmeter.testelement.TestElement;
 /**
  */
 public class IntegerProperty extends NumberProperty {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    private int value;
+  private int value;
 
-    private int savedValue;
+  private int savedValue;
 
-    public IntegerProperty(String name, int value) {
-        super(name);
-        this.value = value;
-    }
+  public IntegerProperty(String name, int value) {
+    super(name);
+    this.value = value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setRunningVersion(boolean runningVersion) {
-        savedValue = value;
-        super.setRunningVersion(runningVersion);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setRunningVersion(boolean runningVersion) {
+    savedValue = value;
+    super.setRunningVersion(runningVersion);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        value = savedValue;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    value = savedValue;
+  }
 
-    public IntegerProperty(String name) {
-        super(name);
-    }
+  public IntegerProperty(String name) { super(name); }
 
-    public IntegerProperty() {
-        super();
-    }
+  public IntegerProperty() { super(); }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
+  public void setValue(int value) { this.value = value; }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setNumberValue(Number n) {
-        value = n.intValue();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void setNumberValue(Number n) {
+    value = n.intValue();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void setNumberValue(String n) throws NumberFormatException {
-        value = Integer.parseInt(n);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void setNumberValue(String n) throws NumberFormatException {
+    value = Integer.parseInt(n);
+  }
 
-    /**
-     * @see JMeterProperty#getStringValue()
-     */
-    @Override
-    public String getStringValue() {
-        return Integer.toString(value);
-    }
+  /**
+   * @see JMeterProperty#getStringValue()
+   */
+  @Override
+  public String getStringValue() {
+    return Integer.toString(value);
+  }
 
-    /**
-     * @see JMeterProperty#getObjectValue()
-     */
-    @Override
-    public Object getObjectValue() {
-        return value;
-    }
+  /**
+   * @see JMeterProperty#getObjectValue()
+   */
+  @Override
+  public Object getObjectValue() {
+    return value;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public IntegerProperty clone() {
-        IntegerProperty prop = (IntegerProperty) super.clone();
-        prop.value = value;
-        return prop;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IntegerProperty clone() {
+    IntegerProperty prop = (IntegerProperty)super.clone();
+    prop.value = value;
+    return prop;
+  }
 
-    /**
-     * @see JMeterProperty#getBooleanValue()
-     */
-    @Override
-    public boolean getBooleanValue() {
-        return getIntValue() > 0;
-    }
+  /**
+   * @see JMeterProperty#getBooleanValue()
+   */
+  @Override
+  public boolean getBooleanValue() {
+    return getIntValue() > 0;
+  }
 
-    /**
-     * @see JMeterProperty#getDoubleValue()
-     */
-    @Override
-    public double getDoubleValue() {
-        return value;
-    }
+  /**
+   * @see JMeterProperty#getDoubleValue()
+   */
+  @Override
+  public double getDoubleValue() {
+    return value;
+  }
 
-    /**
-     * @see JMeterProperty#getFloatValue()
-     */
-    @Override
-    public float getFloatValue() {
-        return value;
-    }
+  /**
+   * @see JMeterProperty#getFloatValue()
+   */
+  @Override
+  public float getFloatValue() {
+    return value;
+  }
 
-    /**
-     * @see JMeterProperty#getIntValue()
-     */
-    @Override
-    public int getIntValue() {
-        return value;
-    }
+  /**
+   * @see JMeterProperty#getIntValue()
+   */
+  @Override
+  public int getIntValue() {
+    return value;
+  }
 
-    /**
-     * @see JMeterProperty#getLongValue()
-     */
-    @Override
-    public long getLongValue() {
-        return value;
-    }
+  /**
+   * @see JMeterProperty#getLongValue()
+   */
+  @Override
+  public long getLongValue() {
+    return value;
+  }
 }

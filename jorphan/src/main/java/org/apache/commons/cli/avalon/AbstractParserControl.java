@@ -24,16 +24,16 @@ package org.apache.commons.cli.avalon;
  * @see ParserControl
  */
 public abstract class AbstractParserControl implements ParserControl {
-    /**
-     * By default always continue parsing by returning false.
-     *
-     * @param lastOptionCode
-     *            the code of last option parsed
-     * @return return true to halt, false to continue parsing
-     * @see ParserControl#isFinished(int)
-     */
-    @Override
-    public boolean isFinished(int lastOptionCode) {
-        return false;
-    }
+  /**
+   * By default always continue parsing by returning false.
+   *
+   * @param lastOptionCode
+   *            the code of last option parsed
+   * @return return true to halt, false to continue parsing
+   * @see ParserControl#isFinished(int)
+   */
+  @Override
+  public boolean isFinished(int lastOptionCode) {
+    return false;
+  }
 }

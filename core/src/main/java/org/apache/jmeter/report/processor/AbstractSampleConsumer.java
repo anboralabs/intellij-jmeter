@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-
 import org.apache.jmeter.report.core.Sample;
 import org.apache.jmeter.report.core.SampleException;
 import org.apache.jmeter.report.core.SampleMetadata;
@@ -37,217 +36,211 @@ import org.slf4j.LoggerFactory;
  *
  * @since 3.0
  */
-public abstract class AbstractSampleConsumer extends AbstractSampleProcessor
-        implements SampleConsumer, SampleProducer {
+public abstract class AbstractSampleConsumer
+    extends AbstractSampleProcessor implements SampleConsumer, SampleProducer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractSampleConsumer.class);
+  private static final Logger LOG =
+      LoggerFactory.getLogger(AbstractSampleConsumer.class);
 
-    /** sample consumer name, used for logging */
-    private String name;
+  /** sample consumer name, used for logging */
+  private String name;
 
-    /** number of samples produced by this consumer, all channels included */
-    private long producedSampleCount;
+  /** number of samples produced by this consumer, all channels included */
+  private long producedSampleCount;
 
-    private File workingDir;
+  private File workingDir;
 
-    /**
-     * samples consumers that will consume sample produced by this sample
-     * consumer (which is also a sample producer)
-     */
-    private List<SampleConsumer> sampleConsumers = new ArrayList<>();
+  /**
+   * samples consumers that will consume sample produced by this sample
+   * consumer (which is also a sample producer)
+   */
+  private List<SampleConsumer> sampleConsumers = new ArrayList<>();
 
-    /**
-     * index of sample metadata consumed by this consumer. Indexed by channel
-     * numbers
-     */
-    private final Map<Integer, SampleMetadata> consumedMetadata = new TreeMap<>();
+  /**
+   * index of sample metadata consumed by this consumer. Indexed by channel
+   * numbers
+   */
+  private final Map<Integer, SampleMetadata> consumedMetadata = new TreeMap<>();
 
-    /**
-     * Gets the data identified by the specified key from the current sample
-     * context
-     *
-     * @param key
-     *            the key
-     * @return the data
-     */
-    protected final Object getDataFromContext(String key) {
-        return getSampleContext().getData().get(key);
+  /**
+   * Gets the data identified by the specified key from the current sample
+   * context
+   *
+   * @param key
+   *            the key
+   * @return the data
+   */
+  protected final Object getDataFromContext(String key) {
+    return getSampleContext().getData().get(key);
+  }
+
+  /**
+   * Store data in the current sample context with the specified key
+   * identifier.
+   *
+   * @param key
+   *            the key
+   * @param value
+   *            the value
+   */
+  protected final void setDataToContext(String key, Object value) {
+    getSampleContext().getData().put(key, value);
+  }
+
+  /**
+   * Gets the name of the consumer.
+   *
+   * @return the name of the consumer
+   */
+  public String getName() {
+    if (name == null) {
+      return getClass().getSimpleName() + "-" + hashCode();
+    } else {
+      return name;
     }
+  }
 
-    /**
-     * Store data in the current sample context with the specified key
-     * identifier.
-     *
-     * @param key
-     *            the key
-     * @param value
-     *            the value
-     */
-    protected final void setDataToContext(String key, Object value) {
-        getSampleContext().getData().put(key, value);
+  /**
+   * Sets the name of the consumer.
+   *
+   * @param name
+   *            the new name
+   */
+  public void setName(String name) { this.name = name; }
+
+  public final File getWorkingDirectory() { return workingDir; }
+
+  private void setWorkingDirectory(File baseDirectory) {
+    this.workingDir = new File(baseDirectory, getName());
+  }
+
+  @Override
+  public void setSampleContext(SampleContext sampleContext) {
+    super.setSampleContext(sampleContext);
+    initConsumers(sampleContext);
+    setWorkingDirectory(sampleContext.getWorkingDirectory());
+  }
+
+  /**
+   * Sets the consumers
+   *
+   * @param consumers
+   *            for the samples (must not be {@code null})
+   */
+  public void setSampleConsumers(List<SampleConsumer> consumers) {
+    Objects.requireNonNull(consumers, "consumers must not be null");
+
+    this.sampleConsumers = consumers;
+  }
+
+  public void addSampleConsumer(SampleConsumer consumer) {
+    if (consumer == null) {
+      return;
     }
+    this.sampleConsumers.add(consumer);
+  }
 
-    /**
-     * Gets the name of the consumer.
-     *
-     * @return the name of the consumer
-     */
-    public String getName() {
-        if (name == null) {
-            return getClass().getSimpleName() + "-" + hashCode();
-        } else {
-            return name;
-        }
+  public void setSampleConsumer(SampleConsumer consumer) {
+    addSampleConsumer(consumer);
+  }
+
+  public void removeSampleConsumer(SampleConsumer consumer) {
+    if (consumer == null) {
+      return;
     }
+    this.sampleConsumers.remove(consumer);
+  }
 
-    /**
-     * Sets the name of the consumer.
-     *
-     * @param name
-     *            the new name
-     */
-    public void setName(String name) {
-        this.name = name;
+  @Override
+  public void setConsumedMetadata(SampleMetadata sampleMetadata, int channel) {
+    consumedMetadata.put(channel, sampleMetadata);
+  }
+
+  public SampleMetadata getConsumedMetadata(int channel) {
+    return consumedMetadata.get(channel);
+  }
+
+  public int getConsumedChannelCount() { return consumedMetadata.size(); }
+
+  private void initConsumers(SampleContext context) {
+    for (SampleConsumer consumer : this.sampleConsumers) {
+      try {
+        consumer.setSampleContext(context);
+      } catch (Exception e) {
+        throw new SampleException(
+            "Consumer failed with message :" + e.getMessage(), e);
+      }
     }
+  }
 
-    public final File getWorkingDirectory() {
-        return workingDir;
+  @Override
+  public void setChannelAttribute(int channel, String key, Object value) {
+    super.setChannelAttribute(channel, key, value);
+    // propagate attribute to all of this SampleConsumer consumers
+    for (SampleConsumer consumer : sampleConsumers) {
+      consumer.setChannelAttribute(channel, key, value);
     }
+  }
 
-    private void setWorkingDirectory(File baseDirectory) {
-        this.workingDir = new File(baseDirectory, getName());
+  @Override
+  public void setProducedMetadata(SampleMetadata metadata, int channel) {
+    for (SampleConsumer consumer : this.sampleConsumers) {
+      try {
+        consumer.setConsumedMetadata(metadata, channel);
+      } catch (Exception e) {
+        throw new SampleException(
+            "Consumer failed with message :" + e.getMessage(), e);
+      }
     }
+  }
 
-    @Override
-    public void setSampleContext(SampleContext sampleContext) {
-        super.setSampleContext(sampleContext);
-        initConsumers(sampleContext);
-        setWorkingDirectory(sampleContext.getWorkingDirectory());
+  protected SampleConsumer getConsumer(int i) {
+    if (i < sampleConsumers.size()) {
+      return sampleConsumers.get(i);
+    } else {
+      return null;
     }
+  }
 
-    /**
-     * Sets the consumers
-     *
-     * @param consumers
-     *            for the samples (must not be {@code null})
-     */
-    public void setSampleConsumers(List<SampleConsumer> consumers) {
-        Objects.requireNonNull(consumers, "consumers must not be null");
-
-        this.sampleConsumers = consumers;
+  @Override
+  public void startProducing() {
+    producedSampleCount = 0;
+    for (SampleConsumer consumer : this.sampleConsumers) {
+      try {
+        consumer.startConsuming();
+      } catch (Exception e) {
+        throw new SampleException(
+            "Consumer failed with message :" + e.getMessage(), e);
+      }
     }
+  }
 
-    public void addSampleConsumer(SampleConsumer consumer) {
-        if (consumer == null) {
-            return;
-        }
-        this.sampleConsumers.add(consumer);
+  @Override
+  public void produce(Sample s, int channel) {
+    for (SampleConsumer consumer : this.sampleConsumers) {
+      try {
+        consumer.consume(s, channel);
+        producedSampleCount++;
+      } catch (Exception e) {
+        throw new SampleException(
+            "Consumer failed with message :" + e.getMessage(), e);
+      }
     }
+  }
 
-    public void setSampleConsumer(SampleConsumer consumer) {
-        addSampleConsumer(consumer);
+  @Override
+  public void stopProducing() {
+    for (SampleConsumer consumer : this.sampleConsumers) {
+      try {
+        consumer.stopConsuming();
+      } catch (Exception e) {
+        throw new SampleException(
+            "Consumer failed with message :" + e.getMessage(), e);
+      }
     }
-
-    public void removeSampleConsumer(SampleConsumer consumer) {
-        if (consumer == null) {
-            return;
-        }
-        this.sampleConsumers.remove(consumer);
+    if (LOG.isInfoEnabled()) {
+      LOG.info(getClass() + "#stopProducing(): " + getName() + " produced " +
+               producedSampleCount + " samples");
     }
-
-    @Override
-    public void setConsumedMetadata(SampleMetadata sampleMetadata, int channel) {
-        consumedMetadata.put(channel, sampleMetadata);
-    }
-
-    public SampleMetadata getConsumedMetadata(int channel) {
-        return consumedMetadata.get(channel);
-    }
-
-    public int getConsumedChannelCount() {
-        return consumedMetadata.size();
-    }
-
-    private void initConsumers(SampleContext context) {
-        for (SampleConsumer consumer : this.sampleConsumers) {
-            try {
-                consumer.setSampleContext(context);
-            } catch (Exception e) {
-                throw new SampleException("Consumer failed with message :"
-                        + e.getMessage(), e);
-            }
-        }
-    }
-
-    @Override
-    public void setChannelAttribute(int channel, String key, Object value) {
-        super.setChannelAttribute(channel, key, value);
-        // propagate attribute to all of this SampleConsumer consumers
-        for (SampleConsumer consumer : sampleConsumers) {
-            consumer.setChannelAttribute(channel, key, value);
-        }
-    }
-
-    @Override
-    public void setProducedMetadata(SampleMetadata metadata, int channel) {
-        for (SampleConsumer consumer : this.sampleConsumers) {
-            try {
-                consumer.setConsumedMetadata(metadata, channel);
-            } catch (Exception e) {
-                throw new SampleException("Consumer failed with message :"
-                        + e.getMessage(), e);
-            }
-        }
-    }
-
-    protected SampleConsumer getConsumer(int i) {
-        if (i < sampleConsumers.size()) {
-            return sampleConsumers.get(i);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void startProducing() {
-        producedSampleCount = 0;
-        for (SampleConsumer consumer : this.sampleConsumers) {
-            try {
-                consumer.startConsuming();
-            } catch (Exception e) {
-                throw new SampleException("Consumer failed with message :"
-                        + e.getMessage(), e);
-            }
-        }
-    }
-
-    @Override
-    public void produce(Sample s, int channel) {
-        for (SampleConsumer consumer : this.sampleConsumers) {
-            try {
-                consumer.consume(s, channel);
-                producedSampleCount++;
-            } catch (Exception e) {
-                throw new SampleException("Consumer failed with message :"
-                        + e.getMessage(), e);
-            }
-        }
-    }
-
-    @Override
-    public void stopProducing() {
-        for (SampleConsumer consumer : this.sampleConsumers) {
-            try {
-                consumer.stopConsuming();
-            } catch (Exception e) {
-                throw new SampleException("Consumer failed with message :"
-                        + e.getMessage(), e);
-            }
-        }
-        if (LOG.isInfoEnabled()) {
-            LOG.info(getClass()+"#stopProducing(): " + getName() + " produced "
-                    + producedSampleCount + " samples");
-        }
-    }
-
+  }
 }

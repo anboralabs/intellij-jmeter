@@ -24,58 +24,46 @@ package org.apache.jmeter.report.processor;
  */
 public class ApdexSummaryData {
 
-    private final ApdexThresholdsInfo apdexThresholdInfo;
+  private final ApdexThresholdsInfo apdexThresholdInfo;
 
-    private long satisfiedCount;
-    private long toleratedCount;
-    private long totalCount;
+  private long satisfiedCount;
+  private long toleratedCount;
+  private long totalCount;
 
-    public final ApdexThresholdsInfo getApdexThresholdInfo() {
-        return apdexThresholdInfo;
-    }
+  public final ApdexThresholdsInfo getApdexThresholdInfo() {
+    return apdexThresholdInfo;
+  }
 
-    public final long getSatisfiedCount() {
-        return satisfiedCount;
-    }
+  public final long getSatisfiedCount() { return satisfiedCount; }
 
-    public final void setSatisfiedCount(long satisfiedCount) {
-        this.satisfiedCount = satisfiedCount;
-    }
+  public final void setSatisfiedCount(long satisfiedCount) {
+    this.satisfiedCount = satisfiedCount;
+  }
 
-    public final long getToleratedCount() {
-        return toleratedCount;
-    }
+  public final long getToleratedCount() { return toleratedCount; }
 
-    public final void setToleratedCount(long toleratedCount) {
-        this.toleratedCount = toleratedCount;
-    }
+  public final void setToleratedCount(long toleratedCount) {
+    this.toleratedCount = toleratedCount;
+  }
 
-    public final long getTotalCount() {
-        return totalCount;
-    }
+  public final long getTotalCount() { return totalCount; }
 
-    public final void setTotalCount(long totalCount) {
-        this.totalCount = totalCount;
-    }
+  public final void setTotalCount(long totalCount) {
+    this.totalCount = totalCount;
+  }
 
-    /**
-     * Instantiates a new apdex summary data.
-     *
-     * @param info the threshold information
-     */
-    public ApdexSummaryData(ApdexThresholdsInfo info) {
-        apdexThresholdInfo = info;
-    }
+  /**
+   * Instantiates a new apdex summary data.
+   *
+   * @param info the threshold information
+   */
+  public ApdexSummaryData(ApdexThresholdsInfo info) {
+    apdexThresholdInfo = info;
+  }
 
-    public void incSatisfiedCount() {
-        satisfiedCount++;
-    }
+  public void incSatisfiedCount() { satisfiedCount++; }
 
-    public void incToleratedCount() {
-        toleratedCount++;
-    }
+  public void incToleratedCount() { toleratedCount++; }
 
-    public void incTotalCount() {
-        totalCount++;
-    }
+  public void incTotalCount() { totalCount++; }
 }

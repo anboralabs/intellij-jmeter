@@ -25,8 +25,8 @@ package org.apache.jmeter.samplers;
  */
 public interface Clearable {
 
-    /**
-     * Clears the current data of the object.
-     */
-    void clearData();
+  /**
+   * Clears the current data of the object.
+   */
+  void clearData();
 }

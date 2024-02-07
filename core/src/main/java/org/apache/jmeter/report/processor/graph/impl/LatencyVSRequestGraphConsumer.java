@@ -19,7 +19,6 @@ package org.apache.jmeter.report.processor.graph.impl;
 
 import java.util.Collections;
 import java.util.Map;
-
 import org.apache.jmeter.report.processor.MedianAggregatorFactory;
 import org.apache.jmeter.report.processor.graph.AbstractGraphConsumer;
 import org.apache.jmeter.report.processor.graph.AbstractVersusRequestsGraphConsumer;
@@ -34,36 +33,35 @@ import org.apache.jmeter.report.processor.graph.StatusSeriesSelector;
  *
  * @since 3.0
  */
-public class LatencyVSRequestGraphConsumer extends
-        AbstractVersusRequestsGraphConsumer {
+public class LatencyVSRequestGraphConsumer
+    extends AbstractVersusRequestsGraphConsumer {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
-     * createKeysSelector()
-     */
-    @Override
-    protected GraphKeysSelector createKeysSelector() {
-        return sample ->
-                sample.getData(
-                        Double.class,
-                        AbstractVersusRequestsGraphConsumer.TIME_INTERVAL_LABEL);
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.processor.graph.AbstractGraphConsumer#
+   * createKeysSelector()
+   */
+  @Override
+  protected GraphKeysSelector createKeysSelector() {
+    return sample
+        -> sample.getData(
+            Double.class,
+            AbstractVersusRequestsGraphConsumer.TIME_INTERVAL_LABEL);
+  }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
-     * createGroupInfos()
-     */
-    @Override
-    protected Map<String, GroupInfo> createGroupInfos() {
-        return Collections.singletonMap(
-                AbstractGraphConsumer.DEFAULT_GROUP,
-                new GroupInfo(
-                        new MedianAggregatorFactory(), new StatusSeriesSelector(),
-                        // We ignore Transaction Controller results
-                        new LatencyValueSelector(true), false, false));
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.jmeter.report.csv.processor.impl.AbstractGraphConsumer#
+   * createGroupInfos()
+   */
+  @Override
+  protected Map<String, GroupInfo> createGroupInfos() {
+    return Collections.singletonMap(
+        AbstractGraphConsumer.DEFAULT_GROUP,
+        new GroupInfo(new MedianAggregatorFactory(), new StatusSeriesSelector(),
+                      // We ignore Transaction Controller results
+                      new LatencyValueSelector(true), false, false));
+  }
 }

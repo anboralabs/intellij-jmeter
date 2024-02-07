@@ -41,64 +41,64 @@ import java.beans.PropertyDescriptor;
  */
 public class TestBeanBeanInfo implements BeanInfo {
 
-    @Override
-    public BeanInfo[] getAdditionalBeanInfo() {
-        return new BeanInfo[0];
-    }
+  @Override
+  public BeanInfo[] getAdditionalBeanInfo() {
+    return new BeanInfo[0];
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BeanDescriptor getBeanDescriptor() {
-        return null;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public BeanDescriptor getBeanDescriptor() {
+    return null;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getDefaultEventIndex() {
-        return 0;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getDefaultEventIndex() {
+    return 0;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getDefaultPropertyIndex() {
-        return 0;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getDefaultPropertyIndex() {
+    return 0;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public EventSetDescriptor[] getEventSetDescriptors() {
-        return new EventSetDescriptor[0];
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public EventSetDescriptor[] getEventSetDescriptors() {
+    return new EventSetDescriptor[0];
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Image getIcon(int iconKind) {
-        return null;
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Image getIcon(int iconKind) {
+    return null;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public MethodDescriptor[] getMethodDescriptors() {
-        return new MethodDescriptor[0];
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public MethodDescriptor[] getMethodDescriptors() {
+    return new MethodDescriptor[0];
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PropertyDescriptor[] getPropertyDescriptors() {
-        return new PropertyDescriptor[0];
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public PropertyDescriptor[] getPropertyDescriptors() {
+    return new PropertyDescriptor[0];
+  }
 }

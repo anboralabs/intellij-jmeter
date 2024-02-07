@@ -18,27 +18,23 @@
 package org.apache.jmeter.threads.gui;
 
 import java.awt.event.ItemListener;
-
 import org.apache.jmeter.gui.TestElementMetadata;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.threads.PostThreadGroup;
 
 @TestElementMetadata(labelResource = "post_thread_group_title")
 public class PostThreadGroupGui extends ThreadGroupGui implements ItemListener {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public PostThreadGroupGui() {
-        super(false);
-    }
+  public PostThreadGroupGui() { super(false); }
 
-    @Override
-    public String getLabelResource() {
-        return "post_thread_group_title"; // $NON-NLS-1$
+  @Override
+  public String getLabelResource() {
+    return "post_thread_group_title"; // $NON-NLS-1$
+  }
 
-    }
-
-    @Override
-    public TestElement makeTestElement() {
-        return new PostThreadGroup();
-    }
+  @Override
+  public TestElement makeTestElement() {
+    return new PostThreadGroup();
+  }
 }

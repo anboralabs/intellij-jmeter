@@ -18,7 +18,6 @@
 package org.apache.jmeter.util;
 
 import java.beans.PropertyDescriptor;
-
 import org.apache.jmeter.testbeans.BeanInfoSupport;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.testbeans.gui.FileEditor;
@@ -29,37 +28,36 @@ import org.apache.jmeter.testbeans.gui.TextAreaEditor;
  */
 public abstract class BeanShellBeanInfoSupport extends BeanInfoSupport {
 
-    protected BeanShellBeanInfoSupport(Class<? extends TestBean> beanClass) {
-        super(beanClass);
-        PropertyDescriptor p;
+  protected BeanShellBeanInfoSupport(Class<? extends TestBean> beanClass) {
+    super(beanClass);
+    PropertyDescriptor p;
 
-        p = property("resetInterpreter");
-        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, Boolean.FALSE);
-        p.setValue(NOT_EXPRESSION, Boolean.TRUE);
-        p.setValue(NOT_OTHER, Boolean.TRUE);
+    p = property("resetInterpreter");
+    p.setValue(NOT_UNDEFINED, Boolean.TRUE);
+    p.setValue(DEFAULT, Boolean.FALSE);
+    p.setValue(NOT_EXPRESSION, Boolean.TRUE);
+    p.setValue(NOT_OTHER, Boolean.TRUE);
 
-        createPropertyGroup("resetGroup", new String[] { "resetInterpreter" });
+    createPropertyGroup("resetGroup", new String[] {"resetInterpreter"});
 
-        p = property("parameters");
-        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, "");
+    p = property("parameters");
+    p.setValue(NOT_UNDEFINED, Boolean.TRUE);
+    p.setValue(DEFAULT, "");
 
-        createPropertyGroup("parameterGroup", new String[] { "parameters" });
+    createPropertyGroup("parameterGroup", new String[] {"parameters"});
 
-        p = property("filename");
-        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, "");
-        p.setPropertyEditorClass(FileEditor.class);
+    p = property("filename");
+    p.setValue(NOT_UNDEFINED, Boolean.TRUE);
+    p.setValue(DEFAULT, "");
+    p.setPropertyEditorClass(FileEditor.class);
 
-        createPropertyGroup("filenameGroup", new String[] { "filename" });
+    createPropertyGroup("filenameGroup", new String[] {"filename"});
 
-        p = property("script");
-        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
-        p.setValue(DEFAULT, "");
-        p.setPropertyEditorClass(TextAreaEditor.class);
+    p = property("script");
+    p.setValue(NOT_UNDEFINED, Boolean.TRUE);
+    p.setValue(DEFAULT, "");
+    p.setPropertyEditorClass(TextAreaEditor.class);
 
-        createPropertyGroup("scripting", new String[] { "script" });
-    }
-
+    createPropertyGroup("scripting", new String[] {"script"});
+  }
 }

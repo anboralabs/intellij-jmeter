@@ -27,21 +27,21 @@ import org.apache.jorphan.collections.HashTree;
  */
 public interface ReplaceableController {
 
-    /**
-     * Used to replace the test execution tree (usually by adding the
-     * subelements of the TestElement that is replacing the
-     * ReplaceableController.
-     *
-     * @return The replaced sub tree
-     *
-     * @see org.apache.jorphan.collections.HashTree
-     */
-    HashTree getReplacementSubTree();
+  /**
+   * Used to replace the test execution tree (usually by adding the
+   * subelements of the TestElement that is replacing the
+   * ReplaceableController.
+   *
+   * @return The replaced sub tree
+   *
+   * @see org.apache.jorphan.collections.HashTree
+   */
+  HashTree getReplacementSubTree();
 
-    /**
-     * Compute the replacement tree.
-     *
-     * @param context the starting point of the replacement
-     */
-    void resolveReplacementSubTree(JMeterTreeNode context);
+  /**
+   * Compute the replacement tree.
+   *
+   * @param context the starting point of the replacement
+   */
+  void resolveReplacementSubTree(JMeterTreeNode context);
 }

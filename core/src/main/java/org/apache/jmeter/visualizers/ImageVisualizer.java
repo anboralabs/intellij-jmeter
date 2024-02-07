@@ -24,5 +24,5 @@ import java.awt.Image;
  *
  */
 public interface ImageVisualizer {
-    Image getImage();
+  Image getImage();
 }

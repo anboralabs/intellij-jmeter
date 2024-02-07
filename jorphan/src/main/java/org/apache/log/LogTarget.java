@@ -28,16 +28,15 @@ package org.apache.log;
  * @deprecated Will be dropped in 3.3
  */
 @Deprecated
-public interface LogTarget
-{
-    /**
-     * Process a log event.
-     * In NO case should this method ever throw an exception/error.
-     * The reason is that logging is usually added for debugging/auditing
-     * purposes and it would be unacceptable to have your debugging
-     * code cause more errors.
-     *
-     * @param event the event
-     */
-    void processEvent( LogEvent event );
+public interface LogTarget {
+  /**
+   * Process a log event.
+   * In NO case should this method ever throw an exception/error.
+   * The reason is that logging is usually added for debugging/auditing
+   * purposes and it would be unacceptable to have your debugging
+   * code cause more errors.
+   *
+   * @param event the event
+   */
+  void processEvent(LogEvent event);
 }

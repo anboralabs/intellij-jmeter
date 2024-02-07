@@ -18,25 +18,19 @@
 package org.apache.jmeter.control;
 
 /**
- * Used by the Generic and Interleave controllers to signal the end of their samples
+ * Used by the Generic and Interleave controllers to signal the end of their
+ * samples
  */
 public class NextIsNullException extends Exception {
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public NextIsNullException() {
-        super();
-    }
+  public NextIsNullException() { super(); }
 
-    public NextIsNullException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public NextIsNullException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public NextIsNullException(String message) {
-        super(message);
-    }
+  public NextIsNullException(String message) { super(message); }
 
-    public NextIsNullException(Throwable cause) {
-        super(cause);
-    }
-
+  public NextIsNullException(Throwable cause) { super(cause); }
 }

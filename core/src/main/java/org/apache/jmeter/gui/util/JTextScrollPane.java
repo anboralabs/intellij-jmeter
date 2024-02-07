@@ -19,64 +19,67 @@ package org.apache.jmeter.gui.util;
 
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-
 /**
  * Utility class to handle RSyntaxTextArea code
- * It's not currently possible to instantiate the RTextScrollPane class when running headless.
- * So we use getInstance methods to create the class and allow for headless testing.
+ * It's not currently possible to instantiate the RTextScrollPane class when
+ * running headless. So we use getInstance methods to create the class and allow
+ * for headless testing.
  */
 public class JTextScrollPane extends RTextScrollPane {
 
-    private static final long serialVersionUID = 210L;
+  private static final long serialVersionUID = 210L;
 
-    @Deprecated
-    public JTextScrollPane() {
-        // for use by test code only
+  @Deprecated
+  public JTextScrollPane() {
+    // for use by test code only
+  }
+
+  public static JTextScrollPane getInstance(JSyntaxTextArea scriptField,
+                                            boolean foldIndicatorEnabled) {
+    try {
+      return new JTextScrollPane(scriptField, foldIndicatorEnabled);
+    } catch (NullPointerException npe) { // for headless unit testing
+      if ("true".equals(System.getProperty(
+              "java.awt.headless"))) { // $NON-NLS-1$ $NON-NLS-2$
+        return new JTextScrollPane();
+      } else {
+        throw npe;
+      }
     }
+  }
 
-    public static JTextScrollPane getInstance(JSyntaxTextArea scriptField, boolean foldIndicatorEnabled) {
-        try {
-            return new JTextScrollPane(scriptField, foldIndicatorEnabled);
-        } catch (NullPointerException npe) { // for headless unit testing
-            if ("true".equals(System.getProperty("java.awt.headless"))) { // $NON-NLS-1$ $NON-NLS-2$
-                return new JTextScrollPane();
-            } else {
-                throw npe;
-            }
-        }
+  public static JTextScrollPane getInstance(JSyntaxTextArea scriptField) {
+    try {
+      return new JTextScrollPane(scriptField);
+    } catch (NullPointerException npe) { // for headless unit testing
+      if ("true".equals(System.getProperty(
+              "java.awt.headless"))) { // $NON-NLS-1$ $NON-NLS-2$
+        return new JTextScrollPane();
+      } else {
+        throw npe;
+      }
     }
+  }
 
-    public static JTextScrollPane getInstance(JSyntaxTextArea scriptField) {
-        try {
-            return new JTextScrollPane(scriptField);
-        } catch (NullPointerException npe) { // for headless unit testing
-            if ("true".equals(System.getProperty("java.awt.headless"))) { // $NON-NLS-1$ $NON-NLS-2$
-                return new JTextScrollPane();
-            } else {
-                throw npe;
-            }
-        }
-    }
+  /**
+   * @param scriptField syntax text are to wrap
+   * @deprecated use {@link #getInstance(JSyntaxTextArea)} instead
+   */
+  @Deprecated
+  public JTextScrollPane(JSyntaxTextArea scriptField) {
+    super(scriptField);
+  }
 
-    /**
-     * @param scriptField syntax text are to wrap
-     * @deprecated use {@link #getInstance(JSyntaxTextArea)} instead
-     */
-    @Deprecated
-    public JTextScrollPane(JSyntaxTextArea scriptField) {
-        super(scriptField);
-    }
-
-    /**
-     *
-     * @param scriptField syntax text are to wrap
-     * @param foldIndicatorEnabled flag, whether fold indicator should be enabled
-     * @deprecated use {@link #getInstance(JSyntaxTextArea, boolean)} instead
-     */
-    @Deprecated
-    public JTextScrollPane(JSyntaxTextArea scriptField, boolean foldIndicatorEnabled) {
-        super(scriptField);
-        super.setFoldIndicatorEnabled(foldIndicatorEnabled);
-    }
-
+  /**
+   *
+   * @param scriptField syntax text are to wrap
+   * @param foldIndicatorEnabled flag, whether fold indicator should be enabled
+   * @deprecated use {@link #getInstance(JSyntaxTextArea, boolean)} instead
+   */
+  @Deprecated
+  public JTextScrollPane(JSyntaxTextArea scriptField,
+                         boolean foldIndicatorEnabled) {
+    super(scriptField);
+    super.setFoldIndicatorEnabled(foldIndicatorEnabled);
+  }
 }

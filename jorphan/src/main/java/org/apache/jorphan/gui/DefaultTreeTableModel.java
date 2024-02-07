@@ -17,35 +17,30 @@
 
 package org.apache.jorphan.gui;
 
-import org.apache.jorphan.reflect.Functor;
-
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import org.apache.jorphan.reflect.Functor;
 
 public class DefaultTreeTableModel extends AbstractTreeTableModel {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public DefaultTreeTableModel() {
-        this(new DefaultMutableTreeNode());
-    }
+  public DefaultTreeTableModel() { this(new DefaultMutableTreeNode()); }
 
-    /**
-     * @param root the {@link TreeNode} to use as root
-     */
-    public DefaultTreeTableModel(TreeNode root) {
-        super(root);
-    }
+  /**
+   * @param root the {@link TreeNode} to use as root
+   */
+  public DefaultTreeTableModel(TreeNode root) { super(root); }
 
-    /**
-     * @param headers the headers to use
-     * @param readFunctors the read functors to use
-     * @param writeFunctors the write functors to use
-     * @param editorClasses the editor classes to use
-     */
-    public DefaultTreeTableModel(String[] headers, Functor[] readFunctors,
-            Functor[] writeFunctors, Class<?>[] editorClasses) {
-        super(headers, readFunctors, writeFunctors, editorClasses);
-    }
-
+  /**
+   * @param headers the headers to use
+   * @param readFunctors the read functors to use
+   * @param writeFunctors the write functors to use
+   * @param editorClasses the editor classes to use
+   */
+  public DefaultTreeTableModel(String[] headers, Functor[] readFunctors,
+                               Functor[] writeFunctors,
+                               Class<?>[] editorClasses) {
+    super(headers, readFunctors, writeFunctors, editorClasses);
+  }
 }

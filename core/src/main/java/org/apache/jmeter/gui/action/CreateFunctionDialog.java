@@ -17,38 +17,34 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.functions.gui.FunctionHelper;
-
-import com.google.auto.service.AutoService;
 
 @AutoService(Command.class)
 public class CreateFunctionDialog extends AbstractAction {
 
-    private static final Set<String> commands;
-    static {
-        commands = new HashSet<>();
-        commands.add(ActionNames.FUNCTIONS);
-    }
+  private static final Set<String> commands;
+  static {
+    commands = new HashSet<>();
+    commands.add(ActionNames.FUNCTIONS);
+  }
 
-    public CreateFunctionDialog() {
-        super();
-    }
+  public CreateFunctionDialog() { super(); }
 
-    /**
-     * Provide the list of Action names that are available in this command.
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * Provide the list of Action names that are available in this command.
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    @Override
-    public void doAction(ActionEvent event) {
-        /*FunctionHelper helper = new FunctionHelper(getParentFrame(event));
-        helper.setVisible(true);*/
-    }
+  @Override
+  public void doAction(ActionEvent event) {
+    /*FunctionHelper helper = new FunctionHelper(getParentFrame(event));
+    helper.setVisible(true);*/
+  }
 }

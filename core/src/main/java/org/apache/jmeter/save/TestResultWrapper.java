@@ -18,58 +18,49 @@
 package org.apache.jmeter.save;
 
 import java.util.Collection;
-
 import org.apache.jmeter.samplers.SampleResult;
 
 public class TestResultWrapper {
-    private String version = "";
+  private String version = "";
 
-    private Collection<SampleResult> sampleResults;
+  private Collection<SampleResult> sampleResults;
 
-    private long testStartTime;
+  private long testStartTime;
 
-    /**
-     * @return Returns the sampleResults.
-     */
-    public Collection<SampleResult> getSampleResults() {
-        return sampleResults;
-    }
+  /**
+   * @return Returns the sampleResults.
+   */
+  public Collection<SampleResult> getSampleResults() { return sampleResults; }
 
-    /**
-     * @param sampleResults
-     *            The sampleResults to set.
-     */
-    public void setSampleResults(Collection<SampleResult> sampleResults) {
-        this.sampleResults = sampleResults;
-    }
+  /**
+   * @param sampleResults
+   *            The sampleResults to set.
+   */
+  public void setSampleResults(Collection<SampleResult> sampleResults) {
+    this.sampleResults = sampleResults;
+  }
 
-    /**
-     * @return Returns the testStartTime.
-     */
-    public long getTestStartTime() {
-        return testStartTime;
-    }
+  /**
+   * @return Returns the testStartTime.
+   */
+  public long getTestStartTime() { return testStartTime; }
 
-    /**
-     * @param testStartTime
-     *            The testStartTime to set.
-     */
-    public void setTestStartTime(long testStartTime) {
-        this.testStartTime = testStartTime;
-    }
+  /**
+   * @param testStartTime
+   *            The testStartTime to set.
+   */
+  public void setTestStartTime(long testStartTime) {
+    this.testStartTime = testStartTime;
+  }
 
-    /**
-     * @return Returns the version.
-     */
-    public String getVersion() {
-        return version;
-    }
+  /**
+   * @return Returns the version.
+   */
+  public String getVersion() { return version; }
 
-    /**
-     * @param version
-     *            The version to set.
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
+  /**
+   * @param version
+   *            The version to set.
+   */
+  public void setVersion(String version) { this.version = version; }
 }

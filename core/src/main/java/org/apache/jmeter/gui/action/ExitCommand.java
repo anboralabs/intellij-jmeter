@@ -17,67 +17,64 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.swing.JOptionPane;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.util.JMeterUtils;
-
-import com.google.auto.service.AutoService;
 
 @AutoService(Command.class)
 public class ExitCommand extends AbstractActionWithNoRunningTest {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.EXIT);
-    }
+  static { commands.add(ActionNames.EXIT); }
 
-    /**
-     * Constructor for the ExitCommand object
-     */
-    public ExitCommand() {
-    }
+  /**
+   * Constructor for the ExitCommand object
+   */
+  public ExitCommand() {}
 
-    /**
-     * Gets the ActionNames attribute of the ExitCommand object
-     *
-     * @return The ActionNames value
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  /**
+   * Gets the ActionNames attribute of the ExitCommand object
+   *
+   * @return The ActionNames value
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    /**
-     * Description of the Method
-     *
-     * @param e
-     *            Description of Parameter
-     */
-    @Override
-    public void doActionAfterCheck(ActionEvent e) {
-        ActionRouter.getInstance().doActionNow(new ActionEvent(e.getSource(), e.getID(), ActionNames.CHECK_DIRTY));
-        GuiPackage guiPackage = GuiPackage.getInstance();
-        if (guiPackage.isDirty()) {
-            int chosenOption = JOptionPane.showConfirmDialog(guiPackage.getMainFrame(), JMeterUtils
-                    .getResString("cancel_exit_to_save"), // $NON-NLS-1$
-                    JMeterUtils.getResString("save?"), // $NON-NLS-1$
-                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (chosenOption == JOptionPane.NO_OPTION) {
-                System.exit(0);
-            } else if (chosenOption == JOptionPane.YES_OPTION) {
-                ActionRouter.getInstance().doActionNow(new ActionEvent(e.getSource(), e.getID(), ActionNames.SAVE));
-                if (!guiPackage.isDirty()) {
-                    System.exit(0);
-                }
-            }
-        } else {
-            System.exit(0);
+  /**
+   * Description of the Method
+   *
+   * @param e
+   *            Description of Parameter
+   */
+  @Override
+  public void doActionAfterCheck(ActionEvent e) {
+    ActionRouter.getInstance().doActionNow(
+        new ActionEvent(e.getSource(), e.getID(), ActionNames.CHECK_DIRTY));
+    GuiPackage guiPackage = GuiPackage.getInstance();
+    if (guiPackage.isDirty()) {
+      int chosenOption = JOptionPane.showConfirmDialog(
+          guiPackage.getMainFrame(),
+          JMeterUtils.getResString("cancel_exit_to_save"), // $NON-NLS-1$
+          JMeterUtils.getResString("save?"),               // $NON-NLS-1$
+          JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+      if (chosenOption == JOptionPane.NO_OPTION) {
+        System.exit(0);
+      } else if (chosenOption == JOptionPane.YES_OPTION) {
+        ActionRouter.getInstance().doActionNow(
+            new ActionEvent(e.getSource(), e.getID(), ActionNames.SAVE));
+        if (!guiPackage.isDirty()) {
+          System.exit(0);
         }
+      }
+    } else {
+      System.exit(0);
     }
+  }
 }

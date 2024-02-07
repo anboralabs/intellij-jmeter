@@ -24,45 +24,38 @@ package org.apache.jmeter.report.config;
  */
 public class GraphConfiguration extends InstanceConfiguration {
 
-    private boolean excludeControllers;
-    private String title;
+  private boolean excludeControllers;
+  private String title;
 
-    /**
-     * Checks if controller samples have to be filtered.
-     *
-     * @return true if controller samples have to be filtered; false otherwise.
-     */
-    public final boolean excludesControllers() {
-        return excludeControllers;
-    }
+  /**
+   * Checks if controller samples have to be filtered.
+   *
+   * @return true if controller samples have to be filtered; false otherwise.
+   */
+  public final boolean excludesControllers() { return excludeControllers; }
 
-    /**
-     * Sets a switch used to check if controller samples have to be filtered.
-     *
-     * @param excludeControllers
-     *            the switch value to set
-     */
-    public final void setExcludeControllers(boolean excludeControllers) {
-        this.excludeControllers = excludeControllers;
-    }
+  /**
+   * Sets a switch used to check if controller samples have to be filtered.
+   *
+   * @param excludeControllers
+   *            the switch value to set
+   */
+  public final void setExcludeControllers(boolean excludeControllers) {
+    this.excludeControllers = excludeControllers;
+  }
 
-    /**
-     * Gets the title of the graph.
-     *
-     * @return the title of the graph
-     */
-    public final String getTitle() {
-        return title;
-    }
+  /**
+   * Gets the title of the graph.
+   *
+   * @return the title of the graph
+   */
+  public final String getTitle() { return title; }
 
-    /**
-     * Sets the title of the graph.
-     *
-     * @param title
-     *            the title of the graph to set
-     */
-    public final void setTitle(String title) {
-        this.title = title;
-    }
-
+  /**
+   * Sets the title of the graph.
+   *
+   * @param title
+   *            the title of the graph to set
+   */
+  public final void setTitle(String title) { this.title = title; }
 }

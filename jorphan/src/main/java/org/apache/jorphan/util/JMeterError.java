@@ -22,26 +22,18 @@ package org.apache.jorphan.util;
  */
 public class JMeterError extends Error {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    public JMeterError() {
-        super();
-    }
+  public JMeterError() { super(); }
 
-    public JMeterError(String s) {
-        super(s);
-    }
+  public JMeterError(String s) { super(s); }
 
-    public JMeterError(Throwable cause) {
-        super(cause);
-    }
+  public JMeterError(Throwable cause) { super(cause); }
 
-    public JMeterError(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public JMeterError(String message, Throwable cause) { super(message, cause); }
 
-    public JMeterError(String s, Throwable ex, boolean enableSuppression, boolean writableStackTrace) {
-        super(s, ex, enableSuppression, writableStackTrace);
-    }
-
+  public JMeterError(String s, Throwable ex, boolean enableSuppression,
+                     boolean writableStackTrace) {
+    super(s, ex, enableSuppression, writableStackTrace);
+  }
 }

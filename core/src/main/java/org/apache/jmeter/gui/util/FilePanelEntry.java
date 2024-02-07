@@ -21,141 +21,137 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.gui.JFactory;
 
 public class FilePanelEntry extends HorizontalPanel implements ActionListener {
-    private static final long serialVersionUID = 280L;
+  private static final long serialVersionUID = 280L;
 
-    private final JTextField filename = new JTextField(10);
+  private final JTextField filename = new JTextField(10);
 
-    private final JLabel label;
+  private final JLabel label;
 
-    private final JButton browse = new JButton(JMeterUtils.getResString("browse")); //$NON-NLS-1$
+  private final JButton browse =
+      new JButton(JMeterUtils.getResString("browse")); //$NON-NLS-1$
 
-    private static final String ACTION_BROWSE = "browse"; //$NON-NLS-1$
+  private static final String ACTION_BROWSE = "browse"; //$NON-NLS-1$
 
-    private final List<ChangeListener> listeners = new ArrayList<>();
+  private final List<ChangeListener> listeners = new ArrayList<>();
 
-    private final String[] filetypes;
+  private final String[] filetypes;
 
-    private boolean onlyDirectories = false;
+  private boolean onlyDirectories = false;
 
-    // Mainly needed for unit test Serializable tests
-    public FilePanelEntry() {
-        this(JMeterUtils.getResString("file_visualizer_filename")); //$NON-NLS-1$
+  // Mainly needed for unit test Serializable tests
+  public FilePanelEntry() {
+    this(JMeterUtils.getResString("file_visualizer_filename")); //$NON-NLS-1$
+  }
+
+  public FilePanelEntry(String label) { this(label, (ChangeListener)null); }
+
+  public FilePanelEntry(String label, String... exts) {
+    this(label, (ChangeListener)null, exts);
+  }
+
+  public FilePanelEntry(String label, boolean onlyDirectories, String... exts) {
+    this(label, onlyDirectories, (ChangeListener)null, exts);
+  }
+
+  public FilePanelEntry(String label, ChangeListener listener, String... exts) {
+    this(label, false, listener, exts);
+  }
+
+  public FilePanelEntry(String label, boolean onlyDirectories,
+                        ChangeListener listener, String... exts) {
+    this.label = new JLabel(label);
+    if (listener != null) {
+      listeners.add(listener);
     }
-
-    public FilePanelEntry(String label) {
-        this(label, (ChangeListener) null);
+    if (exts != null &&
+        !(exts.length == 1 &&
+          exts[0] == null) // String null is converted to String[]{null} NOSONAR
+                           // it's not code
+    ) {
+      this.filetypes = new String[exts.length];
+      System.arraycopy(exts, 0, this.filetypes, 0, exts.length);
+    } else {
+      this.filetypes = null;
     }
+    this.onlyDirectories = onlyDirectories;
+    init();
+  }
 
-    public FilePanelEntry(String label, String ... exts) {
-        this(label, (ChangeListener) null, exts);
+  public final void addChangeListener(ChangeListener l) { listeners.add(l); }
+
+  private void init() { // WARNING: called from ctor so must not be overridden
+                        // (i.e. must be private or final)
+    add(label);
+    add(filename);
+    filename.addActionListener(this);
+    JFactory.small(browse);
+    add(browse);
+    browse.setActionCommand(ACTION_BROWSE);
+    browse.addActionListener(this);
+  }
+
+  public void clearGui() {
+    filename.setText(""); // $NON-NLS-1$
+  }
+
+  /**
+   * If the gui needs to enable/disable the FilePanel, call the method.
+   *
+   * @param enable The Flag whether the {@link FilePanel} should be enabled
+   */
+  public void enableFile(boolean enable) {
+    browse.setEnabled(enable);
+    filename.setEnabled(enable);
+  }
+
+  /**
+   * Gets the filename attribute of the FilePanel object.
+   *
+   * @return the filename value
+   */
+  public String getFilename() { return filename.getText(); }
+
+  /**
+   * Sets the filename attribute of the FilePanel object.
+   *
+   * @param f
+   *            the new filename value
+   */
+  public void setFilename(String f) { filename.setText(f); }
+
+  private void fireFileChanged() {
+    for (ChangeListener cl : listeners) {
+      cl.stateChanged(new ChangeEvent(this));
     }
+  }
 
-    public FilePanelEntry(String label, boolean onlyDirectories, String ... exts) {
-        this(label, onlyDirectories, (ChangeListener) null, exts);
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (e.getActionCommand().equals(ACTION_BROWSE)) {
+      JFileChooser chooser;
+      if (filetypes == null || filetypes.length == 0) {
+        chooser =
+            FileDialoger.promptToOpenFile(filename.getText(), onlyDirectories);
+      } else {
+        chooser = FileDialoger.promptToOpenFile(filetypes, filename.getText(),
+                                                onlyDirectories);
+      }
+      if (chooser != null && chooser.getSelectedFile() != null) {
+        filename.setText(chooser.getSelectedFile().getPath());
+        fireFileChanged();
+      }
+    } else {
+      fireFileChanged();
     }
-
-    public FilePanelEntry(String label, ChangeListener listener, String ... exts) {
-        this(label, false, listener, exts);
-    }
-
-    public FilePanelEntry(String label, boolean onlyDirectories, ChangeListener listener, String ... exts) {
-        this.label = new JLabel(label);
-        if (listener != null) {
-            listeners.add(listener);
-        }
-        if (exts != null &&
-          !(exts.length == 1 && exts[0] == null) // String null is converted to String[]{null} NOSONAR it's not code
-            ) {
-            this.filetypes = new String[exts.length];
-            System.arraycopy(exts, 0, this.filetypes, 0, exts.length);
-        } else {
-            this.filetypes = null;
-        }
-        this.onlyDirectories=onlyDirectories;
-        init();
-    }
-
-    public final void addChangeListener(ChangeListener l) {
-        listeners.add(l);
-    }
-
-    private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
-        add(label);
-        add(filename);
-        filename.addActionListener(this);
-        JFactory.small(browse);
-        add(browse);
-        browse.setActionCommand(ACTION_BROWSE);
-        browse.addActionListener(this);
-
-    }
-
-    public void clearGui(){
-        filename.setText(""); // $NON-NLS-1$
-    }
-
-    /**
-     * If the gui needs to enable/disable the FilePanel, call the method.
-     *
-     * @param enable The Flag whether the {@link FilePanel} should be enabled
-     */
-    public void enableFile(boolean enable) {
-        browse.setEnabled(enable);
-        filename.setEnabled(enable);
-    }
-
-    /**
-     * Gets the filename attribute of the FilePanel object.
-     *
-     * @return the filename value
-     */
-    public String getFilename() {
-        return filename.getText();
-    }
-
-    /**
-     * Sets the filename attribute of the FilePanel object.
-     *
-     * @param f
-     *            the new filename value
-     */
-    public void setFilename(String f) {
-        filename.setText(f);
-    }
-
-    private void fireFileChanged() {
-        for (ChangeListener cl : listeners) {
-            cl.stateChanged(new ChangeEvent(this));
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals(ACTION_BROWSE)) {
-            JFileChooser chooser;
-            if(filetypes == null || filetypes.length == 0){
-                chooser = FileDialoger.promptToOpenFile(filename.getText(),onlyDirectories);
-            } else {
-                chooser = FileDialoger.promptToOpenFile(filetypes, filename.getText(),onlyDirectories);
-            }
-            if (chooser != null && chooser.getSelectedFile() != null) {
-                filename.setText(chooser.getSelectedFile().getPath());
-                fireFileChanged();
-            }
-        } else {
-            fireFileChanged();
-        }
-    }
+  }
 }

@@ -27,14 +27,14 @@ package org.apache.jmeter.report.core;
  */
 public interface StringConverter<TDest> {
 
-    /**
-     * Converts the specified value to the type TDest.
-     *
-     * @param value
-     *            the value to convert
-     * @return the destination type
-     * @throws ConvertException
-     *             occurs when the value cannot be converted to the type TDest
-     */
-    TDest convert(String value) throws ConvertException;
+  /**
+   * Converts the specified value to the type TDest.
+   *
+   * @param value
+   *            the value to convert
+   * @return the destination type
+   * @throws ConvertException
+   *             occurs when the value cannot be converted to the type TDest
+   */
+  TDest convert(String value) throws ConvertException;
 }

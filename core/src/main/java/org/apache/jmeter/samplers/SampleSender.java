@@ -22,28 +22,28 @@ package org.apache.jmeter.samplers;
  * by the SampleSender wrapper classes processed by the RemoteListenerWrapper.
  */
 public interface SampleSender {
-    /**
-     * The test ended (probably not used; client-server mode needs a host)
-     */
-    void testEnded();
+  /**
+   * The test ended (probably not used; client-server mode needs a host)
+   */
+  void testEnded();
 
-    /**
-     * The test ended.
-     *
-     * This will be called from the engine thread.
-     *
-     * @param host
-     *            the host that the test ended on.
-     */
-    void testEnded(String host);
+  /**
+   * The test ended.
+   *
+   * This will be called from the engine thread.
+   *
+   * @param host
+   *            the host that the test ended on.
+   */
+  void testEnded(String host);
 
-    /**
-     * A sample occurred.
-     *
-     * This method will be called from the sampler thread.
-     *
-     * @param e
-     *            a Sample Event
-     */
-    void sampleOccurred(SampleEvent e);
+  /**
+   * A sample occurred.
+   *
+   * This method will be called from the sampler thread.
+   *
+   * @param e
+   *            a Sample Event
+   */
+  void sampleOccurred(SampleEvent e);
 }

@@ -18,7 +18,6 @@
 package org.apache.jmeter.report.core;
 
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -28,35 +27,35 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class JsonUtil {
 
-    /**
-     * Converts the specified array to a json-like array string.
-     *
-     * @param array
-     *            the array
-     * @return the json string
-     */
-    public static String toJsonArray(final String... array) {
-        return '[' + StringUtils.join(array, ", ") + ']';
-    }
+  /**
+   * Converts the specified array to a json-like array string.
+   *
+   * @param array
+   *            the array
+   * @return the json string
+   */
+  public static String toJsonArray(final String... array) {
+    return '[' + StringUtils.join(array, ", ") + ']';
+  }
 
-    /**
-     * Converts the specified map to a json-like object string.
-     *
-     * @param map
-     *            the map
-     * @return the string
-     */
-    public static String toJsonObject(Map<String, String> map) {
-        String result = "{";
-        if (map != null) {
-            String[] array = new String[map.size()];
-            int index = 0;
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                array[index] = '"' + entry.getKey() + "\": " + entry.getValue();
-                index++;
-            }
-            result += StringUtils.join(array, ", ");
-        }
-        return result + "}";
+  /**
+   * Converts the specified map to a json-like object string.
+   *
+   * @param map
+   *            the map
+   * @return the string
+   */
+  public static String toJsonObject(Map<String, String> map) {
+    String result = "{";
+    if (map != null) {
+      String[] array = new String[map.size()];
+      int index = 0;
+      for (Map.Entry<String, String> entry : map.entrySet()) {
+        array[index] = '"' + entry.getKey() + "\": " + entry.getValue();
+        index++;
+      }
+      result += StringUtils.join(array, ", ");
     }
+    return result + "}";
+  }
 }

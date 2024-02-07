@@ -19,160 +19,157 @@ package org.apache.jmeter.testelement.property;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.jmeter.testelement.TestElement;
 
 public class MapProperty extends MultiProperty {
 
-    private static final long serialVersionUID = 221L; // Remember to change this when the class changes ...
+  private static final long serialVersionUID =
+      221L; // Remember to change this when the class changes ...
 
-    private Map<String, JMeterProperty> value;
+  private Map<String, JMeterProperty> value;
 
-    private transient Map<String, JMeterProperty> savedValue = null;
+  private transient Map<String, JMeterProperty> savedValue = null;
 
-    public MapProperty(String name, Map<?,?> value) {
-        super(name);
-        log.info("map = {}", value);
-        this.value = normalizeMap(value);
-        log.info("normalized map = {}", this.value);
+  public MapProperty(String name, Map<?, ?> value) {
+    super(name);
+    log.info("map = {}", value);
+    this.value = normalizeMap(value);
+    log.info("normalized map = {}", this.value);
+  }
+
+  public MapProperty() {
+    super();
+    value = new HashMap<>();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean equals(Object o) {
+    if (o instanceof MapProperty) {
+      if (value != null) {
+        return value.equals(((JMeterProperty)o).getObjectValue());
+      }
     }
+    return false;
+  }
 
-    public MapProperty() {
-        super();
-        value = new HashMap<>();
+  @Override
+  public int hashCode() {
+    int hash = super.hashCode();
+    if (value != null) {
+      hash = hash * 37 + value.hashCode();
     }
+    return hash;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof MapProperty) {
-            if (value != null) {
-                return value.equals(((JMeterProperty) o).getObjectValue());
-            }
-        }
-        return false;
+  /** {@inheritDoc} */
+  @Override
+  public void setObjectValue(Object v) {
+    if (v instanceof Map<?, ?>) {
+      setMap((Map<?, ?>)v);
     }
+  }
 
-    @Override
-    public int hashCode(){
-        int hash = super.hashCode();
-        if (value != null) {
-            hash = hash*37 + value.hashCode();
-        }
-        return hash;
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void addProperty(JMeterProperty prop) {
+    addProperty(prop.getName(), prop);
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void setObjectValue(Object v) {
-        if (v instanceof Map<?, ?>) {
-            setMap((Map<?, ?>) v);
-        }
-    }
+  public JMeterProperty get(String key) { return value.get(key); }
 
-    /** {@inheritDoc} */
-    @Override
-    public void addProperty(JMeterProperty prop) {
-        addProperty(prop.getName(), prop);
+  /**
+   * Figures out what kind of properties this collection is holding and
+   * returns the class type.
+   *
+   * @see AbstractProperty#getPropertyType()
+   */
+  @Override
+  protected Class<? extends JMeterProperty> getPropertyType() {
+    if (!value.isEmpty()) {
+      return valueIterator().next().getClass();
     }
+    return NullProperty.class;
+  }
 
-    public JMeterProperty get(String key) {
-        return value.get(key);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public String getStringValue() {
+    return value.toString();
+  }
 
-    /**
-     * Figures out what kind of properties this collection is holding and
-     * returns the class type.
-     *
-     * @see AbstractProperty#getPropertyType()
-     */
-    @Override
-    protected Class<? extends JMeterProperty> getPropertyType() {
-        if (!value.isEmpty()) {
-            return valueIterator().next().getClass();
-        }
-        return NullProperty.class;
-    }
+  /** {@inheritDoc} */
+  @Override
+  public Object getObjectValue() {
+    return value;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public String getStringValue() {
-        return value.toString();
-    }
+  /** {@inheritDoc} */
+  @Override
+  public MapProperty clone() {
+    MapProperty prop = (MapProperty)super.clone();
+    prop.value = cloneMap();
+    return prop;
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public Object getObjectValue() {
-        return value;
+  private Map<String, JMeterProperty> cloneMap() {
+    try {
+      @SuppressWarnings("unchecked") // value is the correct class
+      Map<String, JMeterProperty> newCol =
+          value.getClass().getDeclaredConstructor().newInstance();
+      PropertyIterator iter = valueIterator();
+      while (iter.hasNext()) {
+        JMeterProperty item = iter.next();
+        newCol.put(item.getName(), item.clone());
+      }
+      return newCol;
+    } catch (Exception e) {
+      log.error("Couldn't clone map", e);
+      return value;
     }
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public MapProperty clone() {
-        MapProperty prop = (MapProperty) super.clone();
-        prop.value = cloneMap();
-        return prop;
-    }
+  public PropertyIterator valueIterator() {
+    return getIterator(value.values());
+  }
 
-    private Map<String, JMeterProperty> cloneMap() {
-        try {
-            @SuppressWarnings("unchecked") // value is the correct class
-            Map<String, JMeterProperty> newCol = value.getClass().getDeclaredConstructor().newInstance();
-            PropertyIterator iter = valueIterator();
-            while (iter.hasNext()) {
-                JMeterProperty item = iter.next();
-                newCol.put(item.getName(), item.clone());
-            }
-            return newCol;
-        } catch (Exception e) {
-            log.error("Couldn't clone map", e);
-            return value;
-        }
+  public void addProperty(String name, JMeterProperty prop) {
+    if (!value.containsKey(name)) {
+      value.put(name, prop);
     }
+  }
 
-    public PropertyIterator valueIterator() {
-        return getIterator(value.values());
-    }
+  public void setMap(Map<?, ?> newMap) { value = normalizeMap(newMap); }
 
-    public void addProperty(String name, JMeterProperty prop) {
-        if (!value.containsKey(name)) {
-            value.put(name, prop);
-        }
+  /** {@inheritDoc} */
+  @Override
+  public void recoverRunningVersion(TestElement owner) {
+    if (savedValue != null) {
+      value = savedValue;
     }
+    recoverRunningVersionOfSubElements(owner);
+  }
 
-    public void setMap(Map<?,?> newMap) {
-        value = normalizeMap(newMap);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void clear() {
+    value.clear();
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void recoverRunningVersion(TestElement owner) {
-        if (savedValue != null) {
-            value = savedValue;
-        }
-        recoverRunningVersionOfSubElements(owner);
-    }
+  /** {@inheritDoc} */
+  @Override
+  public PropertyIterator iterator() {
+    return valueIterator();
+  }
 
-    /** {@inheritDoc} */
-    @Override
-    public void clear() {
-        value.clear();
+  /** {@inheritDoc} */
+  @Override
+  public void setRunningVersion(boolean running) {
+    super.setRunningVersion(running);
+    if (running) {
+      savedValue = value;
+    } else {
+      savedValue = null;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public PropertyIterator iterator() {
-        return valueIterator();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void setRunningVersion(boolean running) {
-        super.setRunningVersion(running);
-        if (running) {
-            savedValue = value;
-        } else {
-            savedValue = null;
-        }
-    }
+  }
 }

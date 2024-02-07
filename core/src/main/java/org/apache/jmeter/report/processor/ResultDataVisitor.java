@@ -27,30 +27,30 @@ package org.apache.jmeter.report.processor;
  */
 public interface ResultDataVisitor<T> {
 
-    /**
-     * Visits the specified list result.
-     *
-     * @param listResult
-     *            the list result
-     * @return the result of the visit
-     */
-    T visitListResult(ListResultData listResult);
+  /**
+   * Visits the specified list result.
+   *
+   * @param listResult
+   *            the list result
+   * @return the result of the visit
+   */
+  T visitListResult(ListResultData listResult);
 
-    /**
-     * Visits the specified map result.
-     *
-     * @param mapResult
-     *            the map result
-     * @return the result of the visit
-     */
-    T visitMapResult(MapResultData mapResult);
+  /**
+   * Visits the specified map result.
+   *
+   * @param mapResult
+   *            the map result
+   * @return the result of the visit
+   */
+  T visitMapResult(MapResultData mapResult);
 
-    /**
-     * Visits the specified value result.
-     *
-     * @param valueResult
-     *            the value result
-     * @return the result of the visit
-     */
-    T visitValueResult(ValueResultData valueResult);
+  /**
+   * Visits the specified value result.
+   *
+   * @param valueResult
+   *            the value result
+   * @return the result of the visit
+   */
+  T visitValueResult(ValueResultData valueResult);
 }

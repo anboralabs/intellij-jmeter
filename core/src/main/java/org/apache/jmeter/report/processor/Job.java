@@ -28,30 +28,30 @@ package org.apache.jmeter.report.processor;
  */
 abstract class Job<T> implements Runnable {
 
-    private boolean resultReady = false;
+  private boolean resultReady = false;
 
-    private final Object lock = new Object();
+  private final Object lock = new Object();
 
-    private T result;
+  private T result;
 
-    @Override
-    public final void run() {
-        resultReady = false;
-        result = exec();
-        synchronized (lock) {
-            resultReady = true;
-            lock.notifyAll();
-        }
+  @Override
+  public final void run() {
+    resultReady = false;
+    result = exec();
+    synchronized (lock) {
+      resultReady = true;
+      lock.notifyAll();
     }
+  }
 
-    protected abstract T exec();
+  protected abstract T exec();
 
-    public T getResult() throws InterruptedException {
-        synchronized (lock) {
-            while (!resultReady) {
-                lock.wait();
-            }
-        }
-        return result;
+  public T getResult() throws InterruptedException {
+    synchronized (lock) {
+      while (!resultReady) {
+        lock.wait();
+      }
     }
+    return result;
+  }
 }

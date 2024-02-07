@@ -21,7 +21,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import org.apache.jmeter.gui.util.MenuInfo;
 
 /**
@@ -31,5 +30,5 @@ import org.apache.jmeter.gui.util.MenuInfo;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface GUIMenuSortOrder {
-    int value() default MenuInfo.SORT_ORDER_DEFAULT;
+  int value() default MenuInfo.SORT_ORDER_DEFAULT;
 }

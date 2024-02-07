@@ -27,42 +27,41 @@ import java.util.Map;
  */
 public class SubConfiguration {
 
-    private final HashMap<String, String> properties = new HashMap<>();
+  private final HashMap<String, String> properties = new HashMap<>();
 
-    /**
-     * Gets the properties of the item.
-     *
-     * @return the properties of the item
-     */
-    public final Map<String, String> getProperties() {
-        return properties;
-    }
+  /**
+   * Gets the properties of the item.
+   *
+   * @return the properties of the item
+   */
+  public final Map<String, String> getProperties() { return properties; }
 
-    /**
-     * Gets the value of the specified property.
-     *
-     * @param <TProperty>
-     *            the type of the property
-     * @param key
-     *            the key identifier of the property
-     * @param defaultValue
-     *            the default value of the property
-     * @param clazz
-     *            the class of the property
-     * @return the value of property if found; defaultValue otherwise
-     * @throws ConfigurationException
-     *             if cannot convert property
-     */
-    public final <TProperty> TProperty getProperty(String key,
-            TProperty defaultValue, @SuppressWarnings("BoundedWildcard") Class<TProperty> clazz)
-                    throws ConfigurationException {
-        String value = properties.get(key);
-        TProperty result;
-        if (value == null) {
-            result = defaultValue;
-        } else {
-            result = ConfigurationUtils.convert(value, clazz);
-        }
-        return result;
+  /**
+   * Gets the value of the specified property.
+   *
+   * @param <TProperty>
+   *            the type of the property
+   * @param key
+   *            the key identifier of the property
+   * @param defaultValue
+   *            the default value of the property
+   * @param clazz
+   *            the class of the property
+   * @return the value of property if found; defaultValue otherwise
+   * @throws ConfigurationException
+   *             if cannot convert property
+   */
+  public final <TProperty> TProperty
+  getProperty(String key, TProperty defaultValue,
+              @SuppressWarnings("BoundedWildcard") Class<TProperty> clazz)
+      throws ConfigurationException {
+    String value = properties.get(key);
+    TProperty result;
+    if (value == null) {
+      result = defaultValue;
+    } else {
+      result = ConfigurationUtils.convert(value, clazz);
     }
+    return result;
+  }
 }

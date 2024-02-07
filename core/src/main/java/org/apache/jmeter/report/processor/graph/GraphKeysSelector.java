@@ -25,6 +25,4 @@ import org.apache.jmeter.report.core.SampleSelector;
  *
  * @since 3.0
  */
-public interface GraphKeysSelector extends SampleSelector<Double> {
-
-}
+public interface GraphKeysSelector extends SampleSelector<Double> {}

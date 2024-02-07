@@ -39,44 +39,43 @@ import org.apache.jmeter.report.core.SampleMetadata;
  * </p><ul>
  * <li>Call <code>setProducedMetadata()</code> for each produced channel</li>
  * <li>Call <code>startProducing()</code></li>
- * <li>Call <code>produce()</code> for each sample to produce for every channel</li>
- * <li>Call <code>stopProducing()</code></li>
+ * <li>Call <code>produce()</code> for each sample to produce for every
+ * channel</li> <li>Call <code>stopProducing()</code></li>
  * </ul>
  *
  * @since 3.0
  */
 public interface SampleProducer extends SampleProcessor {
 
-    /**
-     * Set the metadata associated with the specified channel
-     *
-     * @param metadata
-     *            The metadata to be associated to the specified channel
-     * @param channel
-     *            The channel whoses metadata are being associated with
-     */
-    void setProducedMetadata(SampleMetadata metadata, int channel);
+  /**
+   * Set the metadata associated with the specified channel
+   *
+   * @param metadata
+   *            The metadata to be associated to the specified channel
+   * @param channel
+   *            The channel whoses metadata are being associated with
+   */
+  void setProducedMetadata(SampleMetadata metadata, int channel);
 
-    /**
-     * Start producing samples, must be invoked before any call to
-     * <code>produce()</code>
-     */
-    void startProducing();
+  /**
+   * Start producing samples, must be invoked before any call to
+   * <code>produce()</code>
+   */
+  void startProducing();
 
-    /**
-     * Produce a single sample on the specified channel
-     *
-     * @param s
-     *            The sample produced
-     * @param channel
-     *            The channel on which is produced the sample
-     */
-    void produce(Sample s, int channel);
+  /**
+   * Produce a single sample on the specified channel
+   *
+   * @param s
+   *            The sample produced
+   * @param channel
+   *            The channel on which is produced the sample
+   */
+  void produce(Sample s, int channel);
 
-    /**
-     * Stop producing samples, no <code>produce()</code> call should occur after
-     * this service has been called.
-     */
-    void stopProducing();
-
+  /**
+   * Stop producing samples, no <code>produce()</code> call should occur after
+   * this service has been called.
+   */
+  void stopProducing();
 }

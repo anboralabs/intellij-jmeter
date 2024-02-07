@@ -27,15 +27,16 @@ import org.apache.jmeter.report.core.Sample;
  */
 public class CodeSeriesSelector extends AbstractSeriesSelector {
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.apache.jmeter.report.csv.processor.SampleSelector#select(org.apache
-     * .jmeter.report.csv.core.Sample)
-     */
-    @Override
-    public Iterable<String> select(Sample sample) {
-        return withDefaultIfEmpty(sample.getResponseCode(), "EMPTY_RES_CODE"); //$NON-NLS-1$
-    }
+  /*
+   * (non-Javadoc)
+   *
+   * @see
+   * org.apache.jmeter.report.csv.processor.SampleSelector#select(org.apache
+   * .jmeter.report.csv.core.Sample)
+   */
+  @Override
+  public Iterable<String> select(Sample sample) {
+    return withDefaultIfEmpty(sample.getResponseCode(),
+                              "EMPTY_RES_CODE"); //$NON-NLS-1$
+  }
 }

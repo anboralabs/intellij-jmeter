@@ -26,41 +26,39 @@ import java.util.List;
  */
 public class GuiLogEventBus {
 
-    /**
-     * Registered GUI log event listeners array.
-     */
-    private final List<GuiLogEventListener> listeners = new ArrayList<>();
+  /**
+   * Registered GUI log event listeners array.
+   */
+  private final List<GuiLogEventListener> listeners = new ArrayList<>();
 
-    /**
-     * Default constructor.
-     */
-    public GuiLogEventBus() {
-        super();
-    }
+  /**
+   * Default constructor.
+   */
+  public GuiLogEventBus() { super(); }
 
-    /**
-     * Register a GUI log event listener ({@link GuiLogEventListener}).
-     * @param listener a GUI log event listener ({@link GuiLogEventListener})
-     */
-    public void registerEventListener(GuiLogEventListener listener) {
-        listeners.add(listener);
-    }
+  /**
+   * Register a GUI log event listener ({@link GuiLogEventListener}).
+   * @param listener a GUI log event listener ({@link GuiLogEventListener})
+   */
+  public void registerEventListener(GuiLogEventListener listener) {
+    listeners.add(listener);
+  }
 
-    /**
-     * Unregister a GUI log event listener ({@link GuiLogEventListener}).
-     * @param listener a GUI log event listener ({@link GuiLogEventListener})
-     */
-    public void unregisterEventListener(GuiLogEventListener listener) {
-        listeners.remove(listener);
-    }
+  /**
+   * Unregister a GUI log event listener ({@link GuiLogEventListener}).
+   * @param listener a GUI log event listener ({@link GuiLogEventListener})
+   */
+  public void unregisterEventListener(GuiLogEventListener listener) {
+    listeners.remove(listener);
+  }
 
-    /**
-     * Post a log event object.
-     * @param logEventObject log event object
-     */
-    public void postEvent(LogEventObject logEventObject) {
-        for (GuiLogEventListener listener : listeners) {
-            listener.processLogEvent(logEventObject);
-        }
+  /**
+   * Post a log event object.
+   * @param logEventObject log event object
+   */
+  public void postEvent(LogEventObject logEventObject) {
+    for (GuiLogEventListener listener : listeners) {
+      listener.processLogEvent(logEventObject);
     }
+  }
 }

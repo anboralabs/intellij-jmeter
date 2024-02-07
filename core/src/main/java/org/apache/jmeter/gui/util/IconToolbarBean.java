@@ -19,115 +19,115 @@ package org.apache.jmeter.gui.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.jmeter.gui.action.ActionNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class IconToolbarBean {
 
-    private static final Logger log = LoggerFactory.getLogger(IconToolbarBean.class);
+  private static final Logger log =
+      LoggerFactory.getLogger(IconToolbarBean.class);
 
-    private static final String ICON_FIELD_SEP = ",";  //$NON-NLS-1$
+  private static final String ICON_FIELD_SEP = ","; //$NON-NLS-1$
 
-    private static final Pattern DIMENSIONS = Pattern.compile("(\\d+)x(\\d+)");
+  private static final Pattern DIMENSIONS = Pattern.compile("(\\d+)x(\\d+)");
 
-    private final String i18nKey;
+  private final String i18nKey;
 
-    private final String actionName;
+  private final String actionName;
 
-    private final String iconPath;
+  private final String iconPath;
 
-    private final String iconPathPressed;
+  private final String iconPathPressed;
 
-    private final int width;
+  private final int width;
 
-    private final int height;
+  private final int height;
 
-    /**
-     * Constructor to transform a line value (from icon set file) to a icon bean for toolbar.
-     * @param strToSplit - the line value (i18n key, ActionNames ID, icon path, optional icon pressed path)
-     * @throws IllegalArgumentException if error in parsing.
-     */
-    IconToolbarBean(final String strToSplit, final String iconSize) throws IllegalArgumentException {
-        if (strToSplit == null) {
-            throw new IllegalArgumentException("Icon definition must not be null"); //$NON-NLS-1$
-        }
-        final String[] tmp = strToSplit.split(ICON_FIELD_SEP);
-        if (tmp.length > 2) {
-            this.i18nKey = tmp[0];
-            this.actionName = tmp[1];
-            this.iconPath = tmp[2].replace("<SIZE>", iconSize); //$NON-NLS-1$
-            this.iconPathPressed = (tmp.length > 3) ? tmp[3].replace("<SIZE>", iconSize) : this.iconPath; //$NON-NLS-1$
-        } else {
-            throw new IllegalArgumentException("Incorrect argument format - expected at least 2 fields separated by " + ICON_FIELD_SEP);
-        }
-        Matcher m = DIMENSIONS.matcher(iconSize);
-        if (m.matches()) {
-            this.width = Integer.parseInt(m.group(1));
-            this.height = Integer.parseInt(m.group(2));
-        } else {
-            log.info("Unable to parse {} as width x height for icon {}. Will default to 22x22", iconSize, actionName);
-            // See JMeterToolBar.DEFAULT_TOOLBAR_ICON_SIZE
-            this.width = 22;
-            this.height = 22;
-        }
+  /**
+   * Constructor to transform a line value (from icon set file) to a icon bean
+   * for toolbar.
+   * @param strToSplit - the line value (i18n key, ActionNames ID, icon path,
+   *     optional icon pressed path)
+   * @throws IllegalArgumentException if error in parsing.
+   */
+  IconToolbarBean(final String strToSplit, final String iconSize)
+      throws IllegalArgumentException {
+    if (strToSplit == null) {
+      throw new IllegalArgumentException(
+          "Icon definition must not be null"); //$NON-NLS-1$
     }
-
-    /**
-     * Resolve action name ID declared in icon set file to ActionNames value
-     * @return the resolve actionName
-     */
-    public String getActionNameResolve() {
-        final String aName;
-        try {
-            aName = (String) ActionNames.class.getField(this.actionName).get(null);
-        } catch (Exception e) {
-            log.warn("Toolbar icon Action names error: {}, use unknown action.", this.actionName); //$NON-NLS-1$
-            return this.actionName; // return unknown action names for display error msg
-        }
-        return aName;
+    final String[] tmp = strToSplit.split(ICON_FIELD_SEP);
+    if (tmp.length > 2) {
+      this.i18nKey = tmp[0];
+      this.actionName = tmp[1];
+      this.iconPath = tmp[2].replace("<SIZE>", iconSize); //$NON-NLS-1$
+      this.iconPathPressed = (tmp.length > 3)
+                                 ? tmp[3].replace("<SIZE>", iconSize)
+                                 : this.iconPath; //$NON-NLS-1$
+    } else {
+      throw new IllegalArgumentException(
+          "Incorrect argument format - expected at least 2 fields separated by " +
+          ICON_FIELD_SEP);
     }
-
-    /**
-     * @return the i18nKey
-     */
-    public String getI18nKey() {
-        return i18nKey;
+    Matcher m = DIMENSIONS.matcher(iconSize);
+    if (m.matches()) {
+      this.width = Integer.parseInt(m.group(1));
+      this.height = Integer.parseInt(m.group(2));
+    } else {
+      log.info(
+          "Unable to parse {} as width x height for icon {}. Will default to 22x22",
+          iconSize, actionName);
+      // See JMeterToolBar.DEFAULT_TOOLBAR_ICON_SIZE
+      this.width = 22;
+      this.height = 22;
     }
+  }
 
-    /**
-     * @return the actionName
-     */
-    public String getActionName() {
-        return actionName;
+  /**
+   * Resolve action name ID declared in icon set file to ActionNames value
+   * @return the resolve actionName
+   */
+  public String getActionNameResolve() {
+    final String aName;
+    try {
+      aName = (String)ActionNames.class.getField(this.actionName).get(null);
+    } catch (Exception e) {
+      log.warn("Toolbar icon Action names error: {}, use unknown action.",
+               this.actionName); //$NON-NLS-1$
+      return this
+          .actionName; // return unknown action names for display error msg
     }
+    return aName;
+  }
 
-    /**
-     * @return the iconPath
-     */
-    public String getIconPath() {
-        return iconPath;
-    }
+  /**
+   * @return the i18nKey
+   */
+  public String getI18nKey() { return i18nKey; }
 
-    /**
-     * @return the iconPathPressed
-     */
-    public String getIconPathPressed() {
-        return iconPathPressed;
-    }
+  /**
+   * @return the actionName
+   */
+  public String getActionName() { return actionName; }
 
-    /**
-     * @return desired icon width
-     */
-    public int getWidth() {
-        return width;
-    }
+  /**
+   * @return the iconPath
+   */
+  public String getIconPath() { return iconPath; }
 
-    /**
-     * @return desired icon height
-     */
-    public int getHeight() {
-        return height;
-    }
+  /**
+   * @return the iconPathPressed
+   */
+  public String getIconPathPressed() { return iconPathPressed; }
+
+  /**
+   * @return desired icon width
+   */
+  public int getWidth() { return width; }
+
+  /**
+   * @return desired icon height
+   */
+  public int getHeight() { return height; }
 }

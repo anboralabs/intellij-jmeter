@@ -18,7 +18,6 @@
 package org.apache.jmeter.save;
 
 import java.util.Collection;
-
 import org.apache.jmeter.samplers.SampleResult;
 
 /**
@@ -26,54 +25,48 @@ import org.apache.jmeter.samplers.SampleResult;
  * aggregate listener and monitor listener.
  */
 public class ListenerResultWrapper {
-    private String version = "";
+  private String version = "";
 
-    private Collection<SampleResult> calculatedResults;
+  private Collection<SampleResult> calculatedResults;
 
-    private long testStartTime;
+  private long testStartTime;
 
-    /**
-     * @return Returns the sampleResults.
-     */
-    public Collection<SampleResult> getSampleResults() {
-        return calculatedResults;
-    }
+  /**
+   * @return Returns the sampleResults.
+   */
+  public Collection<SampleResult> getSampleResults() {
+    return calculatedResults;
+  }
 
-    /**
-     * @param results
-     *            The sampleResults to set.
-     */
-    public void setSampleResults(Collection<SampleResult> results) {
-        this.calculatedResults = results;
-    }
+  /**
+   * @param results
+   *            The sampleResults to set.
+   */
+  public void setSampleResults(Collection<SampleResult> results) {
+    this.calculatedResults = results;
+  }
 
-    /**
-     * @return Returns the testStartTime.
-     */
-    public long getTestStartTime() {
-        return testStartTime;
-    }
+  /**
+   * @return Returns the testStartTime.
+   */
+  public long getTestStartTime() { return testStartTime; }
 
-    /**
-     * @param testStartTime
-     *            The testStartTime to set.
-     */
-    public void setTestStartTime(long testStartTime) {
-        this.testStartTime = testStartTime;
-    }
+  /**
+   * @param testStartTime
+   *            The testStartTime to set.
+   */
+  public void setTestStartTime(long testStartTime) {
+    this.testStartTime = testStartTime;
+  }
 
-    /**
-     * @return Returns the version.
-     */
-    public String getVersion() {
-        return version;
-    }
+  /**
+   * @return Returns the version.
+   */
+  public String getVersion() { return version; }
 
-    /**
-     * @param version
-     *            The version to set.
-     */
-    public void setVersion(String version) {
-        this.version = version;
-    }
+  /**
+   * @param version
+   *            The version to set.
+   */
+  public void setVersion(String version) { this.version = version; }
 }

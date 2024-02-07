@@ -30,42 +30,39 @@ import java.net.URI;
  */
 public class CsvFile extends File {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 4721600093557427167L;
-    private final char separator;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = 4721600093557427167L;
+  private final char separator;
 
-    public CsvFile(File parent, String child, char separator) {
-        super(parent, child);
-        this.separator = separator;
-    }
+  public CsvFile(File parent, String child, char separator) {
+    super(parent, child);
+    this.separator = separator;
+  }
 
-    public CsvFile(String parent, String child, char separator) {
-        super(parent, child);
-        this.separator = separator;
-    }
+  public CsvFile(String parent, String child, char separator) {
+    super(parent, child);
+    this.separator = separator;
+  }
 
-    public CsvFile(String pathname, char separator) {
-        super(pathname);
-        this.separator = separator;
-    }
+  public CsvFile(String pathname, char separator) {
+    super(pathname);
+    this.separator = separator;
+  }
 
-    public CsvFile(URI uri, char separator) {
-        super(uri);
-        this.separator = separator;
-    }
+  public CsvFile(URI uri, char separator) {
+    super(uri);
+    this.separator = separator;
+  }
 
-    /**
-     * DO NOT USE - UNIT TEST ONLY
-     * @deprecated UNIT TEST ONLY
-     */
-    @Deprecated // only for use by unit tests
-    public CsvFile() {
-        super("");
-        this.separator = 0;
-    }
+  /**
+   * DO NOT USE - UNIT TEST ONLY
+   * @deprecated UNIT TEST ONLY
+   */
+  @Deprecated // only for use by unit tests
+  public CsvFile() {
+    super("");
+    this.separator = 0;
+  }
 
-    public char getSeparator() {
-        return separator;
-    }
-
+  public char getSeparator() { return separator; }
 }

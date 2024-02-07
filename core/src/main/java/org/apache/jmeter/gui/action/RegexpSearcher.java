@@ -19,7 +19,6 @@ package org.apache.jmeter.gui.action;
 
 import java.util.List;
 import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -27,37 +26,38 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class RegexpSearcher implements Searcher {
 
-    private final boolean caseSensitive;
-    private final String regexp;
-    /**
-     * Constructor
-     * @param caseSensitive is search case sensitive
-     * @param regexp Regexp to search
-     */
-    public RegexpSearcher(boolean caseSensitive, String regexp) {
-        super();
-        this.caseSensitive = caseSensitive;
-        this.regexp = regexp;
-    }
+  private final boolean caseSensitive;
+  private final String regexp;
+  /**
+   * Constructor
+   * @param caseSensitive is search case sensitive
+   * @param regexp Regexp to search
+   */
+  public RegexpSearcher(boolean caseSensitive, String regexp) {
+    super();
+    this.caseSensitive = caseSensitive;
+    this.regexp = regexp;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean search(List<String> textTokens) {
-        Pattern pattern;
-        if (caseSensitive) {
-            pattern = Pattern.compile(regexp);
-        } else {
-            pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
-        }
-        return textTokens.stream()
-                .filter(token -> !StringUtils.isEmpty(token))
-                .anyMatch(token -> pattern.matcher(token).find());
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean search(List<String> textTokens) {
+    Pattern pattern;
+    if (caseSensitive) {
+      pattern = Pattern.compile(regexp);
+    } else {
+      pattern = Pattern.compile(regexp, Pattern.CASE_INSENSITIVE);
     }
+    return textTokens.stream()
+        .filter(token -> !StringUtils.isEmpty(token))
+        .anyMatch(token -> pattern.matcher(token).find());
+  }
 
-    @Override
-    public String toString() {
-        return "RegexpSearcher [caseSensitive=" + caseSensitive + ", regexp=" + regexp + "]";
-    }
+  @Override
+  public String toString() {
+    return "RegexpSearcher [caseSensitive=" + caseSensitive +
+        ", regexp=" + regexp + "]";
+  }
 }

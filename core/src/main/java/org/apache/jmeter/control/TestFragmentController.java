@@ -19,8 +19,8 @@ package org.apache.jmeter.control;
 
 import java.io.Serializable;
 
-public class TestFragmentController extends GenericController implements Serializable {
+public class TestFragmentController
+    extends GenericController implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
+  private static final long serialVersionUID = 1L;
 }

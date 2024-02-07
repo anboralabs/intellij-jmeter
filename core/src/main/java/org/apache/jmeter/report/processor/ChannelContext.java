@@ -26,6 +26,6 @@ import java.util.TreeMap;
  */
 public class ChannelContext extends TreeMap<String, Object> {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -3090936623529607644L;
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = -3090936623529607644L;
 }

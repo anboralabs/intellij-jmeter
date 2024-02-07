@@ -21,9 +21,9 @@ import java.awt.Color;
 
 public class JMeterColor {
 
-    public static final Color DARK_GREEN = new Color(0F, .5F, 0F);
+  public static final Color DARK_GREEN = new Color(0F, .5F, 0F);
 
-    public static final Color LAVENDER = new Color(206F / 255F, 207F / 255F, 1F);
+  public static final Color LAVENDER = new Color(206F / 255F, 207F / 255F, 1F);
 
-    public static final Color PURPLE = new Color(150 / 255F, 0, 150 / 255F);
+  public static final Color PURPLE = new Color(150 / 255F, 0, 150 / 255F);
 }

@@ -33,54 +33,58 @@ import org.apache.jorphan.gui.layout.VerticalLayout;
 @TestElementMetadata(labelResource = "transaction_controller_title")
 public class TransactionControllerGui extends AbstractControllerGui {
 
-    private static final long serialVersionUID = 240L;
+  private static final long serialVersionUID = 240L;
 
-    /** If selected, then generate parent sample, otherwise as per original controller */
-    private final JBooleanPropertyEditor generateParentSample =
-            new JBooleanPropertyEditor(
-                    TransactionControllerSchema.INSTANCE.getGenearteParentSample(),
-                    JMeterUtils.getResString("transaction_controller_parent"));
+  /**
+   * If selected, then generate parent sample, otherwise as per original
+   * controller
+   */
+  private final JBooleanPropertyEditor generateParentSample =
+      new JBooleanPropertyEditor(
+          TransactionControllerSchema.INSTANCE.getGenearteParentSample(),
+          JMeterUtils.getResString("transaction_controller_parent"));
 
-    /** if selected, add duration of timers to total runtime */
-    private final JBooleanPropertyEditor includeTimers =
-            new JBooleanPropertyEditor(
-                    TransactionControllerSchema.INSTANCE.getIncludeTimers(),
-                    JMeterUtils.getResString("transaction_controller_include_timers"));
+  /** if selected, add duration of timers to total runtime */
+  private final JBooleanPropertyEditor includeTimers =
+      new JBooleanPropertyEditor(
+          TransactionControllerSchema.INSTANCE.getIncludeTimers(),
+          JMeterUtils.getResString("transaction_controller_include_timers"));
 
-    /**
-     * Create a new TransactionControllerGui instance.
-     */
-    public TransactionControllerGui() {
-        init();
-        bindingGroup.add(generateParentSample);
-        bindingGroup.add(includeTimers);
-    }
+  /**
+   * Create a new TransactionControllerGui instance.
+   */
+  public TransactionControllerGui() {
+    init();
+    bindingGroup.add(generateParentSample);
+    bindingGroup.add(includeTimers);
+  }
 
-    @Override
-    public TestElement makeTestElement() {
-        return new TransactionController();
-    }
+  @Override
+  public TestElement makeTestElement() {
+    return new TransactionController();
+  }
 
-    @Override
-    public void assignDefaultValues(TestElement element) {
-        super.assignDefaultValues(element);
-        // See https://github.com/apache/jmeter/issues/3282
-        ((TransactionController) element).setIncludeTimers(false);
-    }
+  @Override
+  public void assignDefaultValues(TestElement element) {
+    super.assignDefaultValues(element);
+    // See https://github.com/apache/jmeter/issues/3282
+    ((TransactionController)element).setIncludeTimers(false);
+  }
 
-    @Override
-    public String getLabelResource() {
-        return "transaction_controller_title"; // $NON-NLS-1$
-    }
+  @Override
+  public String getLabelResource() {
+    return "transaction_controller_title"; // $NON-NLS-1$
+  }
 
-    /**
-     * Initialize the GUI components and layout for this component.
-     */
-    private void init() { // WARNING: called from ctor so must not be overridden (i.e. must be private or final)
-        setLayout(new VerticalLayout(5, VerticalLayout.BOTH, VerticalLayout.TOP));
-        setBorder(makeBorder());
-        add(makeTitlePanel());
-        add(generateParentSample);
-        add(includeTimers);
-    }
+  /**
+   * Initialize the GUI components and layout for this component.
+   */
+  private void init() { // WARNING: called from ctor so must not be overridden
+                        // (i.e. must be private or final)
+    setLayout(new VerticalLayout(5, VerticalLayout.BOTH, VerticalLayout.TOP));
+    setBorder(makeBorder());
+    add(makeTitlePanel());
+    add(generateParentSample);
+    add(includeTimers);
+  }
 }

@@ -17,18 +17,16 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.gui.GuiPackage;
 import org.apache.jmeter.gui.JMeterGUIComponent;
 import org.apache.jmeter.gui.tree.JMeterTreeNode;
 import org.apache.jmeter.samplers.Clearable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Handles the following actions:
@@ -38,45 +36,45 @@ import com.google.auto.service.AutoService;
  */
 @AutoService(Command.class)
 public class Clear extends AbstractAction {
-    private static final Logger log = LoggerFactory.getLogger(Clear.class);
+  private static final Logger log = LoggerFactory.getLogger(Clear.class);
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.CLEAR);
-        commands.add(ActionNames.CLEAR_ALL);
-    }
+  static {
+    commands.add(ActionNames.CLEAR);
+    commands.add(ActionNames.CLEAR_ALL);
+  }
 
-    public Clear() {
-    }
+  public Clear() {}
 
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    @Override
-    public void doAction(ActionEvent e) {
-        GuiPackage guiPackage = GuiPackage.getInstance();
-        final String actionCommand = e.getActionCommand();
-        if (actionCommand.equals(ActionNames.CLEAR)) {
-            JMeterGUIComponent guiComp = guiPackage.getCurrentGui();
-            if (guiComp instanceof Clearable){
-                ((Clearable) guiComp).clearData();
-            }
-        } else {
-            guiPackage.getMainFrame().clearData();
-            for (JMeterTreeNode node : guiPackage.getTreeModel().getNodesOfType(Clearable.class)) {
-                JMeterGUIComponent guiComp = guiPackage.getGui(node.getTestElement());
-                if (guiComp instanceof Clearable){
-                    Clearable item = (Clearable) guiComp;
-                    try {
-                        item.clearData();
-                    } catch (Exception ex) {
-                        log.error("Can't clear: {} {}", node, guiComp, ex);
-                    }
-                }
-            }
+  @Override
+  public void doAction(ActionEvent e) {
+    GuiPackage guiPackage = GuiPackage.getInstance();
+    final String actionCommand = e.getActionCommand();
+    if (actionCommand.equals(ActionNames.CLEAR)) {
+      JMeterGUIComponent guiComp = guiPackage.getCurrentGui();
+      if (guiComp instanceof Clearable) {
+        ((Clearable)guiComp).clearData();
+      }
+    } else {
+      guiPackage.getMainFrame().clearData();
+      for (JMeterTreeNode node :
+           guiPackage.getTreeModel().getNodesOfType(Clearable.class)) {
+        JMeterGUIComponent guiComp = guiPackage.getGui(node.getTestElement());
+        if (guiComp instanceof Clearable) {
+          Clearable item = (Clearable)guiComp;
+          try {
+            item.clearData();
+          } catch (Exception ex) {
+            log.error("Can't clear: {} {}", node, guiComp, ex);
+          }
         }
+      }
     }
+  }
 }

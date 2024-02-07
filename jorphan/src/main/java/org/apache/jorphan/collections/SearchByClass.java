@@ -51,64 +51,60 @@ import java.util.List;
  *            Class that should be searched for
  */
 public class SearchByClass<T> implements HashTreeTraverser {
-    private final List<T> objectsOfClass = new ArrayList<>();
+  private final List<T> objectsOfClass = new ArrayList<>();
 
-    private final IdentityHashMap<Object, ListedHashTree> subTrees = new IdentityHashMap<>();
+  private final IdentityHashMap<Object, ListedHashTree> subTrees =
+      new IdentityHashMap<>();
 
-    private final Class<T> searchClass;
+  private final Class<T> searchClass;
 
-    /**
-     * Creates an instance of SearchByClass, and sets the Class to be searched
-     * for.
-     *
-     * @param searchClass
-     *            class to be searched for
-     */
-    public SearchByClass(Class<T> searchClass) {
-        this.searchClass = searchClass;
+  /**
+   * Creates an instance of SearchByClass, and sets the Class to be searched
+   * for.
+   *
+   * @param searchClass
+   *            class to be searched for
+   */
+  public SearchByClass(Class<T> searchClass) { this.searchClass = searchClass; }
+
+  /**
+   * After traversing the HashTree, call this method to get a collection of
+   * the nodes that were found.
+   *
+   * @return Collection All found nodes of the requested type
+   */
+  public Collection<T>
+  getSearchResults() { // TODO specify collection type without breaking callers
+    return objectsOfClass;
+  }
+
+  /**
+   * Given a specific found node, this method will return the sub tree of that
+   * node.
+   *
+   * @param root
+   *            the node for which the sub tree is requested
+   * @return HashTree
+   */
+  public HashTree getSubTree(Object root) { return subTrees.get(root); }
+
+  /** {@inheritDoc} */
+  @SuppressWarnings("unchecked")
+  @Override
+  public void addNode(Object node, HashTree subTree) {
+    if (searchClass.isAssignableFrom(node.getClass())) {
+      objectsOfClass.add((T)node);
+      ListedHashTree tree = new ListedHashTree(node);
+      tree.set(node, subTree);
+      subTrees.put(node, tree);
     }
+  }
 
-    /**
-     * After traversing the HashTree, call this method to get a collection of
-     * the nodes that were found.
-     *
-     * @return Collection All found nodes of the requested type
-     */
-    public Collection<T> getSearchResults() { // TODO specify collection type without breaking callers
-        return objectsOfClass;
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void subtractNode() {}
 
-    /**
-     * Given a specific found node, this method will return the sub tree of that
-     * node.
-     *
-     * @param root
-     *            the node for which the sub tree is requested
-     * @return HashTree
-     */
-    public HashTree getSubTree(Object root) {
-        return subTrees.get(root);
-    }
-
-    /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
-    @Override
-    public void addNode(Object node, HashTree subTree) {
-        if (searchClass.isAssignableFrom(node.getClass())) {
-            objectsOfClass.add((T) node);
-            ListedHashTree tree = new ListedHashTree(node);
-            tree.set(node, subTree);
-            subTrees.put(node, tree);
-        }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void subtractNode() {
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void processPath() {
-    }
+  /** {@inheritDoc} */
+  @Override
+  public void processPath() {}
 }

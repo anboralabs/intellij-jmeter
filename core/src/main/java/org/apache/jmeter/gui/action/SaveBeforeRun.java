@@ -17,13 +17,11 @@
 
 package org.apache.jmeter.gui.action;
 
+import com.google.auto.service.AutoService;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.jmeter.gui.GuiPackage;
-
-import com.google.auto.service.AutoService;
 
 /**
  * Save Before Run Action To save test plan before GUI execution
@@ -32,26 +30,26 @@ import com.google.auto.service.AutoService;
  */
 @AutoService(Command.class)
 public class SaveBeforeRun extends AbstractAction {
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static {
-        commands.add(ActionNames.SAVE_BEFORE_RUN);
-    }
+  static { commands.add(ActionNames.SAVE_BEFORE_RUN); }
 
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
-    }
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
 
-    @Override
-    public void doAction(ActionEvent e) {
-        if (ActionNames.SAVE_BEFORE_RUN.equals(e.getActionCommand())) {
-            // toggle boolean preference value
-            GuiPackage guiInstance = GuiPackage.getInstance();
-            boolean togglePreferenceValue = !guiInstance.shouldSaveBeforeRunByPreference();
-            guiInstance.setSaveBeforeRunByPreference(togglePreferenceValue);
-            // toggle check box
-            guiInstance.getMenuItemSaveBeforeRunPanel().getModel().setSelected(togglePreferenceValue);
-        }
+  @Override
+  public void doAction(ActionEvent e) {
+    if (ActionNames.SAVE_BEFORE_RUN.equals(e.getActionCommand())) {
+      // toggle boolean preference value
+      GuiPackage guiInstance = GuiPackage.getInstance();
+      boolean togglePreferenceValue =
+          !guiInstance.shouldSaveBeforeRunByPreference();
+      guiInstance.setSaveBeforeRunByPreference(togglePreferenceValue);
+      // toggle check box
+      guiInstance.getMenuItemSaveBeforeRunPanel().getModel().setSelected(
+          togglePreferenceValue);
     }
+  }
 }
