@@ -3,6 +3,7 @@ package co.anbora.labs.jmeter.ide.startup
 import co.anbora.labs.jmeter.ide.actions.SetupFilesAction
 import co.anbora.labs.jmeter.ide.notifications.JMeterNotifications
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
+import co.anbora.labs.jmeter.loader.JMeterLoader
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
@@ -18,6 +19,7 @@ class InitConfigFiles: ProjectActivity {
         val toolchain = project.toolchainSettings.toolchain()
 
         if (toolchain.isValid()) {
+            JMeterLoader.initLoader(toolchain, this.javaClass.classLoader)
             JMeterUtils.initializeJMeter(toolchain.homePath())
             return
         }

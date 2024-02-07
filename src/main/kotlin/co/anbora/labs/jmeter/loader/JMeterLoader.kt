@@ -17,7 +17,9 @@ object JMeterLoader {
     private val logger = Logger.getLogger(JMeterLoader::class.simpleName)
 
     fun initLoader(toolchain: JMeterToolchain, pluginClassLoader: ClassLoader?) {
-        JMeterUtils.setDynamicLoader(loadJMeterLibsToPlugin(toolchain, pluginClassLoader))
+        if (JMeterUtils.getDynamicLoader() == null) {
+            JMeterUtils.setDynamicLoader(loadJMeterLibsToPlugin(toolchain, pluginClassLoader))
+        }
     }
 
     private fun loadJMeterLibsToPlugin(toolchain: JMeterToolchain, pluginClassLoader: ClassLoader?): DynamicClassLoader {
