@@ -624,7 +624,8 @@ public class JMeter implements JMeterPlugin {
       }
     } catch (Exception e1) { // NOSONAR No logging here
       System.out.println(JMeterUtils.getJMeterCopyright()); // NOSONAR
-      System.out.println("Version " + JMeterUtils.getJMeterVersion()); // NOSONAR
+      System.out.println("Version " +
+                         JMeterUtils.getJMeterVersion()); // NOSONAR
     }
   }
 
