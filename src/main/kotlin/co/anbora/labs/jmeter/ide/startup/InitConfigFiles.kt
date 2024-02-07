@@ -1,43 +1,36 @@
 package co.anbora.labs.jmeter.ide.startup
 
 import co.anbora.labs.jmeter.ide.actions.SetupFilesAction
-import co.anbora.labs.jmeter.ide.icons.JmeterIcons
 import co.anbora.labs.jmeter.ide.notifications.JMeterNotifications
-import co.anbora.labs.jmeter.ide.settings.Settings
-import co.anbora.labs.jmeter.util.UnzipUtility
-import com.intellij.notification.Notification
-import com.intellij.notification.NotificationGroupManager
+import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
+import co.anbora.labs.jmeter.loader.JMeterLoader
 import com.intellij.notification.NotificationType
-import com.intellij.notification.Notifications
-import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.application.ApplicationActivationListener
-import com.intellij.openapi.application.invokeLater
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
-import com.intellij.openapi.wm.IdeFrame
-import org.apache.commons.jexl2.internal.AbstractExecutor
-import java.nio.file.Files
-import java.nio.file.Paths
-import kotlin.io.path.exists
+import org.apache.jmeter.JMeter
+import org.apache.jmeter.plugin.PluginManager
+import org.apache.jmeter.util.JMeterUtils
 
 class InitConfigFiles: ProjectActivity {
 
     override suspend fun execute(project: Project) {
-        if (checkConfigFilesNotExist()) {
-            val notification = JMeterNotifications.createNotification(
-                "JMeter Plugin Setup",
-                "Some configurations files needed to start use it.",
-                NotificationType.INFORMATION,
-                SetupFilesAction()
-            )
+        PluginManager.install(JMeter(), true)
 
-            JMeterNotifications.showNotification(notification, project)
-        }
-    }
+        val toolchain = project.toolchainSettings.toolchain()
 
-    private fun checkConfigFilesNotExist(): Boolean {
-        return Settings.allConfigFiles.any {
-            !Settings.binPath.resolve(it).exists()
+        if (toolchain.isValid()) {
+            JMeterLoader.initLoader(toolchain, this.javaClass.classLoader)
+            JMeterUtils.initializeJMeter(toolchain.homePath())
+            return
         }
+
+        val notification = JMeterNotifications.createNotification(
+            "JMeter Plugin",
+            "Please setup JMeter Home",
+            NotificationType.INFORMATION,
+            SetupFilesAction()
+        )
+
+        JMeterNotifications.showNotification(notification, project)
     }
 }

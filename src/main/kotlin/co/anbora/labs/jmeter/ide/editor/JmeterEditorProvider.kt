@@ -1,7 +1,9 @@
 package co.anbora.labs.jmeter.ide.editor
 
 import co.anbora.labs.jmeter.fileTypes.JmxFileType
-import co.anbora.labs.jmeter.ide.gui.JmeterEditor
+import co.anbora.labs.jmeter.ide.editor.gui.JmxFileEditor
+import co.anbora.labs.jmeter.ide.editor.gui.NotConfiguredFileEditor
+import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
 import com.intellij.diff.editor.DiffVirtualFile
 import com.intellij.openapi.fileEditor.AsyncFileEditorProvider
 import com.intellij.openapi.fileEditor.FileEditor
@@ -11,19 +13,6 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.SingleRootFileViewProvider
-import com.thoughtworks.xstream.converters.ConversionException
-import org.apache.jmeter.gui.GuiPackage
-import org.apache.jmeter.gui.MainFrame
-import org.apache.jmeter.gui.action.ActionRouter
-import org.apache.jmeter.gui.action.Load
-import org.apache.jmeter.gui.tree.JMeterTreeListener
-import org.apache.jmeter.gui.tree.JMeterTreeModel
-import org.apache.jmeter.save.SaveService
-import org.apache.jmeter.util.JMeterUtils
-import org.apache.jorphan.collections.HashTree
-import org.apache.jorphan.gui.JMeterUIDefaults
-import java.io.File
-import java.util.*
 
 private const val EDITOR_TYPE_ID = "co.anbora.labs.jmeter.editor"
 
@@ -41,7 +30,7 @@ class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
         return fileType == JmxFileType
     }
 
-    override fun createEditor(project: Project, file: VirtualFile): FileEditor = createJmeterEditor(file, project)
+    override fun createEditor(project: Project, file: VirtualFile): FileEditor = createJMeterEditor(project, file)
 
     override fun getEditorTypeId(): String = EDITOR_TYPE_ID
 
@@ -49,35 +38,17 @@ class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
 
     override fun createEditorAsync(project: Project, file: VirtualFile): AsyncFileEditorProvider.Builder {
         return object : AsyncFileEditorProvider.Builder() {
-            override fun build(): FileEditor = createJmeterEditor(file, project)
+            override fun build(): FileEditor = createJMeterEditor(project, file)
         }
     }
 
-    private fun createJmeterEditor(
-        file: VirtualFile,
-        project: Project
-    ): JmeterEditor {
-        val treeModel = JMeterTreeModel()
-        val treeLis = JMeterTreeListener(treeModel)
-        GuiPackage.initInstance(treeLis, treeModel)
+    private fun createJMeterEditor(project: Project, file: VirtualFile): FileEditor {
+        val toolchain = project.toolchainSettings.toolchain()
 
-        val instance = ActionRouter.getInstance()
-        instance.populateCommandMap()
-        treeLis.setActionHandler(instance)
-        val main = MainFrame(treeModel, treeLis)
-        loadFile(file.toNioPath().toFile())
-        return JmeterEditor(project, file, main)
-    }
-
-    private fun loadFile(testFile: File) {
-        try {
-            val tree: HashTree = SaveService.loadTree(testFile)
-            GuiPackage.getInstance().testPlanFile = testFile.absolutePath
-            Load.insertLoadedTree(1, tree)
-        } catch (e: ConversionException) {
-            JMeterUtils.reportErrorToUser(SaveService.CEtoString(e))
-        } catch (e: Exception) {
-            JMeterUtils.reportErrorToUser(e.toString())
+        if (toolchain.isValid()) {
+            return JmxFileEditor(project, file)
         }
+
+        return NotConfiguredFileEditor(project, file)
     }
 }

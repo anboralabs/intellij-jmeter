@@ -14,23 +14,27 @@
         <projectConfigurable
                 groupId="tools"
                 displayName="JMeter"
-                id="preference.JmeterHomeConfigurable"
-                instance="co.anbora.labs.jmeter.ide.settings.ui.JmeterHomePathSettings" />
+                id="preference.NewJMeterHomeConfigurable"
+                instance="co.anbora.labs.jmeter.ide.settings.JMeterProjectSettingsConfigurable" />
         <fileType name="Jmeter" implementationClass="co.anbora.labs.jmeter.fileTypes.JmxFileType"
                   fieldName="INSTANCE" extensions="jmx"/>
         <fileEditorProvider implementation="co.anbora.labs.jmeter.ide.editor.JmeterEditorProvider"/>
         <postStartupActivity implementation="co.anbora.labs.jmeter.ide.startup.InitConfigFiles" />
         <notificationGroup id="JMeter_Notification" displayType="STICKY_BALLOON"/>
+
+        <applicationService serviceImplementation="co.anbora.labs.jmeter.ide.toolchain.JMeterKnownToolchainsState"/>
     </extensions>
 
+    <extensions defaultExtensionNs="co.anbora.labs.jmeter.jmeter-intellij">
+        <toolchainFlavor implementation="co.anbora.labs.jmeter.ide.toolchain.flavors.JMeterSysPathToolchainFlavor" />
+    </extensions>
+
+    <extensionPoints>
+        <extensionPoint interface="co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainFlavor"
+                        dynamic="true" name="toolchainFlavor"/>
+    </extensionPoints>
+
     <actions>
-        <action
-                id="co.anbora.labs.jmeter.ide.actions.PluginManagerDialogAction"
-                class="co.anbora.labs.jmeter.ide.actions.PluginManagerDialogAction"
-                text="JMeter Plugin Manager"
-                description="Show plugin manager">
-            <add-to-group group-id="ToolsMenu" anchor="first"/>
-        </action>
         <action id="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
                 class="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
                 text="Setup" />

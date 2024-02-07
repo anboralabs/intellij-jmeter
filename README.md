@@ -2,8 +2,8 @@
 
 # JMeter Viewer
 
-![Locked-ks](/images/jmeter_viewer_1.png)
-![Unlocked-ks](/images/jmeter_viewer_2.png)
+![JMeter](/images/jmeter_viewer_1.png)
+![Configuration](/images/jmeter_viewer_2.png)
 
 ## What is it?
 
