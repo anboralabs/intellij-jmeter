@@ -28,7 +28,7 @@ class JmxFileEditor(
 
     private fun initLoader() {
         val pluginClassLoader = this.javaClass.classLoader
-        val toolchain = this.projectArg.toolchainSettings.toolchain()
+        val toolchain = toolchainSettings.toolchain()
         JMeterLoader.initLoader(toolchain, pluginClassLoader)
     }
 

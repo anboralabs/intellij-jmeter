@@ -16,7 +16,7 @@ class InitConfigFiles: ProjectActivity {
     override suspend fun execute(project: Project) {
         PluginManager.install(JMeter(), true)
 
-        val toolchain = project.toolchainSettings.toolchain()
+        val toolchain = toolchainSettings.toolchain()
 
         if (toolchain.isValid()) {
             JMeterLoader.initLoader(toolchain, this.javaClass.classLoader)

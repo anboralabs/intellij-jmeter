@@ -22,6 +22,7 @@
         <postStartupActivity implementation="co.anbora.labs.jmeter.ide.startup.InitConfigFiles" />
         <notificationGroup id="JMeter_Notification" displayType="STICKY_BALLOON"/>
 
+        <applicationService serviceImplementation="co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService"/>
         <applicationService serviceImplementation="co.anbora.labs.jmeter.ide.toolchain.JMeterKnownToolchainsState"/>
     </extensions>
 
