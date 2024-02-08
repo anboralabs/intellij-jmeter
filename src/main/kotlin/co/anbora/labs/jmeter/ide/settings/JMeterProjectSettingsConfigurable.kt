@@ -33,7 +33,7 @@ class JMeterProjectSettingsConfigurable(private val project: Project) : Configur
     override fun isModified(): Boolean {
         mainPanel.apply()
 
-        val settings = project.toolchainSettings
+        val settings = toolchainSettings
         return model.homeLocation != settings.toolchainLocation
     }
 
@@ -42,7 +42,7 @@ class JMeterProjectSettingsConfigurable(private val project: Project) : Configur
 
         validateSettings()
 
-        val settings = project.toolchainSettings
+        val settings = toolchainSettings
         settings.setToolchain(JMeterToolchain.fromPath(model.homeLocation))
     }
 
@@ -54,7 +54,7 @@ class JMeterProjectSettingsConfigurable(private val project: Project) : Configur
     }
 
     override fun reset() {
-        val settings = project.toolchainSettings
+        val settings = toolchainSettings
 
         with(model) {
             homeLocation = settings.toolchainLocation

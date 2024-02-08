@@ -43,7 +43,7 @@ class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
     }
 
     private fun createJMeterEditor(project: Project, file: VirtualFile): FileEditor {
-        val toolchain = project.toolchainSettings.toolchain()
+        val toolchain = toolchainSettings.toolchain()
 
         if (toolchain.isValid()) {
             return JmxFileEditor(project, file)

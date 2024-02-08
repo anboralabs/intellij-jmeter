@@ -7,10 +7,9 @@ import com.intellij.util.xmlb.annotations.Attribute
 
 @State(
     name = "JMeter Toolchain",
-    storages = [Storage(StoragePathMacros.WORKSPACE_FILE)]
+    storages = [Storage("JMeterHome.xml")]
 )
-@Service
-class JMeterToolchainService() : PersistentStateComponent<JMeterToolchainService.ToolchainState?> {
+class JMeterToolchainService: PersistentStateComponent<JMeterToolchainService.ToolchainState?> {
     private var state = ToolchainState()
     val toolchainLocation: String
         get() = state.toolchainLocation
@@ -40,7 +39,7 @@ class JMeterToolchainService() : PersistentStateComponent<JMeterToolchainService
     }
 
     companion object {
-        val Project.toolchainSettings
+        val toolchainSettings
             get() = service<JMeterToolchainService>()
     }
 
