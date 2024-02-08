@@ -582,7 +582,8 @@ public class JMeterUtils {
   public static Locale getLocale() { return locale; }
 
   public static void addLocaleChangeListener(LocaleChangeListener listener) {
-    localeChangeListeners.add(listener);
+    // TODO removed to avoid change toolbar on local changes
+    // localeChangeListeners.add(listener);
   }
 
   public static void removeLocaleChangeListener(LocaleChangeListener listener) {
