@@ -8,6 +8,7 @@ import com.thoughtworks.xstream.converters.ConversionException
 import org.apache.jmeter.gui.GuiPackage
 import org.apache.jmeter.gui.MainFrame
 import org.apache.jmeter.gui.action.ActionRouter
+import org.apache.jmeter.gui.action.ExitIDECommand
 import org.apache.jmeter.gui.action.Load
 import org.apache.jmeter.gui.tree.JMeterTreeListener
 import org.apache.jmeter.gui.tree.JMeterTreeModel
@@ -51,7 +52,7 @@ class JmxFileEditor(
 
         val instance = ActionRouter.getInstance()
 
-        instance.populateCommandMap()
+        instance.populateCommandMapWithCustomCommands(ExitIDECommand())
         treeLis.setActionHandler(instance)
         mainPanel = MainFrame(treeModel, treeLis)
         loadFile(file.toNioPath().toFile())
