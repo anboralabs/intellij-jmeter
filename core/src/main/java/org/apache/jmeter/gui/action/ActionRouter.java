@@ -20,14 +20,7 @@ package org.apache.jmeter.gui.action;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
+import java.util.*;
 import javax.swing.SwingUtilities;
 import org.apache.jmeter.exceptions.IllegalUserActionException;
 import org.apache.jmeter.gui.GuiPackage;
@@ -325,16 +318,16 @@ public final class ActionRouter implements ActionListener {
     if (!commands.isEmpty()) {
       return; // already done
     }
-    // Thread currentThread = Thread.currentThread();
-    // ClassLoader originalClassLoader = currentThread.getContextClassLoader();
-    // ClassLoader pluginClassLoader = this.getClass().getClassLoader();
     try {
-      // currentThread.setContextClassLoader(pluginClassLoader);
+      /*Collection<Command> commandServices =
+      JMeterUtils.loadServicesAndScanJars( Command.class,
+              ServiceLoader.load(Command.class),
+              Thread.currentThread().getContextClassLoader(),
+              new LogAndIgnoreServiceLoadExceptionHandler(log)
+      );*/
 
-      Collection<Command> commandServices = JMeterUtils.loadServicesAndScanJars(
-          Command.class, ServiceLoader.load(Command.class),
-          Thread.currentThread().getContextClassLoader(),
-          new LogAndIgnoreServiceLoadExceptionHandler(log));
+      Collection<Command> commandServices =
+          List.of(new Load(), new CheckDirty(), new EditCommand());
 
       if (commandServices.isEmpty()) {
         String message =
@@ -358,6 +351,40 @@ public final class ActionRouter implements ActionListener {
       log.error("exception finding action handlers", e);
     } finally {
       // currentThread.setContextClassLoader(originalClassLoader);
+    }
+  }
+
+  public void populateCommandMapWithCustomCommands(Command... newCommand) {
+    if (!commands.isEmpty()) {
+      return; // already done
+    }
+    try {
+      Collection<Command> defaultCommands =
+              List.of(new Load(), new CheckDirty(), new EditCommand());
+
+      Collection<Command> commandServices = new ArrayList<>(Arrays.asList(newCommand));
+      commandServices.addAll(defaultCommands);
+
+      if (commandServices.isEmpty()) {
+        String message =
+                "No implementations of " + Command.class +
+                        " found. Please ensure the classpath contains JMeter commands";
+        log.error(message);
+        throw new JMeterError(message);
+      }
+      for (Command command : commandServices) {
+        for (String commandName : command.getActionNames()) {
+          Set<Command> commandObjects =
+                  commands.computeIfAbsent(commandName, k -> new HashSet<>());
+          commandObjects.add(command);
+        }
+      }
+    } catch (HeadlessException e) {
+      if (log.isWarnEnabled()) {
+        log.warn("AWT headless exception occurred. {}", e.toString());
+      }
+    } catch (Exception e) {
+      log.error("exception finding action handlers", e);
     }
   }
 
