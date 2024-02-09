@@ -7,7 +7,7 @@ import com.intellij.util.xmlb.annotations.Attribute
 
 @State(
     name = "JMeter Toolchain",
-    storages = [Storage("JMeterHome.xml")]
+    storages = [Storage("NewJMeterHome.xml")]
 )
 class JMeterToolchainService: PersistentStateComponent<JMeterToolchainService.ToolchainState?> {
     private var state = ToolchainState()

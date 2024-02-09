@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "co.anbora.labs.jmeter"
-version = "1.3.3"
+version = "1.4.0"
 
 repositories {
     mavenCentral()
@@ -27,6 +27,9 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.22.1")
     implementation("org.apache.logging.log4j:log4j-core:2.22.1")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.22.1")
+
+    implementation("com.google.auto.service:auto-service-annotations:1.1.1")
+    implementation("com.google.auto.service:auto-service:1.1.1")
 
     implementation("net.sf.json-lib:json-lib:2.4:jdk15")
 

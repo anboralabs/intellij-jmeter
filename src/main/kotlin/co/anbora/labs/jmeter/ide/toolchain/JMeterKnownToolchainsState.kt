@@ -8,7 +8,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 
 @State(
     name = "JMeter Home",
-    storages = [Storage("JMeterToolchains.xml")]
+    storages = [Storage("NewJMeterToolchains.xml")]
 )
 class JMeterKnownToolchainsState : PersistentStateComponent<JMeterKnownToolchainsState?> {
     companion object {

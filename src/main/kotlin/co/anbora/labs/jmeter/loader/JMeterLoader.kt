@@ -1,6 +1,7 @@
 package co.anbora.labs.jmeter.loader
 
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchain
+import kg.apc.jmeter.JMeterPluginsUtils
 import org.apache.jmeter.DynamicClassLoader
 import org.apache.jmeter.util.JMeterUtils
 import java.io.File
@@ -20,6 +21,7 @@ object JMeterLoader {
         if (JMeterUtils.getDynamicLoader() == null) {
             JMeterUtils.setDynamicLoader(loadJMeterLibsToPlugin(toolchain, pluginClassLoader))
             JMeterUtils.initializeJMeter(toolchain.homePath())
+            JMeterPluginsUtils.prepareJMeterEnv(toolchain.homePath())
         }
     }
 
