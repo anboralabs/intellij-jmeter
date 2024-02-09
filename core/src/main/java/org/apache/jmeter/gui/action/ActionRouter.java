@@ -360,22 +360,23 @@ public final class ActionRouter implements ActionListener {
     }
     try {
       Collection<Command> defaultCommands =
-              List.of(new Load(), new CheckDirty(), new EditCommand());
+          List.of(new Load(), new CheckDirty(), new EditCommand());
 
-      Collection<Command> commandServices = new ArrayList<>(Arrays.asList(newCommand));
+      Collection<Command> commandServices =
+          new ArrayList<>(Arrays.asList(newCommand));
       commandServices.addAll(defaultCommands);
 
       if (commandServices.isEmpty()) {
         String message =
-                "No implementations of " + Command.class +
-                        " found. Please ensure the classpath contains JMeter commands";
+            "No implementations of " + Command.class +
+            " found. Please ensure the classpath contains JMeter commands";
         log.error(message);
         throw new JMeterError(message);
       }
       for (Command command : commandServices) {
         for (String commandName : command.getActionNames()) {
           Set<Command> commandObjects =
-                  commands.computeIfAbsent(commandName, k -> new HashSet<>());
+              commands.computeIfAbsent(commandName, k -> new HashSet<>());
           commandObjects.add(command);
         }
       }
