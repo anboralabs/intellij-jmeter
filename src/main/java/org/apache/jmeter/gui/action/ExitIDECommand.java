@@ -24,7 +24,6 @@ import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,46 +31,44 @@ import java.util.Set;
 @AutoService(Command.class)
 public class ExitIDECommand extends AbstractActionWithNoRunningTest {
 
-    private static final Set<String> commands = new HashSet<>();
+  private static final Set<String> commands = new HashSet<>();
 
-    static { commands.add(ActionNames.EXIT); }
+  static { commands.add(ActionNames.EXIT); }
 
-    /**
-     * Constructor for the ExitCommand object
-     */
-    public ExitIDECommand() {}
+  /**
+   * Constructor for the ExitCommand object
+   */
+  public ExitIDECommand() {}
 
-    /**
-     * Gets the ActionNames attribute of the ExitCommand object
-     *
-     * @return The ActionNames value
-     */
-    @Override
-    public Set<String> getActionNames() {
-        return commands;
+  /**
+   * Gets the ActionNames attribute of the ExitCommand object
+   *
+   * @return The ActionNames value
+   */
+  @Override
+  public Set<String> getActionNames() {
+    return commands;
+  }
+
+  /**
+   * Description of the Method
+   *
+   * @param e
+   *            Description of Parameter
+   */
+  @Override
+  public void doActionAfterCheck(ActionEvent e) {
+    Project[] project = ProjectManager.getInstance().getOpenProjects();
+
+    Notification notification = JMeterNotifications.createNotification(
+        "JMeter Plugin Setup", "Please restart the IDE",
+        NotificationType.INFORMATION, new RestartIDEAction());
+
+    if (project.length != 0) {
+      JMeterNotifications.showNotification(notification, project[0]);
+    } else {
+      JMeterNotifications.showNotification(
+          notification, ProjectManager.getInstance().getDefaultProject());
     }
-
-    /**
-     * Description of the Method
-     *
-     * @param e
-     *            Description of Parameter
-     */
-    @Override
-    public void doActionAfterCheck(ActionEvent e) {
-        Project[] project = ProjectManager.getInstance().getOpenProjects();
-
-        Notification notification = JMeterNotifications.createNotification(
-                "JMeter Plugin Setup",
-                "Please restart the IDE",
-                NotificationType.INFORMATION,
-                new RestartIDEAction()
-        );
-
-        if (project.length != 0) {
-            JMeterNotifications.showNotification(notification, project[0]);
-        } else {
-            JMeterNotifications.showNotification(notification, ProjectManager.getInstance().getDefaultProject());
-        }
-    }
+  }
 }
