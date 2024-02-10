@@ -3,6 +3,7 @@ package co.anbora.labs.jmeter.ide.editor.gui
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
 import co.anbora.labs.jmeter.loader.JMeterLoader
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
 import com.thoughtworks.xstream.converters.ConversionException
 import org.apache.jmeter.gui.GuiPackage
@@ -21,6 +22,8 @@ class JmxFileEditor(
     private val projectArg: Project,
     private val fileArg: VirtualFile,
 ): JMeterFileEditor(projectArg, fileArg) {
+
+    private val mapKeys: MutableMap<String, Key<GuiPackage>> = mutableMapOf()
 
     init {
         initLoader()
@@ -48,7 +51,12 @@ class JmxFileEditor(
     override fun initComponents() {
         val treeModel = JMeterTreeModel()
         val treeLis = JMeterTreeListener(treeModel)
-        GuiPackage.initInstance(treeLis, treeModel)
+        val newInstance = GuiPackage.initInstanceWithReturn(treeLis, treeModel)
+
+        val name = file.toNioPath().toFile().name
+        val keyUser = Key.create<GuiPackage>(name)
+        this.mapKeys[name] = keyUser
+        this.putUserData(keyUser, newInstance)
 
         val instance = ActionRouter.getInstance()
 
@@ -56,5 +64,11 @@ class JmxFileEditor(
         treeLis.setActionHandler(instance)
         mainPanel = MainFrame(treeModel, treeLis)
         loadFile(file.toNioPath().toFile())
+    }
+
+    fun reInitInstance(fileName: String) {
+        val value = this.mapKeys.getValue(fileName)
+        val instanceGui = this.getUserData(value)
+        instanceGui?.let { GuiPackage.setInstance(instanceGui) }
     }
 }

@@ -35,6 +35,11 @@
                         dynamic="true" name="toolchainFlavor"/>
     </extensionPoints>
 
+    <projectListeners>
+        <listener class="co.anbora.labs.jmeter.ide.listeners.JMeterSelectionListener"
+                  topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+    </projectListeners>
+
     <actions>
         <action id="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
                 class="co.anbora.labs.jmeter.ide.actions.SetupFilesAction"
