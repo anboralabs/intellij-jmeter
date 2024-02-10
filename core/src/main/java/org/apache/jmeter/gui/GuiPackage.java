@@ -187,9 +187,7 @@ public final class GuiPackage implements LocaleChangeListener, HistoryListener {
    *
    * @return the GuiPackage instance (may be null, e.g in non-Gui mode)
    */
-  public static void setInstance(GuiPackage instance) {
-    guiPack = instance;
-  }
+  public static void setInstance(GuiPackage instance) { guiPack = instance; }
 
   /**
    * Register as listener of:
@@ -220,7 +218,7 @@ public final class GuiPackage implements LocaleChangeListener, HistoryListener {
   }
 
   public static GuiPackage initInstanceWithReturn(JMeterTreeListener listener,
-                                  JMeterTreeModel treeModel) {
+                                                  JMeterTreeModel treeModel) {
     GuiPackage guiPack = new GuiPackage(treeModel, listener);
     guiPack.undoHistory.add(treeModel, "Created");
     GuiPackage.guiPack = guiPack;
