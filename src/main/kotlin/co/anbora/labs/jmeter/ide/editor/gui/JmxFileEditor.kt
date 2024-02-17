@@ -2,6 +2,7 @@ package co.anbora.labs.jmeter.ide.editor.gui
 
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
 import co.anbora.labs.jmeter.loader.JMeterLoader
+import co.anbora.labs.jmeter.router.actions.RouterActionsFlavor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFile
@@ -60,7 +61,9 @@ class JmxFileEditor(
 
         val instance = ActionRouter.getInstance()
 
-        instance.populateCommandMapWithCustomCommands(ExitIDECommand())
+        val commands = RouterActionsFlavor.getApplicableFlavors().flatMap { it.getDefaultCommands() }
+
+        instance.populateCommandMapWithCustomCommands(commands)
         treeLis.setActionHandler(instance)
         mainPanel = MainFrame(treeModel, treeLis)
         loadFile(file.toNioPath().toFile())

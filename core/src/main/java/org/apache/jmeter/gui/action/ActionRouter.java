@@ -315,56 +315,24 @@ public final class ActionRouter implements ActionListener {
    * 58790</a>
    */
   public void populateCommandMap() {
-    if (!commands.isEmpty()) {
-      return; // already done
-    }
-    try {
-      /*Collection<Command> commandServices =
+    /* Collection<Command> commandServices =
       JMeterUtils.loadServicesAndScanJars( Command.class,
               ServiceLoader.load(Command.class),
               Thread.currentThread().getContextClassLoader(),
               new LogAndIgnoreServiceLoadExceptionHandler(log)
-      );*/
-
-      Collection<Command> commandServices =
-          List.of(new Load(), new CheckDirty(), new EditCommand());
-
-      if (commandServices.isEmpty()) {
-        String message =
-            "No implementations of " + Command.class +
-            " found. Please ensure the classpath contains JMeter commands";
-        log.error(message);
-        throw new JMeterError(message);
-      }
-      for (Command command : commandServices) {
-        for (String commandName : command.getActionNames()) {
-          Set<Command> commandObjects =
-              commands.computeIfAbsent(commandName, k -> new HashSet<>());
-          commandObjects.add(command);
-        }
-      }
-    } catch (HeadlessException e) {
-      if (log.isWarnEnabled()) {
-        log.warn("AWT headless exception occurred. {}", e.toString());
-      }
-    } catch (Exception e) {
-      log.error("exception finding action handlers", e);
-    } finally {
-      // currentThread.setContextClassLoader(originalClassLoader);
-    }
+      ); */
+    fillCommandsMap(List.of(new Load(), new CheckDirty(), new EditCommand()));
   }
 
-  public void populateCommandMapWithCustomCommands(Command... newCommand) {
+  public void populateCommandMapWithCustomCommands(Collection<Command> commandServices) {
+    fillCommandsMap(commandServices);
+  }
+
+  private void fillCommandsMap(Collection<Command> commandServices) {
     if (!commands.isEmpty()) {
-      return; // already done
+      return;
     }
     try {
-      Collection<Command> defaultCommands =
-              List.of(new Load(), new CheckDirty(), new EditCommand());
-
-      Collection<Command> commandServices = new ArrayList<>(Arrays.asList(newCommand));
-      commandServices.addAll(defaultCommands);
-
       if (commandServices.isEmpty()) {
         String message =
                 "No implementations of " + Command.class +

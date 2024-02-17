@@ -15,8 +15,6 @@ class JMeterSysPathToolchainFlavor : JMeterToolchainFlavor() {
             .asSequence()
             .filter { it.isNotEmpty() }
             .mapNotNull { it.toPathOrNull() }
-            .filter { it.isExecutable() }
-            .map { it.parent }
             .filter { it.isDirectory() }
     }
 }
