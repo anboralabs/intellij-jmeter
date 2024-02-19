@@ -28,7 +28,7 @@
 
     <extensions defaultExtensionNs="co.anbora.labs.jmeter.jmeter-intellij">
         <toolchainFlavor implementation="co.anbora.labs.jmeter.ide.toolchain.flavors.JMeterSysPathToolchainFlavor" />
-        <routerActions implementation="co.anbora.labs.jmeter.router.actions.flavors.JMeterDefaultCommands"/>
+        <routerActions order="first" implementation="co.anbora.labs.jmeter.router.actions.flavors.JMeterDefaultCommands"/>
     </extensions>
 
     <extensionPoints>
