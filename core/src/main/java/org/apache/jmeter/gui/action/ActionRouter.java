@@ -337,15 +337,15 @@ public final class ActionRouter implements ActionListener {
     try {
       if (commandServices.isEmpty()) {
         String message =
-                "No implementations of " + Command.class +
-                        " found. Please ensure the classpath contains JMeter commands";
+            "No implementations of " + Command.class +
+            " found. Please ensure the classpath contains JMeter commands";
         log.error(message);
         throw new JMeterError(message);
       }
       for (Command command : commandServices) {
         for (String commandName : command.getActionNames()) {
           Set<Command> commandObjects =
-                  commands.computeIfAbsent(commandName, k -> new HashSet<>());
+              commands.computeIfAbsent(commandName, k -> new HashSet<>());
           commandObjects.add(command);
         }
       }
