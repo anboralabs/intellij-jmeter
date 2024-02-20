@@ -60,7 +60,8 @@ public final class ActionRouter implements ActionListener {
 
   private void performAction(final ActionEvent e) {
     String actionCommand = e.getActionCommand();
-    if (!NO_TRANSACTION_ACTIONS.contains(actionCommand) && GuiPackage.getInstance() != null) {
+    if (!NO_TRANSACTION_ACTIONS.contains(actionCommand) &&
+        GuiPackage.getInstance() != null) {
       GuiPackage.getInstance().beginUndoTransaction();
     }
     try {
@@ -102,7 +103,8 @@ public final class ActionRouter implements ActionListener {
       JMeterUtils.reportErrorToUser("Sorry, this feature (" + actionCommand +
                                     ") not yet implemented");
     } finally {
-      if (!NO_TRANSACTION_ACTIONS.contains(actionCommand) && GuiPackage.getInstance() != null) {
+      if (!NO_TRANSACTION_ACTIONS.contains(actionCommand) &&
+          GuiPackage.getInstance() != null) {
         GuiPackage.getInstance().endUndoTransaction();
       }
     }
@@ -326,7 +328,8 @@ public final class ActionRouter implements ActionListener {
     fillCommandsMap(List.of(new Load(), new CheckDirty(), new EditCommand()));
   }
 
-  public void populateCommandMapWithCustomCommands(Collection<Command> commandServices) {
+  public void
+  populateCommandMapWithCustomCommands(Collection<Command> commandServices) {
     fillCommandsMap(commandServices);
   }
 
