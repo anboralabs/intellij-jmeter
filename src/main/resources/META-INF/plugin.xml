@@ -28,11 +28,14 @@
 
     <extensions defaultExtensionNs="co.anbora.labs.jmeter.jmeter-intellij">
         <toolchainFlavor implementation="co.anbora.labs.jmeter.ide.toolchain.flavors.JMeterSysPathToolchainFlavor" />
+        <routerActions order="first" implementation="co.anbora.labs.jmeter.router.actions.flavors.JMeterDefaultCommands"/>
     </extensions>
 
     <extensionPoints>
         <extensionPoint interface="co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainFlavor"
                         dynamic="true" name="toolchainFlavor"/>
+        <extensionPoint interface="co.anbora.labs.jmeter.router.actions.RouterActionsFlavor"
+                        dynamic="true" name="routerActions"/>
     </extensionPoints>
 
     <projectListeners>
