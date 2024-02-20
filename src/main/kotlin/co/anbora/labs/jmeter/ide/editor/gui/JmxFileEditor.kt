@@ -58,12 +58,7 @@ class JmxFileEditor(
         this.mapKeys[name] = keyUser
         this.putUserData(keyUser, newInstance)
 
-        val instance = ActionRouter.getInstance()
-
-        val commands = RouterActionsFlavor.getApplicableFlavors().flatMap { it.getDefaultCommands() }
-
-        instance.populateCommandMapWithCustomCommands(commands)
-        treeLis.setActionHandler(instance)
+        treeLis.setActionHandler(ActionRouter.getInstance())
         mainPanel = MainFrame(treeModel, treeLis)
         loadFile(file.toNioPath().toFile())
     }
