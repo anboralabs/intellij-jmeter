@@ -59,6 +59,7 @@ public final class ActionNames {
   public static final String EDIT = "edit";             // $NON-NLS-1$
   public static final String ENABLE = "enable";         // $NON-NLS-1$
   public static final String EXIT = "exit";             // $NON-NLS-1$
+  public static final String EXIT_IDE = "exit_ide";             // $NON-NLS-1$
   public static final String EXPAND_ALL = "expand all"; // $NON-NLS-1$
   public static final String FUNCTIONS = "functions";   // $NON-NLS-1$
   public static final String HELP = "help";             // $NON-NLS-1$

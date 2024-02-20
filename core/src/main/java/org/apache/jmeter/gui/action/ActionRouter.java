@@ -60,12 +60,14 @@ public final class ActionRouter implements ActionListener {
 
   private void performAction(final ActionEvent e) {
     String actionCommand = e.getActionCommand();
-    if (!NO_TRANSACTION_ACTIONS.contains(actionCommand)) {
+    if (!NO_TRANSACTION_ACTIONS.contains(actionCommand) && GuiPackage.getInstance() != null) {
       GuiPackage.getInstance().beginUndoTransaction();
     }
     try {
       try {
-        GuiPackage.getInstance().updateCurrentGui();
+        if (GuiPackage.getInstance() != null) {
+          GuiPackage.getInstance().updateCurrentGui();
+        }
       } catch (Exception err) {
         log.error("performAction({}) updateCurrentGui() on{} caused",
                   actionCommand, e, err);
@@ -100,7 +102,7 @@ public final class ActionRouter implements ActionListener {
       JMeterUtils.reportErrorToUser("Sorry, this feature (" + actionCommand +
                                     ") not yet implemented");
     } finally {
-      if (!NO_TRANSACTION_ACTIONS.contains(actionCommand)) {
+      if (!NO_TRANSACTION_ACTIONS.contains(actionCommand) && GuiPackage.getInstance() != null) {
         GuiPackage.getInstance().endUndoTransaction();
       }
     }
