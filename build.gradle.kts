@@ -1,11 +1,11 @@
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.0"
-    id("org.jetbrains.intellij") version "1.17.1"
+    id("org.jetbrains.intellij") version "1.17.2"
 }
 
 group = "co.anbora.labs.jmeter"
-version = "1.5.0"
+version = "1.5.1"
 
 repositories {
     mavenCentral()

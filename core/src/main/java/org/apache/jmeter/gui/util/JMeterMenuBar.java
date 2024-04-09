@@ -579,8 +579,8 @@ public class JMeterMenuBar extends JMenuBar implements LocaleChangeListener {
 
     // Add the recent files, which will also add a separator that is
     // visible when needed
-    fileLoadRecentFiles = LoadRecentProject.getRecentFileMenuItems();
-    fileLoadRecentFiles.forEach(jc -> recentFilesOpen.add(jc));
+    fileLoadRecentFiles = List.of();
+    // fileLoadRecentFiles.forEach(jc -> recentFilesOpen.add(jc));
     recentFilesOpen.setEnabled(
         LoadRecentProject.hasVisibleMenuItem(fileLoadRecentFiles));
 
