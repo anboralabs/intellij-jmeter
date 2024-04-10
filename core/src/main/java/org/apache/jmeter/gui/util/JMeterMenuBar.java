@@ -255,7 +255,7 @@ public class JMeterMenuBar extends JMenuBar implements LocaleChangeListener {
     helpMenu.add(setDebug);
     helpMenu.add(resetDebug);
 
-    addPluginsMenuItems(helpMenu, menuCreators, MENU_LOCATION.HELP);
+    // addPluginsMenuItems(helpMenu, menuCreators, MENU_LOCATION.HELP);
 
     helpMenu.addSeparator();
     helpMenu.add(usefulLinks);
@@ -276,12 +276,12 @@ public class JMeterMenuBar extends JMenuBar implements LocaleChangeListener {
     toolsMenu.add(makeMenuItemRes("function_dialog_menu_item", 'F',
                                   ActionNames.FUNCTIONS, KeyStrokes.FUNCTIONS));
 
-    addPluginsMenuItems(toolsMenu, menuCreators, MENU_LOCATION.TOOLS);
+    // addPluginsMenuItems(toolsMenu, menuCreators, MENU_LOCATION.TOOLS);
   }
 
   private void makeOptionsMenu() {
     optionsMenu = makeMenuRes("option", 'O'); //$NON-NLS-1$
-    optionsMenu.add(createLaFMenu());
+    // optionsMenu.add(createLaFMenu());
 
     JCheckBoxMenuItem menuLoggerPanel = makeCheckBoxMenuItemRes(
         "menu_logger_panel",
@@ -329,13 +329,13 @@ public class JMeterMenuBar extends JMenuBar implements LocaleChangeListener {
     optionsMenu.add(makeMenuItemRes("menu_zoom_in", 'I', ActionNames.ZOOM_IN));
     optionsMenu.add(
         makeMenuItemRes("menu_zoom_out", 'U', ActionNames.ZOOM_OUT));
-    JCheckBoxMenuItem saveBeforeRun = makeCheckBoxMenuItemRes(
+    /*JCheckBoxMenuItem saveBeforeRun = makeCheckBoxMenuItemRes(
         "menu_save_before_run", ActionNames.SAVE_BEFORE_RUN); //$NON-NLS-1$
     if (guiInstance != null) {
       saveBeforeRun.setSelected(guiInstance.shouldSaveBeforeRunByPreference());
       guiInstance.setMenuItemSaveBeforeRunPanel(saveBeforeRun);
     }
-    optionsMenu.add(saveBeforeRun);
+    optionsMenu.add(saveBeforeRun);*/
 
     addPluginsMenuItems(optionsMenu, menuCreators, MENU_LOCATION.OPTIONS);
   }
