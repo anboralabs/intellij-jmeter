@@ -1,6 +1,7 @@
 package co.anbora.labs.jmeter.ide.startup
 
 import co.anbora.labs.jmeter.ide.actions.SetupFilesAction
+import co.anbora.labs.jmeter.ide.checker.CheckerFlavor
 import co.anbora.labs.jmeter.ide.notifications.JMeterNotifications
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
 import co.anbora.labs.jmeter.loader.JMeterLoader
@@ -20,6 +21,10 @@ class InitConfigFiles: ProjectActivity {
         initCommands()
 
         val toolchain = toolchainSettings.toolchain()
+
+        if (!CheckerFlavor.isSupported()) {
+            JMeterNotifications.supportNotification(project)
+        }
 
         if (toolchain.isValid()) {
             JMeterLoader.initLoader(toolchain, this.javaClass.classLoader)

@@ -72,4 +72,6 @@ class JmxFileEditor(
         val instanceGui = this.getUserData(value)
         instanceGui?.let { GuiPackage.setInstance(instanceGui) }
     }
+
+    fun getProject(): Project = projectArg
 }
