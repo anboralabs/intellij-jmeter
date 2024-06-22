@@ -29,6 +29,7 @@
     <extensions defaultExtensionNs="co.anbora.labs.jmeter.jmeter-intellij">
         <toolchainFlavor implementation="co.anbora.labs.jmeter.ide.toolchain.flavors.JMeterSysPathToolchainFlavor" />
         <routerActions order="first" implementation="co.anbora.labs.jmeter.router.actions.flavors.JMeterDefaultCommands"/>
+        <checker implementation="co.anbora.labs.jmeter.ide.checker.flavors.JMeterChecker"/>
     </extensions>
 
     <extensionPoints>
@@ -36,6 +37,8 @@
                         dynamic="true" name="toolchainFlavor"/>
         <extensionPoint interface="co.anbora.labs.jmeter.router.actions.RouterActionsFlavor"
                         dynamic="true" name="routerActions"/>
+        <extensionPoint interface="co.anbora.labs.jmeter.ide.checker.CheckerFlavor"
+                        dynamic="true" name="checker"/>
     </extensionPoints>
 
     <projectListeners>
@@ -50,5 +53,8 @@
         <action id="co.anbora.labs.jmeter.ide.actions.RestartIDEAction"
                 class="co.anbora.labs.jmeter.ide.actions.RestartIDEAction"
                 text="Restart" />
+        <action id="co.anbora.labs.jmeter.ide.actions.BuyLicense"
+                class="co.anbora.labs.jmeter.ide.actions.BuyLicense"
+                text="Buy" />
     </actions>
 </idea-plugin>

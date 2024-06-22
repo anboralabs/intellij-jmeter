@@ -1,5 +1,6 @@
 package co.anbora.labs.jmeter.ide.notifications
 
+import co.anbora.labs.jmeter.ide.actions.BuyLicense
 import co.anbora.labs.jmeter.ide.icons.JmeterIcons
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationGroupManager
@@ -36,5 +37,16 @@ object JMeterNotifications {
         } catch (e: Exception) {
             notification.notify(project)
         }
+    }
+
+    fun supportNotification(project: Project?) {
+        val notification = createNotification(
+            "Support JMeter Plugin",
+            "Buy the freemium license; 1 USD per year",
+            NotificationType.WARNING,
+            BuyLicense()
+        )
+
+        showNotification(notification, project)
     }
 }

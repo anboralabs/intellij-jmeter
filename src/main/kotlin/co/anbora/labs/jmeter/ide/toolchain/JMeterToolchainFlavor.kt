@@ -2,7 +2,7 @@ package co.anbora.labs.jmeter.ide.toolchain
 
 import co.anbora.labs.jmeter.ide.settings.JMeterConfigurationUtil
 import com.intellij.openapi.extensions.ExtensionPointName
-import com.intellij.util.io.isDirectory
+import java.nio.file.Files
 import java.nio.file.Path
 
 abstract class JMeterToolchainFlavor {
@@ -24,9 +24,9 @@ abstract class JMeterToolchainFlavor {
      * @return true if paths points to a valid home.
      */
     protected open fun isValidToolchainPath(path: Path): Boolean {
-        return path.isDirectory()
-                && path.resolve(JMeterConfigurationUtil.STANDARD_BIN_PATH).isDirectory()
-                && path.resolve(JMeterConfigurationUtil.STANDARD_LIB_PATH).isDirectory()
+        return Files.isDirectory(path)
+                && Files.isDirectory(path.resolve(JMeterConfigurationUtil.STANDARD_BIN_PATH))
+                && Files.isDirectory(path.resolve(JMeterConfigurationUtil.STANDARD_LIB_PATH))
     }
 
     companion object {
