@@ -1,11 +1,11 @@
 package co.anbora.labs.jmeter.ide.actions
 
-import co.anbora.labs.jmeter.ide.license.CheckLicense
+import com.intellij.ide.BrowserUtil
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
 
 class BuyLicense: DumbAwareAction("Buy") {
     override fun actionPerformed(e: AnActionEvent) {
-        CheckLicense.requestLicense("Support plugin development.")
+        BrowserUtil.browse("https://plugins.jetbrains.com/plugin/22087-jmeter-viewer")
     }
 }
