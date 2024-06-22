@@ -7,9 +7,6 @@ import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.ui.LicensingFacade;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.Signature;
@@ -31,6 +28,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CheckLicense {
   /**
@@ -147,9 +146,9 @@ public class CheckLicense {
   public static void requestLicense(final String message) {
     // ensure the dialog is appeared from UI thread and in a non-modal context
     ApplicationManager.getApplication().invokeLater(
-        () -> showRegisterDialog(PRODUCT_CODE, message),
-        ModalityState.nonModal()
-    );
+        ()
+            -> showRegisterDialog(PRODUCT_CODE, message),
+        ModalityState.nonModal());
   }
 
   private static void showRegisterDialog(final String productCode,
@@ -339,7 +338,7 @@ public class CheckLicense {
     } catch (Exception e) {
       // debug the reason here
     }
-    throw new Exception(
-        "Certificate used to sign the license is not signed by JetBrains root certificate");
+    throw new Exception("Certificate used to sign the license is not signed " +
+                        "by JetBrains root certificate");
   }
 }
