@@ -20,7 +20,7 @@
                 instance="co.anbora.labs.jmeter.ide.settings.JMeterProjectSettingsConfigurable" />
         <fileType name="Jmeter" implementationClass="co.anbora.labs.jmeter.fileTypes.JmxFileType"
                   fieldName="INSTANCE" extensions="jmx"/>
-        <fileEditorProvider implementation="co.anbora.labs.jmeter.ide.editor.JmeterEditorProvider"/>
+        <fileEditorProvider implementation="co.anbora.labs.jmeter.ide.editor.JMeterEditorProvider"/>
         <postStartupActivity implementation="co.anbora.labs.jmeter.ide.startup.InitConfigFiles" />
         <notificationGroup id="JMeter_Notification" displayType="STICKY_BALLOON"/>
 
