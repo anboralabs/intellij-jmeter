@@ -4,7 +4,6 @@ import co.anbora.labs.jmeter.fileTypes.JmxFileType
 import co.anbora.labs.jmeter.ide.editor.gui.JmxFileEditor
 import co.anbora.labs.jmeter.ide.editor.gui.NotConfiguredFileEditor
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
-import com.intellij.diff.editor.DiffVirtualFile
 import com.intellij.openapi.fileEditor.AsyncFileEditorProvider
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorPolicy
@@ -16,13 +15,12 @@ import com.intellij.psi.SingleRootFileViewProvider
 
 private const val EDITOR_TYPE_ID = "co.anbora.labs.jmeter.editor"
 
-class JmeterEditorProvider: AsyncFileEditorProvider, DumbAware {
+class JMeterEditorProvider: AsyncFileEditorProvider, DumbAware {
 
     override fun accept(project: Project, file: VirtualFile): Boolean {
         return isJmeterFile(file)
                 && !SingleRootFileViewProvider.isTooLargeForContentLoading(file)
                 && !SingleRootFileViewProvider.isTooLargeForIntelligence(file)
-                && file !is DiffVirtualFile
     }
 
     private fun isJmeterFile(file: VirtualFile): Boolean {

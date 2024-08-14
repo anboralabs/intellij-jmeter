@@ -408,8 +408,8 @@ public abstract class JMeterPluginsUtils {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-      if ((e.getModifiers() & InputEvent.BUTTON1_MASK) ==
-          InputEvent.BUTTON1_MASK) {
+      if ((e.getModifiersEx() & InputEvent.BUTTON1_DOWN_MASK) ==
+          InputEvent.BUTTON1_DOWN_MASK) {
         openInBrowser(uri);
       }
     }
