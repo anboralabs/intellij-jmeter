@@ -143,7 +143,7 @@ public class CheckLicense {
     return false;
   }
 
-  public static void requestLicense(final String message) {
+  /*public static void requestLicense(final String message) {
     // ensure the dialog is appeared from UI thread and in a non-modal context
     ApplicationManager.getApplication().invokeLater(
         ()
@@ -165,7 +165,7 @@ public class CheckLicense {
       registerAction.actionPerformed(AnActionEvent.createFromDataContext(
           "", new Presentation(), asDataContext(productCode, message)));
     }
-  }
+  }*/
 
   // This creates a DataContext providing additional information for the license
   // UI The "Register*" actions show the registration dialog and expect to find
@@ -174,7 +174,7 @@ public class CheckLicense {
   // pre-selected in the opened dialog
   // - message: optional message explaining the reason why the dialog has been
   // shown
-  @NotNull
+  /*@NotNull
   private static DataContext asDataContext(final String productCode,
                                            @Nullable String message) {
     return dataId -> {
@@ -191,7 +191,7 @@ public class CheckLicense {
         return null;
       }
     };
-  }
+  }*/
 
   private static boolean isEvaluationValid(String expirationTime) {
     try {
