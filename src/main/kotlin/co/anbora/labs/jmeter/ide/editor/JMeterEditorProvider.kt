@@ -1,6 +1,6 @@
 package co.anbora.labs.jmeter.ide.editor
 
-import co.anbora.labs.jmeter.fileTypes.JmxFileType
+import co.anbora.labs.jmeter.fileTypes.JMeterFileType
 import co.anbora.labs.jmeter.ide.editor.gui.JmxFileEditor
 import co.anbora.labs.jmeter.ide.editor.gui.NotConfiguredFileEditor
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
@@ -25,7 +25,7 @@ class JMeterEditorProvider: AsyncFileEditorProvider, DumbAware {
 
     private fun isJmeterFile(file: VirtualFile): Boolean {
         val fileType = FileTypeRegistry.getInstance().getFileTypeByExtension(file.extension.orEmpty())
-        return fileType == JmxFileType
+        return fileType == JMeterFileType
     }
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor = createJMeterEditor(project, file)

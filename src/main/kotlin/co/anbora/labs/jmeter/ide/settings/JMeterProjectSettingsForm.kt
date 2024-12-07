@@ -9,14 +9,14 @@ import com.intellij.ui.dsl.builder.panel
 import org.apache.jmeter.util.JMeterUtils
 import java.nio.file.Path
 
-class JMeterProjectSettingsForm(private val project: Project?, private val model: Model) {
+class JMeterProjectSettingsForm(private val project: Project, private val model: Model) {
 
     data class Model(
         var homeLocation: String,
     )
 
     private val mainPanel: DialogPanel
-    private val toolchainChooser = ToolchainChooserComponent({ showNewToolchainDialog() }) { onSelect(it) }
+    private val toolchainChooser = ToolchainChooserComponent(project, { showNewToolchainDialog() }) { onSelect(it) }
 
     private fun showNewToolchainDialog() {
         val dialog = JMeterNewToolchainDialog(createFilterKnownToolchains(), project)
