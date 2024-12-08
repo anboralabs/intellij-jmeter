@@ -1,5 +1,6 @@
 package co.anbora.labs.jmeter.ide.toolchain
 
+import co.anbora.labs.jmeter.ide.settings.ui.NullToolchain
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -15,7 +16,7 @@ class JMeterToolchainService: PersistentStateComponent<JMeterToolchainService.To
         get() = state.toolchainLocation
 
     @Volatile
-    private var toolchain: JMeterToolchain = JMeterToolchain.NULL
+    private var toolchain: JMeterToolchain = NullToolchain
 
     fun setToolchain(newToolchain: JMeterToolchain) {
         toolchain = newToolchain
@@ -24,13 +25,13 @@ class JMeterToolchainService: PersistentStateComponent<JMeterToolchainService.To
 
     fun toolchain(): JMeterToolchain {
         val currentLocation = state.toolchainLocation
-        if (toolchain == JMeterToolchain.NULL && currentLocation.isNotEmpty()) {
+        if (toolchain == NullToolchain && currentLocation.isNotEmpty()) {
             setToolchain(JMeterToolchain.fromPath(currentLocation))
         }
         return toolchain
     }
 
-    fun isNotSet(): Boolean = toolchain == JMeterToolchain.NULL
+    fun isNotSet(): Boolean = toolchain == NullToolchain
 
     override fun getState() = state
 

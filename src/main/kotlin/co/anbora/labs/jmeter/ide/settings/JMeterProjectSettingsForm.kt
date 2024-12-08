@@ -1,6 +1,7 @@
 package co.anbora.labs.jmeter.ide.settings
 
 import co.anbora.labs.jmeter.ide.toolchain.JMeterKnownToolchainsState
+import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchain
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Condition
@@ -39,9 +40,9 @@ class JMeterProjectSettingsForm(private val project: Project, private val model:
         }
     }
 
-    private fun onSelect(toolchainInfo: ToolchainInfo) {
-        model.homeLocation = toolchainInfo.location
-        JMeterUtils.initializeJMeter(toolchainInfo.location)
+    private fun onSelect(toolchainInfo: JMeterToolchain) {
+        model.homeLocation = toolchainInfo.homePath()
+        JMeterUtils.initializeJMeter(toolchainInfo.homePath())
     }
 
     init {
@@ -53,7 +54,7 @@ class JMeterProjectSettingsForm(private val project: Project, private val model:
         }
 
         // setup initial location
-        model.homeLocation = toolchainChooser.selectedToolchain()?.location ?: ""
+        model.homeLocation = toolchainChooser.selectedToolchain()?.homePath() ?: ""
     }
 
     fun createComponent() = mainPanel

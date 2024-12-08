@@ -1,6 +1,8 @@
 package co.anbora.labs.jmeter.ide.toolchain
 
 import co.anbora.labs.jmeter.ide.settings.JMeterConfigurationUtil
+import co.anbora.labs.jmeter.ide.settings.JMeterConfigurationUtil.UNDEFINED_VERSION
+import co.anbora.labs.jmeter.ide.settings.JMeterConfigurationUtil.UNKNOWN_VERSION
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.isFile
@@ -43,6 +45,8 @@ class JMeterLocalToolchain(
                 && isValidDir(stdlibDir())
                 && isValidDir(stdlibExtDir())
                 && isValidDir(stdlibJunitDir())
+                && version() != UNDEFINED_VERSION
+                && version() != UNKNOWN_VERSION
     }
 
     private fun isValidDir(dir: VirtualFile?): Boolean {
