@@ -20,7 +20,8 @@ import javax.swing.DefaultComboBoxModel
 
 class ToolchainChooserComponent(
     private val project: Project,
-    private val browseActionListener: Runnable,
+    private val addAction: Runnable,
+    private val downloadAction: Runnable,
     private val onSelectAction: (JMeterToolchain) -> Unit
 ): ComponentWithBrowseButton<ComboBox<JMeterToolchain>>(ComboBox<JMeterToolchain>(), null) {
 
@@ -72,9 +73,12 @@ class ToolchainChooserComponent(
         when (val selected = this.getToolchainRef()) {
             is AddToolchain -> {
                 this.comboBox.setSelectedItem(this.myLastSelectedItem)
-                ApplicationManager.getApplication().invokeLater(browseActionListener , ModalityState.current())
+                ApplicationManager.getApplication().invokeLater(addAction , ModalityState.current())
             }
-            is DownloadToolchain -> {}
+            is DownloadToolchain -> {
+                this.comboBox.setSelectedItem(this.myLastSelectedItem)
+                ApplicationManager.getApplication().invokeLater(downloadAction , ModalityState.current())
+            }
             is NullToolchain -> Unit
             else -> {
                 if (this.myLastSelectedItem != selected) {

@@ -17,7 +17,11 @@ class JMeterProjectSettingsForm(private val project: Project, private val model:
     )
 
     private val mainPanel: DialogPanel
-    private val toolchainChooser = ToolchainChooserComponent(project, { showNewToolchainDialog() }) { onSelect(it) }
+    private val toolchainChooser = ToolchainChooserComponent(
+        project,
+        { showNewToolchainDialog() },
+        { downloadNewToolchain() }
+    ) { onSelect(it) }
 
     private fun showNewToolchainDialog() {
         val dialog = JMeterNewToolchainDialog(createFilterKnownToolchains(), project)
@@ -33,10 +37,19 @@ class JMeterProjectSettingsForm(private val project: Project, private val model:
         }
     }
 
+
+
     private fun createFilterKnownToolchains(): Condition<Path> {
         val knownToolchains = JMeterKnownToolchainsState.getInstance().knownToolchains
         return Condition { path ->
             knownToolchains.none { it == path.toAbsolutePath().toString() }
+        }
+    }
+
+    private fun downloadNewToolchain() {
+        val dialog = JMeterDownloadToolchainDialog(project)
+        if (!dialog.showAndGet()) {
+            return
         }
     }
 
