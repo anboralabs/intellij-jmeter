@@ -37,8 +37,6 @@ class JMeterProjectSettingsForm(private val project: Project, private val model:
         }
     }
 
-
-
     private fun createFilterKnownToolchains(): Condition<Path> {
         val knownToolchains = JMeterKnownToolchainsState.getInstance().knownToolchains
         return Condition { path ->
@@ -50,6 +48,13 @@ class JMeterProjectSettingsForm(private val project: Project, private val model:
         val dialog = JMeterDownloadToolchainDialog(project)
         if (!dialog.showAndGet()) {
             return
+        }
+
+        toolchainChooser.refresh()
+
+        val addedToolchain = dialog.addedToolchain()
+        if (addedToolchain != null) {
+            toolchainChooser.select(addedToolchain)
         }
     }
 

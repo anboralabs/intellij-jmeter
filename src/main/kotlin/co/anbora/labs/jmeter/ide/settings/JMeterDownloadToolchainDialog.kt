@@ -1,6 +1,10 @@
 package co.anbora.labs.jmeter.ide.settings
 
 import co.anbora.labs.jmeter.ide.settings.ui.ReleaseListCellRenderer
+import co.anbora.labs.jmeter.ide.toolchain.JMeterKnownToolchainsState
+import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchain
+import co.anbora.labs.jmeter.ide.utils.DownloadHelper
+import co.anbora.labs.jmeter.ide.utils.toPath
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.project.Project
@@ -14,7 +18,7 @@ import com.intellij.ui.layout.ValidationInfoBuilder
 import javax.swing.JComponent
 
 class JMeterDownloadToolchainDialog(
-    project: Project
+    val project: Project
 ): DialogWrapper(project) {
 
     data class LocationModel (
@@ -23,13 +27,14 @@ class JMeterDownloadToolchainDialog(
 
     private val mainPanel: DialogPanel
     private val model: LocationModel = LocationModel("${PathManager.getConfigDir()}")
+    private lateinit var releaseField: Cell<ComboBox<JMeterRelease>>
 
     init {
         title = "Download JMeter"
 
         mainPanel = panel {
             row("Version:") {
-                comboBox(Releases.Versions, ReleaseListCellRenderer())
+                releaseField = comboBox(Releases.Versions, ReleaseListCellRenderer())
                     .columns(COLUMNS_LARGE)
                     .align(AlignX.FILL)
             }
@@ -60,8 +65,25 @@ class JMeterDownloadToolchainDialog(
         return null
     }
 
-    override fun doOKAction() {
+    fun addedToolchain(): String? {
+        return if (exitCode == OK_EXIT_CODE) model.location else null
+    }
 
-        super.doOKAction()
+    override fun doOKAction() {
+        val release = releaseField.component.item
+        val location = model.location.toPath()
+
+        val installed = location.resolve(release.destinationFolder)
+
+        if (JMeterKnownToolchainsState.getInstance().isKnown(installed.toString())) {
+            setErrorText("This location is already added")
+            return
+        }
+
+        DownloadHelper.downloadAsync(project, release, location) {
+            JMeterKnownToolchainsState.getInstance().add(JMeterToolchain.fromPath(installed.toString()))
+
+            super.doOKAction()
+        }
     }
 }
