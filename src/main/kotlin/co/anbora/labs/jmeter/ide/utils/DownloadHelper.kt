@@ -21,7 +21,13 @@ import java.util.zip.ZipFile
 
 object DownloadHelper {
 
-    fun downloadAsync(project: Project, release: JMeterRelease, downloadPath: Path, consumer: Consumer<Unit>) {
+    fun downloadAsync(
+        project: Project,
+        release: JMeterRelease,
+        downloadPath: Path,
+        onSuccess: Consumer<Unit>,
+        onError: Consumer<Throwable>
+    ) {
         val dlFilePath = downloadPath.resolve(release.getZipName())
         ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Downloading JMeter ${release.name}", false) {
             override fun run(progressIndicator: ProgressIndicator) {
@@ -36,12 +42,16 @@ object DownloadHelper {
                         this@DownloadHelper.uncompress(dlFilePath, downloadPath)
                     }
                 } catch (ex: IOException) {
-
+                    onError.accept(ex)
                 }
             }
 
+            override fun shouldStartInBackground(): Boolean = false
+
+            override fun isConditionalModal(): Boolean = true
+
             override fun onFinished() {
-                consumer.accept(Unit)
+                onSuccess.accept(Unit)
             }
         })
     }

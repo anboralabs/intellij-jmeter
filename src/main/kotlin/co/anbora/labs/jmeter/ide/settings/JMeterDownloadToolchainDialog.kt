@@ -18,7 +18,8 @@ import com.intellij.ui.layout.ValidationInfoBuilder
 import javax.swing.JComponent
 
 class JMeterDownloadToolchainDialog(
-    val project: Project
+    val project: Project,
+    private val onDownloadJMeter: (path: String) -> Unit
 ): DialogWrapper(project) {
 
     data class LocationModel (
@@ -65,10 +66,6 @@ class JMeterDownloadToolchainDialog(
         return null
     }
 
-    fun addedToolchain(): String? {
-        return if (exitCode == OK_EXIT_CODE) model.location else null
-    }
-
     override fun doOKAction() {
         val release = releaseField.component.item
         val location = model.location.toPath()
@@ -80,10 +77,14 @@ class JMeterDownloadToolchainDialog(
             return
         }
 
-        DownloadHelper.downloadAsync(project, release, location) {
-            JMeterKnownToolchainsState.getInstance().add(JMeterToolchain.fromPath(installed.toString()))
+        DownloadHelper.downloadAsync(project, release, location, {
+            val newPath = installed.toString()
+            JMeterKnownToolchainsState.getInstance().add(JMeterToolchain.fromPath(newPath))
+            onDownloadJMeter(newPath)
 
             super.doOKAction()
-        }
+        }, { exception ->
+            setErrorText(exception.message)
+        })
     }
 }

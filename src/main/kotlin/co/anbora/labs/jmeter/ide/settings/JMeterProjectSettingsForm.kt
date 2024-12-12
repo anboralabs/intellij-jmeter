@@ -45,16 +45,12 @@ class JMeterProjectSettingsForm(private val project: Project, private val model:
     }
 
     private fun downloadNewToolchain() {
-        val dialog = JMeterDownloadToolchainDialog(project)
+        val dialog = JMeterDownloadToolchainDialog(project) { path ->
+            toolchainChooser.refresh()
+            toolchainChooser.select(path)
+        }
         if (!dialog.showAndGet()) {
             return
-        }
-
-        toolchainChooser.refresh()
-
-        val addedToolchain = dialog.addedToolchain()
-        if (addedToolchain != null) {
-            toolchainChooser.select(addedToolchain)
         }
     }
 
