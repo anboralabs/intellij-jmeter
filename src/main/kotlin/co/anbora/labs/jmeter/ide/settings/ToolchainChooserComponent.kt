@@ -39,7 +39,7 @@ class ToolchainChooserComponent(
         this.addActionListener { e: ActionEvent? -> this.showInterpretersDialog(e) }
         this.comboBox.setModel(this.myModel)
         this.comboBox.renderer = JMeterListCellRenderer()
-        // this.comboBox.setMinimumAndPreferredWidth(0)
+        this.comboBox.setMinimumAndPreferredWidth(0)
         this.myModel.addElement(toolchainSettings.toolchain())
         this.myModel.selectedItem = toolchainSettings.toolchain()
         this.updateDropDownList()
