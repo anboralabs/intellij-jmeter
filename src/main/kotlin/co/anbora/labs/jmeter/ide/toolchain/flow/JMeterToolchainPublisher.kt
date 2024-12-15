@@ -11,6 +11,7 @@ class JMeterToolchainPublisher: SubmissionPublisher<Set<String>>(
 
     fun publish(value: Set<String>) {
         this.value = value
+        super.submit(this.value)
     }
 
     override fun subscribe(subscriber: Flow.Subscriber<in Set<String>>) {

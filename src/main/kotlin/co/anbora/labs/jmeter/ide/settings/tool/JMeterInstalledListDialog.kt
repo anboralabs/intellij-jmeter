@@ -40,7 +40,9 @@ class JMeterInstalledListDialog(
             .setAddAction {
                 ApplicationManager.getApplication().invokeLater(addAction , ModalityState.current())
             }
-            .setRemoveAction {  }
+            .setRemoveAction {
+                this@JMeterInstalledListDialog.remove()
+            }
             .addExtraActions(DownloadExternalAction(downloadAction))
             .disableUpDownActions()
 
@@ -69,6 +71,13 @@ class JMeterInstalledListDialog(
 
     private fun fillList(installed: List<JMeterToolchain>) {
         this.myListModel.addAll(installed)
+    }
+
+    private fun remove() {
+        val selected = this.myList.selectedValue
+        if (selected != null) {
+            JMeterKnownToolchainsState.getInstance().remove(selected)
+        }
     }
 
     override fun createCenterPanel(): JComponent = this.myCenterPanelComponent

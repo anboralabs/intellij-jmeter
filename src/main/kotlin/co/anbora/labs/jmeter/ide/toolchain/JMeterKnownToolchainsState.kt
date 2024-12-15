@@ -31,6 +31,11 @@ class JMeterKnownToolchainsState : PersistentStateComponent<JMeterKnownToolchain
         toolchainPublisher.publish(knownToolchains)
     }
 
+    fun remove(toolchain: JMeterToolchain) {
+        knownToolchains = knownToolchains - toolchain.homePath()
+        toolchainPublisher.publish(knownToolchains)
+    }
+
     fun subscribe(subscriber: Flow.Subscriber<Set<String>>) {
         toolchainPublisher.subscribe(subscriber)
     }
