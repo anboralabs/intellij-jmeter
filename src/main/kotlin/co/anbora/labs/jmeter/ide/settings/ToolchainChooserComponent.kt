@@ -1,5 +1,6 @@
 package co.anbora.labs.jmeter.ide.settings
 
+import co.anbora.labs.jmeter.ide.settings.tool.JMeterInstalledListDialog
 import co.anbora.labs.jmeter.ide.settings.ui.AddToolchain
 import co.anbora.labs.jmeter.ide.settings.ui.DownloadToolchain
 import co.anbora.labs.jmeter.ide.settings.ui.JMeterListCellRenderer
@@ -51,7 +52,8 @@ class ToolchainChooserComponent(
     }
 
     private fun showInterpretersDialog(e: ActionEvent?) {
-
+        val dialog = JMeterInstalledListDialog(project, addAction, downloadAction)
+        dialog.showAndGet()
     }
 
     private fun updateDropDownList() {
