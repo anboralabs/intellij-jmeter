@@ -27,10 +27,8 @@ class ToolchainChooserComponent(
 ): ComponentWithBrowseButton<ComboBox<JMeterToolchain>>(ComboBox<JMeterToolchain>(), null) {
 
     private val comboBox = childComponent
-    private val knownToolchains get() = JMeterKnownToolchainsState.getInstance().knownToolchains
-    private var knownToolchainInfos = knownToolchains
-        .map { JMeterToolchain.fromPath(it) }
-        .filter { it.isValid() }
+    private val knownToolchains get() = JMeterKnownToolchainsState.getInstance().knownToolchains()
+    private var knownToolchainInfos = JMeterKnownToolchainsState.getInstance().knownToolchains()
 
     private var myLastSelectedItem: JMeterToolchain = toolchainSettings.toolchain()
     private val myModel: ToolchainComboBoxModel = ToolchainComboBoxModel()
@@ -106,8 +104,6 @@ class ToolchainChooserComponent(
     fun refresh() {
         comboBox.removeAllItems()
         knownToolchainInfos = knownToolchains
-            .map { JMeterToolchain.fromPath(it) }
-            .filter { it.isValid() }
 
         updateDropDownList()
     }

@@ -6,7 +6,7 @@ import java.util.logging.Logger
 
 class JMeterToolchainSubscriber(
     private val callback: (List<JMeterToolchain>) -> Unit,
-): Flow.Subscriber<Set<String>> {
+): Flow.Subscriber<Set<JMeterToolchain>> {
 
     private val logger = Logger.getLogger(JMeterToolchainSubscriber::class.simpleName)
 
@@ -25,11 +25,8 @@ class JMeterToolchainSubscriber(
         this.logger.info { "Completed." }
     }
 
-    override fun onNext(item: Set<String>) {
-        val installed = item
-            .map { JMeterToolchain.fromPath(it) }
-            .filter { it.isValid() }
-            .toList()
+    override fun onNext(item: Set<JMeterToolchain>) {
+        val installed = item.toList()
         this.callback(installed)
         this.subscription.request(1)
     }

@@ -38,9 +38,9 @@ class JMeterProjectSettingsForm(private val project: Project, private val model:
     }
 
     private fun createFilterKnownToolchains(): Condition<Path> {
-        val knownToolchains = JMeterKnownToolchainsState.getInstance().knownToolchains
+        val knownToolchains = JMeterKnownToolchainsState.getInstance().knownToolchains()
         return Condition { path ->
-            knownToolchains.none { it == path.toAbsolutePath().toString() }
+            knownToolchains.none { it.homePath() == path.toAbsolutePath().toString() }
         }
     }
 

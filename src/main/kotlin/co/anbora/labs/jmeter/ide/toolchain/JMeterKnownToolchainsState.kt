@@ -17,7 +17,12 @@ class JMeterKnownToolchainsState : PersistentStateComponent<JMeterKnownToolchain
         fun getInstance() = service<JMeterKnownToolchainsState>()
     }
 
-    var knownToolchains: Set<String> = emptySet()
+    private var knownToolchains: Set<String> = emptySet()
+
+    @Volatile
+    private var jMeterToolchains: MutableSet<JMeterToolchain> = mutableSetOf()
+
+    fun knownToolchains(): Set<JMeterToolchain> = jMeterToolchains
 
     @Volatile
     private var toolchainPublisher = JMeterToolchainPublisher()
@@ -28,15 +33,17 @@ class JMeterKnownToolchainsState : PersistentStateComponent<JMeterKnownToolchain
 
     fun add(toolchain: JMeterToolchain) {
         knownToolchains = knownToolchains + toolchain.homePath()
-        toolchainPublisher.publish(knownToolchains)
+        jMeterToolchains.add(toolchain)
+        toolchainPublisher.publish(jMeterToolchains)
     }
 
     fun remove(toolchain: JMeterToolchain) {
         knownToolchains = knownToolchains - toolchain.homePath()
-        toolchainPublisher.publish(knownToolchains)
+        jMeterToolchains.remove(toolchain)
+        toolchainPublisher.publish(jMeterToolchains)
     }
 
-    fun subscribe(subscriber: Flow.Subscriber<Set<String>>) {
+    fun subscribe(subscriber: Flow.Subscriber<Set<JMeterToolchain>>) {
         toolchainPublisher.subscribe(subscriber)
     }
 
@@ -44,6 +51,7 @@ class JMeterKnownToolchainsState : PersistentStateComponent<JMeterKnownToolchain
 
     override fun loadState(state: JMeterKnownToolchainsState) {
         XmlSerializerUtil.copyBean(state, this)
-        toolchainPublisher.publish(knownToolchains)
+        jMeterToolchains = knownToolchains.map { JMeterToolchain.fromPath(it) }.toMutableSet()
+        toolchainPublisher.publish(jMeterToolchains)
     }
 }
