@@ -17,7 +17,7 @@ class JMeterKnownToolchainsState : PersistentStateComponent<JMeterKnownToolchain
         fun getInstance() = service<JMeterKnownToolchainsState>()
     }
 
-    private var knownToolchains: Set<String> = emptySet()
+    var knownToolchains: Set<String> = emptySet()
 
     @Volatile
     private var jMeterToolchains: MutableSet<JMeterToolchain> = mutableSetOf()
