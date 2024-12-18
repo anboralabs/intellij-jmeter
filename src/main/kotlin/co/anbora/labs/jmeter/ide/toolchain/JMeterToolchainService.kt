@@ -1,6 +1,8 @@
 package co.anbora.labs.jmeter.ide.toolchain
 
 import co.anbora.labs.jmeter.ide.settings.ui.NullToolchain
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -23,20 +25,22 @@ class JMeterToolchainService: PersistentStateComponent<JMeterToolchainService.To
         state.toolchainLocation = newToolchain.homePath()
     }
 
-    fun toolchain(): JMeterToolchain {
-        val currentLocation = state.toolchainLocation
-        if (toolchain == NullToolchain && currentLocation.isNotEmpty()) {
-            setToolchain(JMeterToolchain.fromPath(currentLocation))
-        }
-        return toolchain
-    }
-
-    fun isNotSet(): Boolean = toolchain == NullToolchain
+    fun toolchain(): JMeterToolchain = toolchain
 
     override fun getState() = state
 
     override fun loadState(state: ToolchainState) {
         XmlSerializerUtil.copyBean(state, this.state)
+    }
+
+    override fun initializeComponent() {
+        val app = ApplicationManager.getApplication()
+        app.executeOnPooledThread {
+            val currentLocation = state.toolchainLocation
+            if (toolchain == NullToolchain && currentLocation.isNotEmpty()) {
+                setToolchain(JMeterToolchain.fromPath(currentLocation))
+            }
+        }.get()
     }
 
     companion object {

@@ -12,7 +12,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.Disposer
 import javax.swing.JComponent
 
-class JMeterProjectSettingsConfigurable(private val project: Project) : Configurable, Disposable {
+class JMeterProjectSettingsConfigurable(private val project: Project) : Configurable {
 
     private val mainPanel: DialogPanel
     private val model = JMeterProjectSettingsForm.Model(
@@ -23,7 +23,8 @@ class JMeterProjectSettingsConfigurable(private val project: Project) : Configur
     init {
         mainPanel = settingsForm.createComponent()
 
-        mainPanel.registerValidators(this)
+        //val disposable = Disposer.newDisposable()
+        //mainPanel.registerValidators(disposable)
     }
 
     override fun createComponent(): JComponent = mainPanel
@@ -71,8 +72,5 @@ class JMeterProjectSettingsConfigurable(private val project: Project) : Configur
         fun show(project: Project) {
             ShowSettingsUtil.getInstance().showSettingsDialog(project, JMeterProjectSettingsConfigurable::class.java)
         }
-    }
-
-    override fun dispose() {
     }
 }

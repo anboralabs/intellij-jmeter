@@ -12,7 +12,6 @@ import com.intellij.openapi.startup.ProjectActivity
 import org.apache.jmeter.JMeter
 import org.apache.jmeter.gui.action.ActionRouter
 import org.apache.jmeter.plugin.PluginManager
-import org.apache.jmeter.util.JMeterUtils
 
 class InitConfigFiles: ProjectActivity {
 

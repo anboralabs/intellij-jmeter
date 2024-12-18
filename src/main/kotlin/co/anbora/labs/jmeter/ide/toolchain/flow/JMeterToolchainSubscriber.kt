@@ -10,11 +10,11 @@ class JMeterToolchainSubscriber(
 
     private val logger = Logger.getLogger(JMeterToolchainSubscriber::class.simpleName)
 
-    private lateinit var subscription: Flow.Subscription
+    private var subscription: Flow.Subscription? = null
 
-    override fun onSubscribe(subscription: Flow.Subscription) {
+    override fun onSubscribe(subscription: Flow.Subscription?) {
         this.subscription = subscription
-        this.subscription.request(1)
+        this.subscription?.request(1)
     }
 
     override fun onError(throwable: Throwable) {
@@ -28,10 +28,10 @@ class JMeterToolchainSubscriber(
     override fun onNext(item: Set<JMeterToolchain>) {
         val installed = item.toList()
         this.callback(installed)
-        this.subscription.request(1)
+        this.subscription?.request(1)
     }
 
     fun unsubscribe() {
-        this.subscription.cancel()
+        this.subscription?.cancel()
     }
 }
