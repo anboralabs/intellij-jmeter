@@ -34,7 +34,7 @@ object JMeterConfigurationUtil {
 
         var result = ""
 
-        if (matcher.find()) {
+        while (matcher.find()) {
             result = matcher.group()
         }
 

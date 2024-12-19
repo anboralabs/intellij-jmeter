@@ -67,8 +67,8 @@ class JMeterNewToolchainDialog(private val toolchainFilter: Condition<Path>, pro
                     filter { toolchainFilter.value(it) }
         }
 
-        val disposable = Disposer.newDisposable()
-        mainPanel.registerValidators(disposable)
+        //val disposable = Disposer.newDisposable()
+        //mainPanel.registerValidators(disposable)
 
         init()
     }
@@ -102,7 +102,7 @@ class JMeterNewToolchainDialog(private val toolchainFilter: Condition<Path>, pro
         model.toolchainVersion = JMeterConfigurationUtil.guessToolchainVersion(model.toolchainLocation)
 
         if (model.toolchainVersion != JMeterConfigurationUtil.UNDEFINED_VERSION) {
-            model.stdlibLocation = model.toolchainLocation ?: ""
+            model.stdlibLocation = model.toolchainLocation
         } else {
             model.stdlibLocation = ""
         }

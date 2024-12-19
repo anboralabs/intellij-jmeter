@@ -18,7 +18,7 @@
                 displayName="JMeter"
                 id="preference.NewJMeterHomeConfigurable"
                 instance="co.anbora.labs.jmeter.ide.settings.JMeterProjectSettingsConfigurable" />
-        <fileType name="Jmeter" implementationClass="co.anbora.labs.jmeter.fileTypes.JmxFileType"
+        <fileType name="JMeter" implementationClass="co.anbora.labs.jmeter.fileTypes.JMeterFileType"
                   fieldName="INSTANCE" extensions="jmx"/>
         <fileEditorProvider implementation="co.anbora.labs.jmeter.ide.editor.JMeterEditorProvider"/>
         <postStartupActivity implementation="co.anbora.labs.jmeter.ide.startup.InitConfigFiles" />

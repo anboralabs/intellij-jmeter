@@ -1,38 +1,40 @@
 package co.anbora.labs.jmeter.ide.toolchain
 
 import co.anbora.labs.jmeter.ide.settings.JMeterConfigurationUtil
+import co.anbora.labs.jmeter.ide.settings.JMeterConfigurationUtil.UNDEFINED_VERSION
 import com.intellij.openapi.util.io.FileUtil
-import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.isFile
+import java.nio.file.Files
+import java.nio.file.Path
+import kotlin.io.path.pathString
 
 class JMeterLocalToolchain(
     private val version: String,
-    private val rootDir: VirtualFile,
+    private val rootDir: Path,
 ) : JMeterToolchain {
-    private val homePath = rootDir.path
+    private val homePath = rootDir.pathString
 
-    private val binDir = rootDir.findChild(JMeterConfigurationUtil.STANDARD_BIN_PATH)
-    private val stdConfig = binDir?.findChild(JMeterConfigurationUtil.STANDARD_JMETER_CONFIG)
+    private val binDir = rootDir.resolve(JMeterConfigurationUtil.STANDARD_BIN_PATH)
+    private val stdConfig = binDir.resolve(JMeterConfigurationUtil.STANDARD_JMETER_CONFIG)
 
-    private val libDir = rootDir.findChild(JMeterConfigurationUtil.STANDARD_LIB_PATH)
-    private val libExtDir = libDir?.findChild(JMeterConfigurationUtil.LIB_EXT_PATH)
-    private val libJunitDir = libDir?.findChild(JMeterConfigurationUtil.LIB_JUNIT_PATH)
+    private val libDir = rootDir.resolve(JMeterConfigurationUtil.STANDARD_LIB_PATH)
+    private val libExtDir = libDir.resolve(JMeterConfigurationUtil.LIB_EXT_PATH)
+    private val libJunitDir = libDir.resolve(JMeterConfigurationUtil.LIB_JUNIT_PATH)
 
     override fun name(): String = version
 
     override fun version(): String = version
 
-    override fun stdlibExtDir(): VirtualFile? = libExtDir
+    override fun stdlibExtDir(): Path = libExtDir
 
-    override fun stdlibJunitDir(): VirtualFile? = libJunitDir
+    override fun stdlibJunitDir(): Path = libJunitDir
 
-    override fun stdlibDir(): VirtualFile? = libDir
+    override fun stdlibDir(): Path = libDir
 
-    override fun stdBinDir(): VirtualFile? = binDir
+    override fun stdBinDir(): Path = binDir
 
-    override fun stdConfig(): VirtualFile? = stdConfig
+    override fun stdConfig(): Path = stdConfig
 
-    override fun rootDir(): VirtualFile = rootDir
+    override fun rootDir(): Path = rootDir
 
     override fun homePath(): String = homePath
 
@@ -43,16 +45,15 @@ class JMeterLocalToolchain(
                 && isValidDir(stdlibDir())
                 && isValidDir(stdlibExtDir())
                 && isValidDir(stdlibJunitDir())
+                && version() != UNDEFINED_VERSION
     }
 
-    private fun isValidDir(dir: VirtualFile?): Boolean {
-        return dir != null && dir.isValid
-                && dir.isInLocalFileSystem && dir.isDirectory
+    private fun isValidDir(dir: Path?): Boolean {
+        return dir != null && Files.isDirectory(dir)
     }
 
-    private fun isValidConfig(config: VirtualFile?): Boolean {
-        return config != null && config.isValid
-                && config.isInLocalFileSystem && config.isFile
+    private fun isValidConfig(config: Path?): Boolean {
+        return config != null && Files.isRegularFile(config)
     }
 
     override fun equals(other: Any?): Boolean {

@@ -2,14 +2,11 @@ package co.anbora.labs.jmeter.fileTypes
 
 import co.anbora.labs.jmeter.ide.icons.JmeterIcons
 import com.intellij.openapi.fileTypes.UserBinaryFileType
-import java.util.logging.Logger
 import javax.swing.Icon
 
-object JmxFileType: UserBinaryFileType() {
+object JMeterFileType: UserBinaryFileType() {
 
-    private const val FILETYPE_NAME = "Jmeter"
-
-    private val log = Logger.getLogger(JmxFileType::class.java.name)
+    private const val FILETYPE_NAME = "JMeter"
 
     const val EDITOR_NAME = "JMeter Details"
 
