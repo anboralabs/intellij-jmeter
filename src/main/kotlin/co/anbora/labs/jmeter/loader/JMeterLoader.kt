@@ -9,6 +9,7 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.util.*
 import java.util.logging.Logger
+import kotlin.io.path.pathString
 
 object JMeterLoader {
 
@@ -29,11 +30,13 @@ object JMeterLoader {
         val jars: MutableList<URL> = ArrayList()
         val usesUNC = OS_NAME_LC.startsWith("windows")
 
-        val libDirs = if (toolchain.isValid()) arrayOf(
-            File(toolchain.stdlibDir()?.path.orEmpty()),  // $NON-NLS-1$ $NON-NLS-2$
-            File(toolchain.stdlibExtDir()?.path.orEmpty()),  // $NON-NLS-1$ $NON-NLS-2$
-            File(toolchain.stdlibJunitDir()?.path.orEmpty())
+        val libTempDirs = if (toolchain.isValid()) arrayOf(
+            toolchain.stdlibDir()?.toFile(),  // $NON-NLS-1$ $NON-NLS-2$
+            toolchain.stdlibExtDir()?.toFile(),  // $NON-NLS-1$ $NON-NLS-2$
+            toolchain.stdlibExtDir()?.toFile()
         ) else arrayOf()// $NON-NLS-1$ $NON-NLS-2$
+
+        val libDirs = libTempDirs.filterNotNull()
 
         for (libDir in libDirs) {
             val libJars = libDir.listFiles { _: File?, name: String ->

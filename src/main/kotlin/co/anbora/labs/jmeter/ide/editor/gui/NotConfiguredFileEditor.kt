@@ -4,8 +4,6 @@ import co.anbora.labs.jmeter.ide.settings.JMeterProjectSettingsConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import java.awt.FlowLayout
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 
@@ -13,7 +11,7 @@ import javax.swing.border.EmptyBorder
 class NotConfiguredFileEditor(
     private val projectArg: Project,
     private val fileArg: VirtualFile
-): JMeterFileEditor(projectArg, fileArg) {
+): LocalFileEditor(projectArg, fileArg) {
     init {
         initComponents()
     }

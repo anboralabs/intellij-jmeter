@@ -81,7 +81,7 @@ class ToolchainChooserComponent(
             }
             is NullToolchain -> Unit
             else -> {
-                if (this.myLastSelectedItem != selected) {
+                if (this.myLastSelectedItem != selected && selected.isValid()) {
                     this.myLastSelectedItem = selected
                     this@ToolchainChooserComponent.onSelectAction(selected)
                 }

@@ -7,6 +7,7 @@ import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchain
 import co.anbora.labs.jmeter.ide.toolchain.flow.JMeterToolchainSubscriber
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ModalityState
+import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.ComponentUtil
@@ -14,6 +15,9 @@ import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.JBUI.Borders
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 import javax.swing.DefaultListModel
 import javax.swing.JComponent
 
@@ -76,7 +80,19 @@ class JMeterInstalledListDialog(
     private fun remove() {
         val selected = this.myList.selectedValue
         if (selected != null) {
-            JMeterKnownToolchainsState.getInstance().remove(selected)
+            val execution = ProgressManager.getInstance().runProcessWithProgressSynchronously(
+                {
+                    selected.rootDir()?.let {
+                        Files.walk(it).use { walk ->
+                            walk.sorted(Comparator.reverseOrder())
+                                .map(Path::toFile)
+                                .forEach(File::delete)
+                        }
+                    }
+                    JMeterKnownToolchainsState.getInstance().remove(selected)
+                }
+                , "Deleting JMeter ${selected.name()}", false, project
+            )
         }
     }
 

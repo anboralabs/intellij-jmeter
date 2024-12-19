@@ -20,9 +20,15 @@ class JMeterListCellRenderer: ColoredListCellRenderer<JMeterToolchain>() {
                 append(NullToolchain.name())
                 return
             }
-            !value.isValid() -> {
+            value is AddToolchain || value is DownloadToolchain || value is NullToolchain -> {
                 append(value.name())
                 return
+            }
+            !value.isValid() -> {
+                icon = JmeterIcons.FILE
+                append(value.version())
+                append("  ")
+                append(getPresentablePath(value.homePath()), SimpleTextAttributes.ERROR_ATTRIBUTES)
             }
             else -> {
                 icon = JmeterIcons.FILE
