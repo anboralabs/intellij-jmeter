@@ -134,6 +134,9 @@ class JMeterNewToolchainDialog(private val toolchainFilter: Condition<Path>, pro
 
         val version = JMeterConfigurationUtil.guessToolchainVersion(model.toolchainLocation)
         if (version == JMeterConfigurationUtil.UNDEFINED_VERSION) {
+            if (model.toolchainLocation.contains("homebrew")) {
+                return error("JMeter location is invalid, for homebrew installation please select libexec folder")
+            }
             return error("JMeter location is invalid, can't get version. Please check that bin folder contains ${JMeterConfigurationUtil.STANDARD_JMETER_CONFIG}")
         }
 
