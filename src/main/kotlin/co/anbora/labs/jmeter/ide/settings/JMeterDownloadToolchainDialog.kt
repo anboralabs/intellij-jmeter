@@ -44,7 +44,7 @@ class JMeterDownloadToolchainDialog(
                     .withTitle("Select Directory")
                     .withPathToTextConvertor(::getPresentablePath)
                     .withTextToPathConvertor(::getCanonicalPath)
-                textFieldWithBrowseButton("JMeter Directory", project, fileChooserDescriptor)
+                textFieldWithBrowseButton(fileChooserDescriptor, project)
                     .align(AlignX.FILL)
                     .bindText(model::location)
                     .trimmedTextValidation(CHECK_NON_EMPTY, CHECK_DIRECTORY)
