@@ -2,6 +2,7 @@ package co.anbora.labs.jmeter.ide.startup
 
 import co.anbora.labs.jmeter.ide.actions.SetupFilesAction
 import co.anbora.labs.jmeter.ide.checker.CheckerFlavor
+import co.anbora.labs.jmeter.ide.license.CheckLicense
 import co.anbora.labs.jmeter.ide.notifications.JMeterNotifications
 import co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService.Companion.toolchainSettings
 import co.anbora.labs.jmeter.loader.JMeterLoader

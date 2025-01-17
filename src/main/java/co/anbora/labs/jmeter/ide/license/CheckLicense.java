@@ -1,9 +1,7 @@
 package co.anbora.labs.jmeter.ide.license;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.ui.LicensingFacade;
@@ -143,7 +141,7 @@ public class CheckLicense {
     return false;
   }
 
-  /*public static void requestLicense(final String message) {
+  public static void requestLicense(final String message) {
     // ensure the dialog is appeared from UI thread and in a non-modal context
     ApplicationManager.getApplication().invokeLater(
         ()
@@ -162,10 +160,15 @@ public class CheckLicense {
       registerAction = actionManager.getAction("Register");
     }
     if (registerAction != null) {
-      registerAction.actionPerformed(AnActionEvent.createFromDataContext(
-          "", new Presentation(), asDataContext(productCode, message)));
+      ActionUtil.performActionDumbAwareWithCallbacks(registerAction, AnActionEvent.createEvent(
+              asDataContext(productCode, message),
+              new Presentation(),
+              "",
+              ActionUiKind.NONE,
+              null
+      ));
     }
-  }*/
+  }
 
   // This creates a DataContext providing additional information for the license
   // UI The "Register*" actions show the registration dialog and expect to find
@@ -174,24 +177,20 @@ public class CheckLicense {
   // pre-selected in the opened dialog
   // - message: optional message explaining the reason why the dialog has been
   // shown
-  /*@NotNull
+  @NotNull
   private static DataContext asDataContext(final String productCode,
                                            @Nullable String message) {
     return dataId -> {
-      switch (dataId) {
-      // the same code as registered in plugin.xml, 'product-descriptor' tag
-      case "register.product-descriptor.code":
-        return productCode;
+        return switch (dataId) {
+            // the same code as registered in plugin.xml, 'product-descriptor' tag
+            case "register.product-descriptor.code" -> productCode;
 
-      // optional message to be shown in the registration dialog that appears
-      case "register.message":
-        return message;
-
-      default:
-        return null;
-      }
+            // optional message to be shown in the registration dialog that appears
+            case "register.message" -> message;
+            default -> null;
+        };
     };
-  }*/
+  }
 
   private static boolean isEvaluationValid(String expirationTime) {
     try {
