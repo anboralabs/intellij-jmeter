@@ -4,7 +4,7 @@
     <name>JMeter Viewer</name>
     <vendor email="support@anbora.co" url="https://labs.anbora.co">Anbora-labs</vendor>
 
-    <product-descriptor code="PJMETERVIEWER" release-date="20250117" release-version="17" optional="true"/>
+    <product-descriptor code="PJMETERVIEWER" release-date="20250516" release-version="18" optional="true"/>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
