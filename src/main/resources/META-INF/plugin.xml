@@ -22,7 +22,9 @@
                   fieldName="INSTANCE" extensions="jmx"/>
         <fileEditorProvider implementation="co.anbora.labs.jmeter.ide.editor.JMeterEditorProvider"/>
         <postStartupActivity implementation="co.anbora.labs.jmeter.ide.startup.InitConfigFiles" />
+        <postStartupActivity implementation="co.anbora.labs.jmeter.ide.startup.SetupExternalPlugins" />
         <notificationGroup id="JMeter_Notification" displayType="STICKY_BALLOON"/>
+        <notificationGroup id="15556c7b-3ac1-42a7-a571-b6527ed3990d_External_JMeter_Notification" displayType="STICKY_BALLOON"/>
 
         <applicationService serviceImplementation="co.anbora.labs.jmeter.ide.toolchain.JMeterToolchainService"/>
         <applicationService serviceImplementation="co.anbora.labs.jmeter.ide.toolchain.JMeterKnownToolchainsState"/>
