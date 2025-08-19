@@ -1,0 +1,12 @@
+[
+  {
+    "id": "co.anbora.labs.jmeter.runner.jmeter-runner-intellij",
+    "description": "If you want to run JMeter from IntelliJ: JMeter Runner",
+    "url": "https://plugins.jetbrains.com/plugin/23855-jmeter-runner"
+  },
+  {
+    "id": "co.anbora.labs.jmeter.plugins.manager",
+    "description": "If you need to install JMeter plugins: JMeter Manager",
+    "url": "https://plugins.jetbrains.com/plugin/23812-jmeter-manager"
+  }
+]
