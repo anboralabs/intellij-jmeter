@@ -62,7 +62,7 @@ object JMeterNotifications {
     fun supportNotification(project: Project?) {
         val notification = createNotification(
             "Support JMeter Plugin",
-            "Buy the freemium license; 1 USD per year",
+            "Buy the freemium license; 7 USD per year",
             NotificationType.WARNING,
             BuyLicense()
         )
