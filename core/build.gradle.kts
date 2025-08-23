@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    id("org.jetbrains.intellij.platform.module")
 }
 
 group = "co.anbora.labs.jmeter.core"
@@ -7,6 +8,11 @@ version = "1.2.5"
 
 repositories {
     mavenCentral()
+
+    // IntelliJ Platform Gradle Plugin Repositories Extension
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 configurations.all {
@@ -14,10 +20,16 @@ configurations.all {
 }
 
 dependencies {
+    // IntelliJ Platform Gradle Plugin Dependencies Extension
+    intellijPlatform {
+        // Create IntelliJ Platform dependency for this module to compile against the IDE APIs
+        create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
+    }
+
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
     implementation("org.ow2.asm:asm:9.6")
 
@@ -97,6 +109,10 @@ dependencies {
 
     implementation(project(":jorphan"))
     implementation(project(":launcher"))
+}
+
+intellijPlatform {
+    buildSearchableOptions = false
 }
 
 tasks {
