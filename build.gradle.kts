@@ -3,7 +3,7 @@ fun environment(key: String) = providers.environmentVariable(key)
 
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "2.0.0"
+    id("org.jetbrains.kotlin.jvm") version "2.2.0"
     id("org.jetbrains.intellij.platform") version "2.7.2"
 }
 
@@ -40,7 +40,6 @@ dependencies {
         // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file for plugin from JetBrains Marketplace.
         plugins(properties("platformPlugins").map { it.split(',') })
 
-        instrumentationTools()
         pluginVerifier()
         // testFramework(TestFrameworkType.Platform.JUnit4)
     }
@@ -78,6 +77,12 @@ intellijPlatform {
             sinceBuild = properties("pluginSinceBuild")
             untilBuild = properties("pluginUntilBuild")
         }
+    }
+
+    signing {
+        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
+        privateKey = providers.environmentVariable("PRIVATE_KEY")
+        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
     }
 
     publishing {
