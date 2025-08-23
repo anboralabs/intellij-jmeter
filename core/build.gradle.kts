@@ -27,7 +27,7 @@ dependencies {
     }
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
+    // implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
     // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 
