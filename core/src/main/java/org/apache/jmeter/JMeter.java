@@ -543,7 +543,7 @@ public class JMeter implements JMeterPlugin {
                    null) { // not non-GUI => GUI
           PluginManager.install(this, true);
           String initialTestFile = testFile;
-          JMeterGuiLauncher.startGui(initialTestFile);
+          // JMeterGuiLauncher.startGui(initialTestFile);
           startOptionalServers();
         } else { // NON-GUI must be true
           extractAndSetReportOutputFolder(parser, deleteResultFile);
