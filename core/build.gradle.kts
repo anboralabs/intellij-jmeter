@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij.platform.module")
 }
 
 group = "co.anbora.labs.jmeter.core"
@@ -8,11 +7,6 @@ version = "1.2.5"
 
 repositories {
     mavenCentral()
-
-    // IntelliJ Platform Gradle Plugin Repositories Extension
-    intellijPlatform {
-        defaultRepositories()
-    }
 }
 
 configurations.all {
@@ -20,11 +14,6 @@ configurations.all {
 }
 
 dependencies {
-    // IntelliJ Platform Gradle Plugin Dependencies Extension
-    intellijPlatform {
-        // Create IntelliJ Platform dependency for this module to compile against the IDE APIs
-        create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
-    }
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8
     // implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
@@ -104,15 +93,8 @@ dependencies {
 
     implementation("net.sf.json-lib:json-lib:2.4:jdk15")
 
-    //implementation("org.apache.jmeter:ApacheJMeter_http:5.6.3")
-    //implementation("org.apache.jmeter:ApacheJMeter_java:5.6.3")
-
     implementation(project(":jorphan"))
     implementation(project(":launcher"))
-}
-
-intellijPlatform {
-    buildSearchableOptions = false
 }
 
 tasks {

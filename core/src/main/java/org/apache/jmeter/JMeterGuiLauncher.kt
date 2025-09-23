@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.jmeter
+/*package org.apache.jmeter
 
 import com.thoughtworks.xstream.converters.ConversionException
 import kotlinx.coroutines.Dispatchers
@@ -149,4 +149,4 @@ public object JMeterGuiLauncher {
             JMeterUtils.reportErrorToUser(e.toString())
         }
     }
-}
+}*/
