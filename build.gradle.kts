@@ -7,7 +7,7 @@ fun environment(key: String) = providers.environmentVariable(key)
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.2.0"
-    id("org.jetbrains.intellij.platform") version "2.9.0"
+    id("org.jetbrains.intellij.platform") version "2.10.4"
 }
 
 group = properties("pluginGroup").get()
@@ -16,17 +16,6 @@ version = properties("pluginVersion").get()
 // Set the JVM language level used to build the project.
 kotlin {
     jvmToolchain(21)
-}
-
-// Ensure ':core' project is evaluated so we can access its tasks/outputs
-evaluationDependsOn(":core")
-
-// Access ':core' runtime dependencies to package them (excluding core.jar)
-val coreProjectRef = project(":core")
-val coreRuntimeDepsProvider: Provider<Set<java.io.File>> = providers.provider {
-    coreProjectRef.configurations.getByName("runtimeClasspath").resolve().filterNot { file ->
-        file.name.startsWith("${coreProjectRef.name}-${coreProjectRef.version}")
-    }.toSet()
 }
 
 // Configure project's dependencies
@@ -76,12 +65,8 @@ dependencies {
     implementation("net.sf.json-lib:json-lib:2.4:jdk15")
 
     implementation(project(":jorphan"))
-    compileOnly(project(":core"))
+    implementation(project(":core"))
     implementation(project(":launcher"))
-
-    // Bring in all ':core' runtime dependencies so they are packaged with the plugin,
-    // but exclude the core.jar itself because its classes are merged into this jar.
-    runtimeOnly(files(coreRuntimeDepsProvider))
 }
 
 // Configure IntelliJ Platform Gradle Plugin - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-extension.html
@@ -125,20 +110,7 @@ intellijPlatform {
 val hasSigningCreds = listOf("CERTIFICATE_CHAIN", "PRIVATE_KEY", "PRIVATE_KEY_PASSWORD")
     .all { environment(it).isPresent }
 
-// Merge ':core' classes and resources into the main plugin JAR
-val coreJarProvider = project(":core").tasks.named("jar")
-
-
 tasks {
-    // Merge core outputs into this module's jar to avoid a separate core.jar in the plugin lib
-    named<Jar>("jar") {
-        // Ensure the core jar is built first
-        dependsOn(coreJarProvider)
-        // Unpack the core jar contents into this jar
-        from({ zipTree(coreJarProvider.get().outputs.files.singleFile) })
-        // Avoid duplicate files when merging resources from ':core'
-        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
-    }
     // Fail early if trying to publish without signing credentials
     named("publishPlugin") {
         dependsOn("signPlugin")
