@@ -1,6 +1,5 @@
 package co.anbora.labs.jmeter.ide.checker
 
-import co.anbora.labs.jmeter.router.actions.RouterActionsFlavor.Companion.getApplicableFlavors
 import com.intellij.openapi.extensions.ExtensionPointName
 
 abstract class CheckerFlavor {
