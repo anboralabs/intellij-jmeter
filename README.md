@@ -9,15 +9,15 @@
 
 JMeter is an open source tool designed to load test functional behavior and measure performance..
 
-JMeter Viewer is an Intellij plugin to view all information related with jmeter test plans,
-and we use <a href="https://jmeter.apache.org" title="Jmeter">Jmeter</a> as a core.
+JMeter Viewer is an Intellij plugin to view all information related with JMeter test plans,
+and we use <a href="https://jmeter.apache.org" title="Jmeter">JMeter</a> as a core.
 
-We don't pretend to be a replacement of Jmeter, Jmeter Viewer is an extension from them to use in Intellij.
+We don't pretend to be a replacement of JMeter, JMeter Viewer is an extension from them to use in Intellij.
 
 ## How to use it?
 
 - Add plugin to Intellij IDE
-- Open a jmeter file
+- Open a JMeter file
 
 ### Add plugin to Intellij IDE
 
