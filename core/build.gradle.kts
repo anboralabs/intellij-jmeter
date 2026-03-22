@@ -71,7 +71,7 @@ dependencies {
 
     implementation("org.brotli:dec:0.1.2")
     implementation("org.exparity:hamcrest-date:2.0.8")
-    implementation("org.freemarker:freemarker:2.3.32")
+    implementation("org.freemarker:freemarker:2.3.34")
 
     implementation("org.jetbrains.lets-plot:lets-plot-batik:4.1.0")
     implementation("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.5.0")
