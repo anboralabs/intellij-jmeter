@@ -62,8 +62,8 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.11.0")
     implementation("org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1")
 
-    implementation("org.apache.logging.log4j:log4j-core:2.22.1")
-    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.22.1")
+    implementation("org.apache.logging.log4j:log4j-core:2.25.3")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.25.3")
 
     implementation("org.apache.tika:tika-core:1.28.5")
 
