@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("org.jetbrains.intellij.platform.module")
+    id("org.jetbrains.intellij.platform.base")
 }
 
 group = "co.anbora.labs.jmeter.jorphan"
