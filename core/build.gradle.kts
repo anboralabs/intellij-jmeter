@@ -88,7 +88,7 @@ dependencies {
     implementation("xalan:serializer:2.7.3")
     implementation("xalan:xalan:2.7.3")
     implementation("xerces:xercesImpl:2.12.2")
-    implementation("xml-apis:xml-apis:1.4.01")
+    implementation("xml-apis:xml-apis:2.0.2")
     implementation("xmlpull:xmlpull:1.1.3.1")
 
     implementation("net.sf.json-lib:json-lib:2.4:jdk15")
