@@ -36,7 +36,7 @@ dependencies {
 
     implementation("com.google.auto.service:auto-service-annotations:1.1.1")
     implementation("com.google.auto.service:auto-service:1.1.1")
-    implementation("com.google.errorprone:error_prone_annotations:2.24.0")
+    implementation("com.google.errorprone:error_prone_annotations:2.46.0")
     implementation("com.miglayout:miglayout-core:5.3")
     implementation("com.miglayout:miglayout-swing:5.3")
     implementation("com.sun.activation:javax.activation:1.2.0")
