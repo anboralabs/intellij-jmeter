@@ -54,10 +54,10 @@ dependencies {
     implementation("com.github.weisj:darklaf-extensions-rsyntaxarea:0.3.4")
     implementation("com.github.weisj:darklaf-property-loader:2.7.3")
 
-    implementation("org.apache.logging.log4j:log4j-1.2-api:2.22.1")
-    implementation("org.apache.logging.log4j:log4j-api:2.22.1")
-    implementation("org.apache.logging.log4j:log4j-core:2.22.1")
-    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.22.1")
+    implementation("org.apache.logging.log4j:log4j-1.2-api:2.25.3")
+    implementation("org.apache.logging.log4j:log4j-api:2.25.3")
+    implementation("org.apache.logging.log4j:log4j-core:2.25.3")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.25.3")
 
     implementation("com.google.auto.service:auto-service-annotations:1.1.1")
     implementation("com.google.auto.service:auto-service:1.1.1")
