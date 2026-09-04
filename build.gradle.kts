@@ -7,7 +7,8 @@ fun environment(key: String) = providers.environmentVariable(key)
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.3.20"
-    id("org.jetbrains.intellij.platform") version "2.16.0"
+    id("org.jetbrains.intellij.platform") version "2.18.1"
+//    id("org.jetbrains.intellij.platform") version "2.16.0"
 }
 
 group = properties("pluginGroup").get()
@@ -63,6 +64,9 @@ dependencies {
     implementation("com.google.auto.service:auto-service:1.1.1")
 
     implementation("net.sf.json-lib:json-lib:2.4:jdk15")
+
+    // Source: https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
+    implementation("com.thoughtworks.xstream:xstream:1.4.21")
 
     implementation(project(":jorphan"))
     implementation(project(":core"))
